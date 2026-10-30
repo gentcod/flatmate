@@ -1,0 +1,29 @@
+module github.com/gentcod/flatmate
+
+go 1.26.0
+
+// Third-party dependencies (modernc.org/sqlite, paseto) resolve via
+// `go mod tidy`. See Makefile.
+
+require (
+	github.com/gentcod/environ v1.1.0
+	github.com/o1egl/paseto v1.0.0
+	modernc.org/sqlite v1.61.0
+)
+
+require (
+	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
+	github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb // indirect
+	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect
+	github.com/dustin/go-humanize v1.1.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
+	github.com/mattn/go-isatty v0.0.24 // indirect
+	github.com/ncruces/go-strftime v1.1.0 // indirect
+	github.com/pkg/errors v0.8.0 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
+	golang.org/x/crypto v0.0.0-20181025213731-e84da0312774 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	modernc.org/libc v1.79.0 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.12.1 // indirect
+)

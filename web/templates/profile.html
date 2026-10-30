@@ -1,0 +1,67 @@
+{{define "content"}}
+<h1>Your profile</h1>
+<p class="hint">Only your first name and general area are ever shown to others.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="post" action="/profile">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>First name <input type="text" name="first_name" value="{{.P.FirstName}}" maxlength="50" required></label>
+<label>What are you looking for?
+<select name="mode">
+<option value="have-room" {{if eq .P.Mode "have-room"}}selected{{end}}>I have a room</option>
+<option value="need-room" {{if eq .P.Mode "need-room"}}selected{{end}}>I need a room</option>
+<option value="find-together" {{if eq .P.Mode "find-together"}}selected{{end}}>Let's find a place together</option>
+</select></label>
+<label>Occupation (optional) <input type="text" name="occupation" value="{{.P.Occupation}}" maxlength="80" placeholder="e.g. Nurse, Student, Trader"></label>
+<label>Preferred area <input type="text" name="area_text" value="{{.P.AreaText}}" maxlength="120" placeholder="e.g. your neighborhood, city" required></label>
+<label><input type="checkbox" name="relocating" value="1" {{if .Relocating}}checked{{end}}> I'm relocating from another city</label>
+<input type="hidden" id="lat" name="lat" value="{{.Lat}}">
+<input type="hidden" id="lng" name="lng" value="{{.Lng}}">
+<p><button type="button" onclick="fillLocation()">Use my location</button>
+<span id="geo-status" class="hint">{{if .Lat}}Location added (approx).{{else}}Optional; helps nearby matching.{{end}}</span></p>
+<label>Budget min <input type="text" name="budget_min" value="{{.P.BudgetMin}}" inputmode="numeric" required></label>
+<label>Budget max <input type="text" name="budget_max" value="{{.P.BudgetMax}}" inputmode="numeric" required></label>
+<label>Currency <input type="text" name="currency" value="{{.P.Currency}}" maxlength="8"></label>
+<label>Gender
+<select name="gender" required>
+<option value="">— choose —</option>
+<option value="woman" {{if eq .P.Gender "woman"}}selected{{end}}>Woman</option>
+<option value="man" {{if eq .P.Gender "man"}}selected{{end}}>Man</option>
+<option value="nonbinary" {{if eq .P.Gender "nonbinary"}}selected{{end}}>Non-binary</option>
+</select></label>
+<label>Who are you open to living with?
+<select name="gender_pref">
+<option value="anyone" {{if eq .P.GenderPref "anyone"}}selected{{end}}>Anyone</option>
+<option value="women" {{if eq .P.GenderPref "women"}}selected{{end}}>Women</option>
+<option value="men" {{if eq .P.GenderPref "men"}}selected{{end}}>Men</option>
+<option value="nonbinary" {{if eq .P.GenderPref "nonbinary"}}selected{{end}}>Non-binary people</option>
+</select></label>
+<label>Move-in from <input type="date" name="move_earliest" value="{{.P.MoveEarliest}}" required></label>
+<label>Stay duration (months) <input type="number" name="duration_months" value="{{.P.DurationMonths}}" min="1" max="36" required></label>
+<p class="hint">Your move window is your start date plus this many months — e.g. 6 months from December covers December to June.</p>
+<label>Short bio <textarea name="bio" maxlength="500" rows="3">{{.P.Bio}}</textarea></label>
+<label>Contact (phone, email, or WhatsApp — shared only after mutual interest)
+<input type="text" name="contact_handle" value="{{.P.ContactHandle}}" maxlength="120"></label>
+<button type="submit">Save and continue</button>
+</form>
+<script>
+function fillLocation(){
+  var s = document.getElementById('geo-status');
+  if (!navigator.geolocation) { s.textContent = 'Geolocation not supported.'; return; }
+  s.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(
+    function (p) {
+      document.getElementById('lat').value = p.coords.latitude.toFixed(4);
+      document.getElementById('lng').value = p.coords.longitude.toFixed(4);
+      s.textContent = 'Location added (approx).';
+    },
+    function () { s.textContent = 'Could not get location.'; });
+}
+</script>
+<hr>
+<h2>Danger zone</h2>
+<form method="post" action="/account/deactivate" onsubmit="return confirm('Deactivate your account? Your profile will be hidden immediately.');">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label><input type="checkbox" name="confirm" value="1" required> I understand this hides my profile immediately</label>
+<button type="submit" class="danger">Deactivate account</button>
+</form>
+{{end}}

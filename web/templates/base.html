@@ -1,0 +1,32 @@
+{{define "base"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Title}} — Flatmate</title>
+<link rel="stylesheet" href="/static/app.css">
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+<header>
+<nav>
+<a class="brand" href="/">Flatmate</a>
+{{if .Authed}}
+<a href="/matches">Matches</a>
+<a href="/profile">Profile</a>
+<a href="/questionnaire">Questionnaire</a>
+<form class="inline" method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Log out</button></form>
+{{else}}
+<a href="/login">Log in</a>
+<a href="/signup">Sign up</a>
+{{end}}
+</nav>
+</header>
+<main>
+{{template "content" .}}
+</main>
+<footer>
+<p class="hint">Flatmate demo — profiles are unverified. Scores advise; you decide.</p>
+</footer>
+</body>
+</html>{{end}}

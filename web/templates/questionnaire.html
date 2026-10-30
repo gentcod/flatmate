@@ -1,0 +1,32 @@
+{{define "content"}}
+<h1>Living habits</h1>
+<p class="hint">Answer for how you actually live. Mark deal-breakers as hard requirements. Or <a href="/onboarding">describe your habits in words</a>.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{if .Notice}}<p class="ok">{{.Notice}}</p>{{end}}
+{{if .Saved}}<p class="ok">Saved. Your answers are confirmed.</p>{{end}}
+{{if .Description}}<details><summary>What you told us</summary><p>{{.Description}}</p></details>{{end}}
+<form method="post" action="/questionnaire">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+{{range .Dims}}
+{{$v := .Value}}{{$w := .Weight}}
+<fieldset>
+<legend>{{.Label}}</legend>
+{{if .Question}}<p class="genq">{{.Question}}</p>{{end}}
+<p class="hint">{{.Hint}}</p>
+<label>Your answer
+<select name="value_{{.Dim}}">
+<option value="">— choose —</option>
+{{range .Options}}<option value="{{.}}" {{if eq . $v}}selected{{end}}>{{.}}</option>{{end}}
+</select></label>
+<label>How much does this matter?
+<select name="weight_{{.Dim}}">
+<option value="1" {{if eq $w 1}}selected{{end}}>1 — a little</option>
+<option value="2" {{if eq $w 2}}selected{{end}}>2 — somewhat</option>
+<option value="3" {{if eq $w 3}}selected{{end}}>3 — a lot</option>
+</select></label>
+<label><input type="checkbox" name="hard_{{.Dim}}" value="1" {{if .Hard}}checked{{end}}> Hard requirement (deal-breaker)</label>
+</fieldset>
+{{end}}
+<button type="submit">Save answers</button>
+</form>
+{{end}}

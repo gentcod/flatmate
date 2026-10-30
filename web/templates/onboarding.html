@@ -1,0 +1,27 @@
+{{define "content"}}
+<h1>Describe your living habits</h1>
+{{if .Interview}}
+<p class="hint">Answer below — or <a href="/questionnaire?draft=1">skip to the form</a> with what we have so far.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{range .Turns}}<p class="turn-{{.Role}}"><strong>{{if eq .Role "user"}}You{{else}}Flatmate{{end}}:</strong> {{.Text}}</p>{{end}}
+{{if .Total}}<p class="hint">{{.Done}} of {{.Total}} topics covered.</p>{{end}}
+<form method="post" action="/onboarding">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Your reply <input type="text" name="message" maxlength="2000" autocomplete="off" required autofocus></label>
+<button type="submit">Send</button>
+</form>
+{{else}}
+<p class="hint">A few sentences in your own words. The AI drafts your answers; you confirm them.</p>
+<h2>What to mention</h2>
+<p class="hint">Cover as many of these as you can — anything you skip, you'll fill in the form. No need to match exact words; the AI maps your meaning.</p>
+<ul>{{range .Dims}}<li><strong>{{.Label}}</strong> — {{.Hint}}</li>{{end}}</ul>
+<p class="hint">Example: "I'm a nurse on night shifts. I keep my room spotless, need quiet to sleep during the day, and never smoke. I work from home twice a week and prefer splitting bills evenly."</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="post" action="/onboarding">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<textarea name="description" rows="6" maxlength="2000">{{.Text}}</textarea>
+<button type="submit">Start the interview</button>
+</form>
+<p>Prefer the plain form? <a href="/questionnaire">Fill it directly</a>.</p>
+{{end}}
+{{end}}

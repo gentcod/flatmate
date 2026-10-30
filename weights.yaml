@@ -1,0 +1,6 @@
+# Group weights for match scoring. Must sum to 1.0. Engine validates on load.
+practical: 0.35
+lifestyle: 0.45
+interpersonal: 0.20
+# Flagged discuss-worthy gaps cap the dimension score at this value.
+discuss_cap: 60

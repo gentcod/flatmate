@@ -1,0 +1,163 @@
+# Flatmate Matching Platform
+## Simplified Product Reference
+
+**Status:** Concept, in implementation
+**Scope:** Global from day one — no single launch market. Seeds span Lagos, Nairobi, London, and New York.
+**One-line goal:** Help people find flatmates they can actually live with, not just flatmates who fit a budget.
+
+---
+
+## 1. The Problem
+
+People can find rooms and potential flatmates through friends, social media groups, and agents. What they can't easily do is tell whether they'd be **compatible** to live with before committing.
+
+Choosing is the hard part. Budget and location are only the starting point. Cleanliness, noise, guests, routines, privacy, and how disagreements get handled decide whether a shared home works.
+
+**Core problem:** There is no simple, structured way to judge whether two people are compatible enough to share a home.
+
+## 2. The Solution
+
+A platform that treats flatmate search as a **compatibility problem**:
+
+1. Users say what they need (hard requirements) and what they prefer (flexible preferences).
+2. The system removes people who don't fit the hard requirements.
+3. It ranks the rest by how well their lifestyles line up.
+4. It explains each match in plain language, including where the two people differ.
+5. Users decide for themselves.
+
+**Example:** Two people want the same area and have the same budget. One wants a quiet home with few visitors. The other hosts friends often. A budget-and-location search ranks them highly. This platform shows the clash up front and suggests what to discuss before they move in.
+
+## 3. Principles
+
+These guide every product and technical decision.
+
+- **Practical first, lifestyle second.** Budget, location, and dates decide eligibility. Lifestyle decides who ranks higher.
+- **Compatible does not mean the same.** Show real alignment and real differences. Don't hide mismatches.
+- **Users decide, the platform recommends.** Scores inform; they never replace judgment.
+- **Be honest about trust.** Say exactly what has been verified, and never imply "verified" means "trustworthy".
+- **Keep it explainable.** Every recommendation must come with reasons a person can read and check.
+- **Collect less.** Gather only the personal data needed to match, and protect it.
+
+## 4. Who It's For
+
+**Primary users**
+- People looking for a flatmate because they already have a room.
+- People looking for a room to share.
+- Two or more people looking to find accommodation together.
+
+Landlords, agents, and housing providers are out of focus for now. Value for flatmate seekers comes first.
+
+## 5. MVP Scope
+
+The MVP tests one idea: **people will use structured compatibility matching instead of relying only on social media groups and word of mouth.**
+
+**Included**
+- Sign up and log in.
+- Profile: what you're looking for, preferred area, budget, move-in window, short bio.
+- Lifestyle questionnaire (see section 6).
+- Eligibility filtering on hard requirements.
+- Ranked matches with explanations and areas to discuss.
+- Save, dismiss, and express interest. Mutual interest shares a contact request.
+- Block and report.
+
+**Not included yet**
+Payments, identity verification, in-app messaging, landlord or agent tools, property listings, rent or lease tools, machine-learning ranking, and personality analysis.
+
+## 6. The Questionnaire
+
+Questions ask about **observable living habits**, not personality.
+
+| Topic | Examples of what it covers |
+|---|---|
+| Cleanliness | Tidiness standards, chores |
+| Noise | Tolerance for noise at home |
+| Sleep and routines | Early, flexible, or late schedule |
+| Guests | How often, overnight or not |
+| Privacy | Need for personal space |
+| Social level | Quiet home vs. social home |
+| Shared expenses | Split equally, itemized, or mixed |
+| Disagreements | Talk now, cool off first, or write it down |
+| Smoking and pets | No, outside only, yes; none, ok, have |
+| Working from home | How often |
+
+Users can mark an answer as a **hard requirement** (a deal-breaker) or a flexible preference, and say how much it matters to them.
+
+## 7. How Matching Works
+
+Matching is **transparent and rule-based**. It is not a black box.
+
+**Step 1: Eligibility.** Remove anyone who breaks a hard requirement: wrong arrangement, budget doesn't fit, move-in dates don't overlap, a deal-breaker like smoking or pets, or a blocked user.
+
+**Step 2: Scoring.** Score each remaining pair from 0 to 100 using three groups: practical fit (budget, location, timing), lifestyle fit, and interpersonal fit. Weights are configurable and live outside the code.
+
+**Step 3: Explanation.** For every match, show what lines up, what differs, and what's worth discussing, for example:
+- Strong alignment on budget and daily routines.
+- Similar expectations on cleanliness.
+- Different views on overnight guests, so talk about it first.
+
+## 8. Where AI Helps
+
+AI assists the experience. It does not make decisions.
+
+**AI is used to:**
+- Run a short conversation that fills in the questionnaire, with the user confirming the answers.
+- Turn the computed score breakdown into a readable explanation.
+- Suggest neutral questions to discuss for flagged differences.
+
+**AI is not used to:**
+- Rank, filter, or score people.
+- Infer personality or sensitive traits from what someone writes.
+
+If the AI is unavailable, the product still works with a plain form and template explanations.
+
+## 9. Trust and Safety (Minimum)
+
+- Secure login.
+- Block and report on every profile.
+- Blocked users never see each other.
+- Only first name and general area are shown. No exact addresses.
+- Contact details are shared only after mutual interest.
+- Users can deactivate their account.
+- The UI states plainly what has been verified.
+
+## 10. Measuring Success
+
+Measure whether people form useful connections, not time spent in the app.
+
+- Profile and questionnaire completion.
+- Users who receive at least one eligible match.
+- Mutual interest and conversations started.
+- Users who report finding a suitable flatmate.
+- Reports and blocks per active user.
+
+## 11. Key Risks
+
+| Risk | Response |
+|---|---|
+| Too few people in an area | Launch in a narrow area and measure match availability |
+| Scores create false confidence | Always show reasons and uncertainty; keep scores advisory |
+| Fraud and safety issues | Reporting, blocking, privacy controls, honest verification labels |
+| People won't pay | Start free; test paid options only after the product proves useful |
+
+## 12. Later (Not Now)
+
+- **Monetization:** Test a time-limited access pass or boosts after value is proven. Rent norms vary by market (annual lump sums vs. monthly), so monthly subscriptions may not fit everywhere; research this before deciding.
+- **Verification:** Add identity checks when cost and operations allow.
+- **Growth:** Add listings, partners, or new cities only after the first markets work.
+- **Personality research:** Consider only if validated against real outcomes.
+
+## 13. Decision Test
+
+Before adding anything, ask:
+
+1. Does it help people find a more compatible flatmate?
+2. Is it needed to test the MVP idea?
+3. Is there a simpler way to get the same result?
+
+If the answer to the first two is no, defer it.
+
+## 14. Product Definition
+
+The Flatmate Matching Platform helps people make better-informed decisions about who they live with, by combining practical housing requirements with lifestyle compatibility and clear explanations.
+
+**It wins by improving the quality of flatmate decisions, not by having the most listings or the most features.**

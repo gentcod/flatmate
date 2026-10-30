@@ -1,0 +1,14 @@
+{{define "content"}}
+<h1>Matches</h1>
+<p class="hint">Ranked by lifestyle fit. Scores advise; you decide.</p>
+{{if .Empty}}<p>No eligible matches yet. Check back after more people complete their profiles.</p>{{end}}
+{{range .Matches}}
+<article class="card">
+<h2><a href="/match/{{.ID}}">{{.FirstName}}</a> <span class="score">{{.Total}}</span></h2>
+<p class="hint">{{.AreaText}} · {{.Gender}}{{if .Occupation}} · {{.Occupation}}{{end}}</p>
+<p>{{.Bio}}</p>
+{{if .TopAlign}}<p>{{.TopAlign}}</p>{{end}}
+<p class="hint">{{if .Saved}}Saved · {{end}}{{if .Mutual}}Mutual interest{{end}}</p>
+</article>
+{{end}}
+{{end}}

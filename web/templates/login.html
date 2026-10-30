@@ -1,0 +1,11 @@
+{{define "content"}}
+<h1>Log in</h1>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="post" action="/login">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Email <input type="email" name="email" value="{{.Email}}" required></label>
+<label>Password <input type="password" name="password" required></label>
+<button type="submit">Log in</button>
+</form>
+<p>New here? <a href="/signup">Sign up</a>.</p>
+{{end}}

@@ -1,0 +1,56 @@
+{{define "content"}}
+{{if .M.Ineligible}}
+<h1>Not eligible</h1>
+<p>You can't match with this person based on hard requirements.</p>
+<p><a href="/matches">Back to matches</a></p>
+{{else}}
+<h1>{{.M.FirstName}} <span class="score">{{.BD.Total}}</span></h1>
+<p class="hint">{{.M.AreaText}} · {{.M.Gender}}{{if .M.Occupation}} · {{.M.Occupation}}{{end}} · {{.M.ModeLabel}} · Unverified</p>
+<p>{{.M.Bio}}</p>
+<p class="hint">Budget: {{.M.BudgetStr}} · Move: {{.M.MoveWindow}}</p>
+<h2>Fit</h2>
+<div class="bars">
+<div class="bar-row"><span>Practical</span><div class="bar"><span style="width:{{.BD.Practical}}%"></span></div><strong>{{.BD.Practical}}</strong></div>
+<div class="bar-row"><span>Lifestyle</span><div class="bar"><span style="width:{{.BD.Lifestyle}}%"></span></div><strong>{{.BD.Lifestyle}}</strong></div>
+<div class="bar-row"><span>Interpersonal</span><div class="bar"><span style="width:{{.BD.Interpersonal}}%"></span></div><strong>{{.BD.Interpersonal}}</strong></div>
+</div>
+{{if .Top}}<h3>Strongest areas</h3><ul>{{range .Top}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{if .Enhanced}}
+<h2>In plain language</h2>
+<ul>{{range .Bullets}}<li>{{.}}</li>{{end}}</ul>
+{{if .DiscussQ}}<h3>Questions to ask each other</h3><ul>{{range .DiscussQ}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{end}}
+{{if .BD.Alignments}}<h3>What lines up</h3><ul>{{range .BD.Alignments}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{if .BD.Differences}}<h3>Where you differ</h3><ul>{{range .BD.Differences}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{if .BD.Discuss}}<h3>Worth discussing</h3><ul>{{range .BD.Discuss}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{if .Bridges}}<h3>Ways to bridge the gap</h3><ul>{{range .Bridges}}<li>{{.Suggestion}}</li>{{end}}</ul>{{end}}
+<h3>Every dimension</h3>
+<table class="dims">
+<tr><th>Area</th><th>Score</th><th>Note</th></tr>
+{{range .BD.Dimensions}}<tr><td>{{.Name}}</td><td>{{.Score}}</td><td>{{.Note}}</td></tr>{{end}}
+</table>
+<h2>Actions</h2>
+{{if .M.Saved}}
+<form method="post" action="/match/{{.M.ID}}/unsave"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Unsave</button></form>
+{{else}}
+<form method="post" action="/match/{{.M.ID}}/save"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Save</button></form>
+{{end}}
+{{if .M.MyInterest}}
+<p>You've expressed interest.</p>
+{{else}}
+<form method="post" action="/match/{{.M.ID}}/interest"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Express interest</button></form>
+{{end}}
+<form method="post" action="/match/{{.M.ID}}/dismiss"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Dismiss</button></form>
+{{if .M.Mutual}}
+<h2>Contact</h2>
+{{if .M.Contact}}<p>{{.M.Contact}}</p>{{else}}<p>Mutual interest, but no contact added yet. <a href="/profile">Add yours</a>.</p>{{end}}
+{{end}}
+<h2>Safety</h2>
+<form method="post" action="/match/{{.M.ID}}/block"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Block</button></form>
+<form method="post" action="/match/{{.M.ID}}/report">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Reason <input type="text" name="reason" maxlength="500"></label>
+<button type="submit">Report</button>
+</form>
+{{end}}
+{{end}}

@@ -1,0 +1,2270 @@
+[
+  {
+    "email": "adaeze@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Adaeze",
+      "mode": "have-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Yaba, Lagos",
+      "lat": 6.51,
+      "lng": 3.37,
+      "relocating": false,
+      "budget_min": 400000,
+      "budget_max": 600000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 6,
+      "bio": "Quiet graduate student with a spare room near UNILAG.",
+      "contact_handle": "+234-800-000-0001",
+      "occupation": "Graduate student"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": true,
+        "weight": 3
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "student",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "tunde@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Tunde",
+      "mode": "need-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Yaba, Lagos",
+      "lat": 6.5,
+      "lng": 3.375,
+      "relocating": false,
+      "budget_min": 350000,
+      "budget_max": 550000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-15",
+      "duration_months": 6,
+      "bio": "Early-rising analyst looking for a calm place on the mainland.",
+      "contact_handle": "+234-800-000-0002",
+      "occupation": "Financial analyst"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "chiamaka@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Chiamaka",
+      "mode": "find-together",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Lekki, Lagos",
+      "lat": null,
+      "lng": null,
+      "relocating": true,
+      "budget_min": 800000,
+      "budget_max": 1200000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 12,
+      "bio": "Relocating from Abuja; wants a lively shared flat and to split the search.",
+      "contact_handle": "chiamaka-relocates@example.com",
+      "occupation": "Software developer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "privacy": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "social",
+        "hard": false,
+        "weight": 2
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "outside",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "have",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "0",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "emeka@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Emeka",
+      "mode": "have-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Surulere, Lagos",
+      "lat": 6.5,
+      "lng": 3.35,
+      "relocating": false,
+      "budget_min": 350000,
+      "budget_max": 500000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 5,
+      "bio": " Spare room in a calm Surulere flat. Allergic to pets.",
+      "contact_handle": "+234-800-000-0004",
+      "occupation": "Civil servant"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 2
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": true,
+        "weight": 3
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "funmi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Funmi",
+      "mode": "need-room",
+      "gender": "woman",
+      "gender_pref": "nonbinary",
+      "area_text": "Surulere, Lagos",
+      "lat": 6.505,
+      "lng": 3.355,
+      "relocating": false,
+      "budget_min": 300000,
+      "budget_max": 450000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-10",
+      "duration_months": 6,
+      "bio": "Neat freak nurse on early shifts, looking near the hospital.",
+      "contact_handle": "funmi-nurse@example.com",
+      "occupation": "Nurse"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "5",
+        "hard": true,
+        "weight": 3
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "ibrahim@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Ibrahim",
+      "mode": "need-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Ikeja, Lagos",
+      "lat": 6.6,
+      "lng": 3.35,
+      "relocating": false,
+      "budget_min": 500000,
+      "budget_max": 700000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 12,
+      "bio": "Remote engineer on calls all day. Silence is non-negotiable.",
+      "contact_handle": "+234-800-000-0006",
+      "occupation": "Software engineer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "1",
+        "hard": true,
+        "weight": 3
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "ngozi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Ngozi",
+      "mode": "have-room",
+      "gender": "woman",
+      "gender_pref": "women",
+      "area_text": "Ikeja, Lagos",
+      "lat": 6.605,
+      "lng": 3.345,
+      "relocating": false,
+      "budget_min": 450000,
+      "budget_max": 650000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-15",
+      "duration_months": 6,
+      "bio": "Quiet flat near GRA with a spare room and fast internet.",
+      "contact_handle": "+234-800-000-0007",
+      "occupation": "Pharmacist"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "olumide@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Olumide",
+      "mode": "find-together",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Lekki, Lagos",
+      "lat": 6.45,
+      "lng": 3.47,
+      "relocating": false,
+      "budget_min": 700000,
+      "budget_max": 1000000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 3,
+      "bio": "New in town crew: want a lively Lekki flat hunt with others.",
+      "contact_handle": "olumide-hunts@example.com",
+      "occupation": ""
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "privacy": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "social",
+        "hard": false,
+        "weight": 2
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "outside",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "unemployed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "aisha@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Aisha",
+      "mode": "find-together",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Ajah, Lagos",
+      "lat": 6.47,
+      "lng": 3.6,
+      "relocating": false,
+      "budget_min": 600000,
+      "budget_max": 900000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 6,
+      "bio": "Night owl designer looking to co-search around Ajah.",
+      "contact_handle": "+234-800-000-0009",
+      "occupation": "Graphic designer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "social",
+        "hard": false,
+        "weight": 2
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "0",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "kunle@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Kunle",
+      "mode": "need-room",
+      "gender": "man",
+      "gender_pref": "men",
+      "area_text": "Gbagada, Lagos",
+      "lat": 6.55,
+      "lng": 3.39,
+      "relocating": false,
+      "budget_min": 200000,
+      "budget_max": 350000,
+      "currency": "NGN",
+      "move_earliest": "2027-01-05",
+      "duration_months": 12,
+      "bio": "Easy-going corps member. Flexible on everything except kindness.",
+      "contact_handle": "+234-800-000-0010",
+      "occupation": "Corps member"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "blessing@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Blessing",
+      "mode": "have-room",
+      "gender": "woman",
+      "gender_pref": "women",
+      "area_text": "Gbagada, Lagos",
+      "lat": 6.552,
+      "lng": 3.392,
+      "relocating": false,
+      "budget_min": 250000,
+      "budget_max": 400000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 5,
+      "bio": "Friendly teacher with a spare room close to the express.",
+      "contact_handle": "blessing-teaches@example.com",
+      "occupation": "Teacher"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "tobi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Tobi",
+      "mode": "need-room",
+      "gender": "nonbinary",
+      "gender_pref": "anyone",
+      "area_text": "Yaba, Lagos",
+      "lat": 6.508,
+      "lng": 3.372,
+      "relocating": false,
+      "budget_min": 350000,
+      "budget_max": 550000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 6,
+      "bio": "Sociable DJ. Smokes, but strictly outside and never indoors.",
+      "contact_handle": "+234-800-000-0012",
+      "occupation": "DJ"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "privacy": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "social",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "outside",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "sandra@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Sandra",
+      "mode": "have-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Ikoyi, Lagos",
+      "lat": 6.45,
+      "lng": 3.43,
+      "relocating": false,
+      "budget_min": 1500000,
+      "budget_max": 2000000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 3,
+      "bio": "Banker with a spare room and a cat. Privacy matters a lot.",
+      "contact_handle": "+234-800-000-0013",
+      "occupation": "Banker"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "5",
+        "hard": true,
+        "weight": 3
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "itemized",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": true,
+        "weight": 3
+      },
+      "pets": {
+        "value": "have",
+        "hard": false,
+        "weight": 2
+      },
+      "wfh": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "daniel@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Daniel",
+      "mode": "need-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Ikoyi, Lagos",
+      "lat": 6.452,
+      "lng": 3.428,
+      "relocating": false,
+      "budget_min": 1400000,
+      "budget_max": 1900000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-10",
+      "duration_months": 6,
+      "bio": "Consultant relocating within Ikoyi. Fine with cats.",
+      "contact_handle": "daniel-consults@example.com",
+      "occupation": "Consultant"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "itemized",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "yusuf@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Yusuf",
+      "mode": "need-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Maryland, Lagos",
+      "lat": 6.56,
+      "lng": 3.37,
+      "relocating": false,
+      "budget_min": 400000,
+      "budget_max": 600000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 12,
+      "bio": "Accountant. Wants every shared bill itemized and tracked.",
+      "contact_handle": "+234-800-000-0015",
+      "occupation": "Accountant"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "itemized",
+        "hard": false,
+        "weight": 3
+      },
+      "disagreements": {
+        "value": "write",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "grace@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Grace",
+      "mode": "have-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Maryland, Lagos",
+      "lat": 6.562,
+      "lng": 3.372,
+      "relocating": false,
+      "budget_min": 400000,
+      "budget_max": 600000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 5,
+      "bio": "Keeps things simple: split everything equally, no spreadsheets.",
+      "contact_handle": "grace-hosts@example.com",
+      "occupation": "Trader"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 2
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "seun@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Seun",
+      "mode": "find-together",
+      "gender": "nonbinary",
+      "gender_pref": "anyone",
+      "area_text": "Ajah, Lagos",
+      "lat": 6.465,
+      "lng": 3.585,
+      "relocating": false,
+      "budget_min": 500000,
+      "budget_max": 750000,
+      "currency": "NGN",
+      "move_earliest": "2027-01-01",
+      "duration_months": 6,
+      "bio": "Gamer up late most nights. Looking for a fellow night owl.",
+      "contact_handle": "+234-800-000-0017",
+      "occupation": "Student"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "student",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "peter@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Peter",
+      "mode": "find-together",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Ajah, Lagos",
+      "lat": 6.468,
+      "lng": 3.59,
+      "relocating": false,
+      "budget_min": 500000,
+      "budget_max": 800000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-15",
+      "duration_months": 6,
+      "bio": "Works late shifts, sleeps late. Easy flatmate for night owls.",
+      "contact_handle": "peter-shifts@example.com",
+      "occupation": "Factory worker"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "amara@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Amara",
+      "mode": "need-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Festac, Lagos",
+      "lat": 6.47,
+      "lng": 3.28,
+      "relocating": false,
+      "budget_min": 300000,
+      "budget_max": 450000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 12,
+      "bio": "Early bird trader. Spotless kitchen or nothing.",
+      "contact_handle": "+234-800-000-0019",
+      "occupation": "Trader"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": true,
+        "weight": 3
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "chidi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Chidi",
+      "mode": "have-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Festac, Lagos",
+      "lat": 6.472,
+      "lng": 3.282,
+      "relocating": false,
+      "budget_min": 300000,
+      "budget_max": 450000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 5,
+      "bio": "Painter up at dawn. Spare room for someone equally tidy.",
+      "contact_handle": "chidi-paints@example.com",
+      "occupation": "Painter"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "halima@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Halima",
+      "mode": "need-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Ikeja, Lagos",
+      "lat": null,
+      "lng": null,
+      "relocating": true,
+      "budget_min": 450000,
+      "budget_max": 650000,
+      "currency": "NGN",
+      "move_earliest": "2027-01-01",
+      "duration_months": 6,
+      "bio": "Relocating from Port Harcourt for a new role in Ikeja.",
+      "contact_handle": "+234-800-000-0021",
+      "occupation": "HR officer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "femi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Femi",
+      "mode": "have-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Ogudu, Lagos",
+      "lat": 6.58,
+      "lng": 3.4,
+      "relocating": false,
+      "budget_min": 400000,
+      "budget_max": 600000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 3,
+      "bio": "Spare room, big dog, and shisha on the balcony most evenings.",
+      "contact_handle": "+234-800-000-0022",
+      "occupation": "Driver"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "social",
+        "hard": false,
+        "weight": 2
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "yes",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "have",
+        "hard": false,
+        "weight": 2
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "kemi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Kemi",
+      "mode": "need-room",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Magodo, Lagos",
+      "lat": 6.65,
+      "lng": 3.48,
+      "relocating": false,
+      "budget_min": 450000,
+      "budget_max": 650000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 6,
+      "bio": "Remote writer. Quiet days, early nights, no surprise guests.",
+      "contact_handle": "kemi-writes@example.com",
+      "occupation": "Writer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 2
+      },
+      "sleep": {
+        "value": "early",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "1",
+        "hard": false,
+        "weight": 2
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 2
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "5",
+        "hard": false,
+        "weight": 2
+      },
+      "employment": {
+        "value": "self-employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "nnamdi@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Nnamdi",
+      "mode": "have-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Magodo, Lagos",
+      "lat": 6.652,
+      "lng": 3.482,
+      "relocating": false,
+      "budget_min": 450000,
+      "budget_max": 650000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-15",
+      "duration_months": 12,
+      "bio": "Calm engineer flat with a spare room in the estate.",
+      "contact_handle": "+234-800-000-0024",
+      "occupation": "Engineer"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "4",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "quiet",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "zainab@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Zainab",
+      "mode": "need-room",
+      "gender": "woman",
+      "gender_pref": "women",
+      "area_text": "Apapa, Lagos",
+      "lat": 6.44,
+      "lng": 3.36,
+      "relocating": false,
+      "budget_min": 350000,
+      "budget_max": 550000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 6,
+      "bio": "Port shift worker, often out late. Low-maintenance flatmate.",
+      "contact_handle": "+234-800-000-0025",
+      "occupation": "Port worker"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "late",
+        "hard": false,
+        "weight": 2
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "cooldown",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "0",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "victor@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Victor",
+      "mode": "have-room",
+      "gender": "man",
+      "gender_pref": "anyone",
+      "area_text": "Apapa, Lagos",
+      "lat": 6.442,
+      "lng": 3.362,
+      "relocating": false,
+      "budget_min": 350000,
+      "budget_max": 550000,
+      "currency": "NGN",
+      "move_earliest": "2026-12-01",
+      "duration_months": 5,
+      "bio": "Spare room near the port. Goes with the flow on most things.",
+      "contact_handle": "victor-hosts@example.com",
+      "occupation": "Chef"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "ok",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "1",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "employed",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  },
+  {
+    "email": "racheal@example.com",
+    "password": "Seedpass123!",
+    "profile": {
+      "first_name": "Racheal",
+      "mode": "find-together",
+      "gender": "woman",
+      "gender_pref": "anyone",
+      "area_text": "Yaba, Lagos",
+      "lat": 6.512,
+      "lng": 3.375,
+      "relocating": false,
+      "budget_min": 200000,
+      "budget_max": 350000,
+      "currency": "NGN",
+      "move_earliest": "2027-01-05",
+      "duration_months": 12,
+      "bio": "Student hunting with a future flatmate around Yaba.",
+      "contact_handle": "+234-800-000-0027",
+      "occupation": "Student"
+    },
+    "answers": {
+      "cleanliness": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "noise": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "sleep": {
+        "value": "flex",
+        "hard": false,
+        "weight": 1
+      },
+      "guests": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "privacy": {
+        "value": "3",
+        "hard": false,
+        "weight": 1
+      },
+      "social": {
+        "value": "mixed",
+        "hard": false,
+        "weight": 1
+      },
+      "expenses": {
+        "value": "equal",
+        "hard": false,
+        "weight": 1
+      },
+      "disagreements": {
+        "value": "talk",
+        "hard": false,
+        "weight": 1
+      },
+      "smoking": {
+        "value": "no",
+        "hard": false,
+        "weight": 1
+      },
+      "pets": {
+        "value": "none",
+        "hard": false,
+        "weight": 1
+      },
+      "wfh": {
+        "value": "2",
+        "hard": false,
+        "weight": 1
+      },
+      "employment": {
+        "value": "student",
+        "hard": false,
+        "weight": 1
+      }
+    }
+  }
+]
