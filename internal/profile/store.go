@@ -54,6 +54,7 @@ type Profile struct {
 	Occupation     string // optional, shown to matches
 	Bio            string
 	ContactHandle  string
+	Searching      bool // visible in matching; new profiles start true
 }
 
 // Validate checks user-supplied profile fields.
@@ -158,6 +159,7 @@ func Get(ctx context.Context, d *sql.DB, userID int64) (p *Profile, found bool, 
 		DurationMonths: int(row.DurationMonths), Gender: row.Gender, GenderPref: row.GenderPref,
 		Occupation: row.Occupation,
 		Bio:        row.Bio, ContactHandle: row.ContactHandle,
+		Searching: row.Searching == 1,
 	}
 	return p, true, nil
 }
@@ -180,6 +182,7 @@ func Upsert(ctx context.Context, d *sql.DB, p *Profile) error {
 		DurationMonths: int64(p.DurationMonths), Gender: p.Gender, GenderPref: p.GenderPref,
 		Occupation: p.Occupation,
 		Bio:        p.Bio, ContactHandle: p.ContactHandle,
+		Searching: boolInt64(p.Searching),
 	})
 }
 

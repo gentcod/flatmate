@@ -61,9 +61,13 @@ func (s *Server) handleMatchesShow(w http.ResponseWriter, r *http.Request) {
 	acts := s.actionSet(r, id)
 	toMe := s.interestToMe(r, id)
 	reported := s.reportedByMe(r, id)
+	area := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("area")))
 	var views []matchView
 	for _, c := range others {
 		if blocked[c.id] || reported[c.id] || acts[c.id]["dismiss"] {
+			continue
+		}
+		if area != "" && !strings.Contains(strings.ToLower(c.p.AreaText), area) {
 			continue
 		}
 		cand := toMatchCandidate(c.p, c.a)
@@ -85,7 +89,8 @@ func (s *Server) handleMatchesShow(w http.ResponseWriter, r *http.Request) {
 	sort.Slice(views, func(i, j int) bool { return views[i].Total > views[j].Total })
 	s.render(w, "matches", map[string]any{
 		"Title": "Matches", "Authed": true, "Matches": views, "Empty": len(views) == 0,
-		"CSRF": s.csrfToken(w, r),
+		"Searching": s.searching(r, id), "AreaFilter": strings.TrimSpace(r.URL.Query().Get("area")),
+		"Nudge": s.profileNudge(r, id), "CSRF": s.csrfToken(w, r),
 	})
 }
 
@@ -107,7 +112,7 @@ func (s *Server) handleMatchDetail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !found || len(a) != len(match.Dimensions) ||
-		s.blockedPair(r, id, target) || s.deactivated(r, target) {
+		s.blockedPair(r, id, target) || s.deactivated(r, target) || !p.Searching {
 		http.NotFound(w, r)
 		return
 	}
@@ -212,6 +217,9 @@ func (s *Server) loadCandidates(r *http.Request, me int64) []candidateBundle {
 		if err != nil || !found {
 			continue
 		}
+		if !p.Searching {
+			continue // hidden users never appear in matching
+		}
 		a, err := profile.GetAnswers(r.Context(), s.DB, id)
 		if err != nil || len(a) != len(match.Dimensions) {
 			continue
@@ -219,6 +227,30 @@ func (s *Server) loadCandidates(r *http.Request, me int64) []candidateBundle {
 		out = append(out, candidateBundle{id: id, p: p, a: a})
 	}
 	return out
+}
+
+// profileNudge suggests the next optional profile field worth filling,
+// or "" when the profile is complete.
+func (s *Server) profileNudge(r *http.Request, id int64) string {
+	p, found, err := profile.Get(r.Context(), s.DB, id)
+	if err != nil || !found {
+		return ""
+	}
+	switch {
+	case strings.TrimSpace(p.Bio) == "":
+		return "Add a short bio so matches know who you are."
+	case strings.TrimSpace(p.Occupation) == "":
+		return "Add your occupation — it's shown to your matches."
+	case strings.TrimSpace(p.ContactHandle) == "":
+		return "Add a contact handle so mutual matches can reach you."
+	}
+	return ""
+}
+
+// searching reports whether the user is visible in matching.
+func (s *Server) searching(r *http.Request, id int64) bool {
+	p, found, err := profile.Get(r.Context(), s.DB, id)
+	return err == nil && found && p.Searching
 }
 
 func (s *Server) blockSet(r *http.Request, me int64) map[int64]bool {

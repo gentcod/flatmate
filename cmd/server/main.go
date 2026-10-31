@@ -4,8 +4,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 
@@ -27,6 +29,8 @@ func main() {
 	weights := flag.String("weights", cfg.WeightsPath, "scoring weights config (WEIGHTS_PATH)")
 	webDir := flag.String("web", cfg.WebDir, "web assets directory (WEB_DIR)")
 	migDir := flag.String("migrations", cfg.MigrationsDir, "migrations directory (MIGRATIONS_DIR)")
+	uiMode := flag.String("ui", cfg.UI, "frontend: legacy templates or spa build (FLATMATE_UI)")
+	clientDir := flag.String("client", cfg.ClientDist, "built SPA directory for -ui=spa (CLIENT_DIST)")
 	flag.Parse()
 
 	database, err := db.Open(*dbPath)
@@ -45,9 +49,17 @@ func main() {
 		log.Fatalf("sessions: %v", err)
 	}
 
-	pages, err := web.LoadPages(filepath.Join(*webDir, "templates"))
-	if err != nil {
-		log.Fatalf("load templates: %v", err)
+	var pages map[string]*template.Template
+	if *uiMode == "spa" {
+		if _, err := os.Stat(filepath.Join(*clientDir, "index.html")); err != nil {
+			log.Fatalf("client dist missing at %s (run make client-build first)", *clientDir)
+		}
+	} else {
+		var err error
+		pages, err = web.LoadPages(filepath.Join(*webDir, "templates"))
+		if err != nil {
+			log.Fatalf("load templates: %v", err)
+		}
 	}
 	weightsCfg, err := match.LoadWeights(*weights)
 	if err != nil {
@@ -68,7 +80,8 @@ func main() {
 		CookieSecure: secure,
 		LoginLimiter: web.NewLimiter(10, time.Minute),
 		AILimiter:    web.NewLimiter(30, time.Minute),
-		Interviews:   web.NewInterviews(2 * time.Hour)}
+		Interviews:   web.NewInterviews(2 * time.Hour),
+		UI:           *uiMode, ClientDist: *clientDir}
 	log.Printf("db=%s weights=%s", *dbPath, *weights)
 	log.Printf("listening on %s", *addr)
 	log.Fatal(http.ListenAndServe(*addr, srv.NewMux(filepath.Join(*webDir, "static"))))

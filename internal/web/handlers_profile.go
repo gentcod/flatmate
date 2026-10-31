@@ -21,7 +21,7 @@ func (s *Server) handleProfileShow(w http.ResponseWriter, r *http.Request) {
 	}
 	if !found {
 		p = &profile.Profile{UserID: id, Mode: profile.ModeHaveRoom, Currency: "USD",
-			DurationMonths: 6, GenderPref: profile.GenderPrefAnyone}
+			DurationMonths: 6, GenderPref: profile.GenderPrefAnyone, Searching: true}
 	}
 	s.renderProfile(w, r, p, "")
 }
@@ -60,6 +60,7 @@ func (s *Server) handleProfilePost(w http.ResponseWriter, r *http.Request) {
 	p.MoveEarliest = strings.TrimSpace(r.FormValue("move_earliest"))
 	p.Gender = r.FormValue("gender")
 	p.GenderPref = r.FormValue("gender_pref")
+	p.Searching = r.FormValue("searching") == "1"
 	p.Occupation = strings.TrimSpace(r.FormValue("occupation"))
 	p.Bio = strings.TrimSpace(r.FormValue("bio"))
 	p.ContactHandle = strings.TrimSpace(r.FormValue("contact_handle"))

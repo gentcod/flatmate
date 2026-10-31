@@ -5,3 +5,5 @@ flatmate.db-*
 internal/database/
 bin/
 roadmap.md
+.gocache
+flatmate.db

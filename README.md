@@ -24,14 +24,26 @@ differs, and what's worth discussing before moving in.
 
 Signup/login, profiles, questionnaire (form or AI-drafted), ranked matches,
 save/dismiss/express interest, mutual-interest contact reveal, block/report,
-and 27 seed profiles. Single Go binary, SQLite, server-rendered pages.
+and 27 seed profiles. Single Go binary, SQLite, JSON API plus two UIs:
+the legacy server-rendered pages and the React SPA in `client/`.
 
 ## Run it
 
 ```sh
 make tools                              # one-time: install sqlc codegen
-make tidy && make test && make demo    # open http://localhost:8080
+make tidy && make test && make demo    # legacy UI at http://localhost:8080
 ```
+
+SPA dev (needs Node 22+):
+
+```sh
+make client-install
+make demo                               # Go API on :8080 (terminal 1)
+cd client && npm run dev                # SPA at http://localhost:5173 (terminal 2)
+```
+
+SPA production: `make client-build`, then `make demo ADDR=:8080`
+with `FLATMATE_UI=spa` — Go serves `client/dist` itself on `:8080`.
 
 Config comes from a `.env` file or the environment (see `.env.example`).
 Seed logins use password `Seedpass123!` (e.g. `tunde@example.com`).

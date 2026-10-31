@@ -150,6 +150,14 @@ table.dims td:nth-child(2) { font-variant-numeric: tabular-nums; font-weight: 70
   padding: 0.65rem 0.9rem;
 }
 
+.warn {
+  color: #7a4a00;
+  background: #fdf3e0;
+  border: 1px solid #e8cf9a;
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+}
+
 .card {
   background: var(--card);
   border: 1px solid var(--line);

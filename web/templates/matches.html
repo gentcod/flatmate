@@ -1,6 +1,13 @@
 {{define "content"}}
 <h1>Matches</h1>
 <p class="hint">Ranked by lifestyle fit. Scores advise; you decide.</p>
+{{if not .Searching}}<p class="warn">You're hidden from matches. <a href="/profile">Show your profile again</a> when you're looking.</p>{{end}}
+{{if .Nudge}}<p class="hint">{{.Nudge}} <a href="/profile">Edit profile</a></p>{{end}}
+<form method="get" action="/matches">
+<input type="text" name="area" value="{{.AreaFilter}}" placeholder="Filter by area, e.g. Lagos" maxlength="120">
+<button type="submit">Filter</button>
+{{if .AreaFilter}}<a href="/matches">Clear</a>{{end}}
+</form>
 {{if .Empty}}<p>No eligible matches yet. Check back after more people complete their profiles.</p>{{end}}
 {{range .Matches}}
 <article class="card">

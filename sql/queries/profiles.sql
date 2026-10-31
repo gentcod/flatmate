@@ -2,8 +2,8 @@
 SELECT * FROM profiles WHERE user_id = sqlc.arg(user_id);
 
 -- name: UpsertProfile :exec
-INSERT INTO profiles (user_id, first_name, mode, area_text, lat, lng, relocating, budget_min, budget_max, currency, move_earliest, move_latest, bio, contact_handle, duration_months, gender, gender_pref, occupation)
-VALUES (sqlc.arg(user_id), sqlc.arg(first_name), sqlc.arg(mode), sqlc.arg(area_text), sqlc.arg(lat), sqlc.arg(lng), sqlc.arg(relocating), sqlc.arg(budget_min), sqlc.arg(budget_max), sqlc.arg(currency), sqlc.arg(move_earliest), sqlc.arg(move_latest), sqlc.arg(bio), sqlc.arg(contact_handle), sqlc.arg(duration_months), sqlc.arg(gender), sqlc.arg(gender_pref), sqlc.arg(occupation))
+INSERT INTO profiles (user_id, first_name, mode, area_text, lat, lng, relocating, budget_min, budget_max, currency, move_earliest, move_latest, bio, contact_handle, duration_months, gender, gender_pref, occupation, searching)
+VALUES (sqlc.arg(user_id), sqlc.arg(first_name), sqlc.arg(mode), sqlc.arg(area_text), sqlc.arg(lat), sqlc.arg(lng), sqlc.arg(relocating), sqlc.arg(budget_min), sqlc.arg(budget_max), sqlc.arg(currency), sqlc.arg(move_earliest), sqlc.arg(move_latest), sqlc.arg(bio), sqlc.arg(contact_handle), sqlc.arg(duration_months), sqlc.arg(gender), sqlc.arg(gender_pref), sqlc.arg(occupation), sqlc.arg(searching))
 ON CONFLICT(user_id) DO UPDATE SET
   first_name = excluded.first_name,
   mode = excluded.mode,
@@ -21,4 +21,5 @@ ON CONFLICT(user_id) DO UPDATE SET
   duration_months = excluded.duration_months,
   gender = excluded.gender,
   gender_pref = excluded.gender_pref,
-  occupation = excluded.occupation;
+  occupation = excluded.occupation,
+  searching = excluded.searching;

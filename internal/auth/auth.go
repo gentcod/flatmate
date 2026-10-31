@@ -198,13 +198,18 @@ func validCSRFToken(s string) bool {
 	return err == nil
 }
 
-// CheckCSRF reports whether the form token matches the CSRF cookie.
+// CheckCSRF reports whether the request token matches the CSRF cookie.
+// Browser forms send it as the csrf_token field; the JSON API sends it
+// as the X-CSRF-Token header. Either satisfies the double-submit check.
 func CheckCSRF(r *http.Request) bool {
 	c, err := r.Cookie(csrfCookieName)
 	if err != nil || !validCSRFToken(c.Value) {
 		return false
 	}
-	f := r.FormValue("csrf_token")
+	f := r.Header.Get("X-CSRF-Token")
+	if f == "" {
+		f = r.FormValue("csrf_token")
+	}
 	if !validCSRFToken(f) {
 		return false
 	}

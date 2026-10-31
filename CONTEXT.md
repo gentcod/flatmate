@@ -54,16 +54,17 @@ func CompleteJSON[T any](ctx context.Context, llm LLM, prompt, schema string, va
 ```
 
 ## 8. Stack + repo layout
-- Go 1.23+, stdlib `net/http` ServeMux; `modernc.org/sqlite`; `html/template`+htmx; paseto+cookie; `weights.yaml`; sqlc queries in `sql/queries` → `internal/database`; env via `internal/util`.
+- Go 1.23+, stdlib `net/http` ServeMux; `modernc.org/sqlite`; paseto+cookie; `weights.yaml`; sqlc queries in `sql/queries` → `internal/database`; env via `internal/util`.
+- Frontend: React 19 + Vite + TypeScript SPA in `client/` (Router, TanStack Query, Tailwind) talking to the Go JSON API (`internal/web/api.go`, `/api/v1/*`). Legacy `html/template` pages remain behind `FLATMATE_UI=legacy` (default); `-ui=spa` serves `client/dist` from the Go binary. Cutover deletes `web/templates` + `web/static`.
 ```
 cmd/server/main.go  internal/{auth,profile,match,ai,web,db,database,util}/
-web/{templates,static}/  sql/queries/*.sql  migrations/*.sql
-weights.yaml  seeds/global.json  Makefile  sqlc.yaml  CONTEXT.md  docs/flatmate.md
+client/{src,package.json,vite.config.ts}  web/{templates,static}/  sql/queries/*.sql
+migrations/*.sql  weights.yaml  seeds/global.json  Makefile  CONTEXT.md  docs/flatmate.md
 ```
 
 ## 9. Data model (SQLite, key columns)
 - `users(id, email_hash, pass_hash, created_at, deactivated_at)`
-- `profiles(user_id PK, first_name, mode, gender, gender_pref, occupation, area_text, lat, lng, relocating BOOL, budget_min, budget_max, currency, move_earliest, move_latest DERIVED as move_earliest + duration_months, duration_months 1–36, bio, contact_handle TEXT free-text phone/email/WhatsApp)`
+- `profiles(user_id PK, first_name, mode, gender, gender_pref, occupation, area_text, lat, lng, relocating BOOL, budget_min, budget_max, currency, move_earliest, move_latest DERIVED as move_earliest + duration_months, duration_months 1–36, bio, contact_handle TEXT free-text phone/email/WhatsApp, searching BOOL DEFAULT 1)` — searching=false hides the user from match lists and detail (404), toggled from profile (legacy) or Settings (SPA)
 - `onboarding_drafts(user_id PK, description, drafts JSON, created_at, updated_at)` — saved AI description flow state, shown back on onboarding/questionnaire for reference
 - `answers(user_id, dimension, value, hard BOOL, weight INT, PRIMARY KEY(user_id, dimension))`
 - `actions(actor, target, kind, created_at)` kind ∈ save|dismiss|interest; mutual interest = both interest.

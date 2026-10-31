@@ -6,6 +6,8 @@ import (
 	"database/sql"
 	"html/template"
 	"net/http"
+	"os"
+	"path"
 	"path/filepath"
 	"time"
 
@@ -26,6 +28,10 @@ type Server struct {
 	LoginLimiter *Limiter
 	AILimiter    *Limiter
 	Interviews   *Interviews
+	// UI selects the frontend: "legacy" serves the Go templates,
+	// "spa" serves the built client from ClientDist.
+	UI         string
+	ClientDist string
 }
 
 const sessionTTL = 7 * 24 * time.Hour
@@ -55,11 +61,18 @@ func LoadPages(dir string) (map[string]*template.Template, error) {
 	return out, nil
 }
 
-// NewMux wires routes.
+// NewMux wires routes. The JSON API is always on; page routes depend
+// on UI: legacy serves the Go templates, spa serves the built client
+// with a fallback to index.html for client-side routes.
 func (s *Server) NewMux(staticDir string) *http.ServeMux {
 	mux := http.NewServeMux()
-	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok")) })
+	s.registerAPI(mux)
+	if s.UI == "spa" {
+		s.registerSPA(mux)
+		return mux
+	}
+	mux.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir(staticDir))))
 	mux.HandleFunc("GET /{$}", s.handleHome)
 	mux.HandleFunc("GET /signup", s.handleSignupShow)
 	mux.HandleFunc("POST /signup", s.handleSignupPost)
@@ -82,6 +95,24 @@ func (s *Server) NewMux(staticDir string) *http.ServeMux {
 	mux.Handle("GET /onboarding", s.requireAuth(http.HandlerFunc(s.handleOnboardingShow)))
 	mux.Handle("POST /onboarding", s.requireAuth(http.HandlerFunc(s.handleOnboardingPost)))
 	return mux
+}
+
+// registerSPA serves the built client. Real files (assets, index.html)
+// are served as-is; every other GET path falls back to index.html so
+// the client router can render it. API and health routes win because
+// they are more specific patterns.
+func (s *Server) registerSPA(mux *http.ServeMux) {
+	mux.Handle("GET /", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		clean := path.Clean("/" + r.URL.Path)
+		if clean != "/" {
+			full := filepath.Join(s.ClientDist, filepath.FromSlash(clean))
+			if info, err := os.Stat(full); err == nil && !info.IsDir() {
+				http.ServeFile(w, r, full)
+				return
+			}
+		}
+		http.ServeFile(w, r, filepath.Join(s.ClientDist, "index.html"))
+	}))
 }
 
 func (s *Server) render(w http.ResponseWriter, page string, data map[string]any) {

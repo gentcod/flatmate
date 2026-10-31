@@ -21,7 +21,7 @@ func TestTemplatesRender(t *testing.T) {
 		AreaText: "Yaba", BudgetMin: 1, BudgetMax: 2, Currency: "NGN",
 		MoveEarliest: "2026-12-01", MoveLatest: "2027-06-01", DurationMonths: 6,
 		Gender: profile.GenderWoman, GenderPref: profile.GenderPrefAnyone,
-		Occupation: "Nurse", Bio: "b", ContactHandle: "c"}
+		Occupation: "Nurse", Bio: "b", ContactHandle: "c", Searching: true}
 	bd := match.Breakdown{Total: 80, Practical: 80, Lifestyle: 80, Interpersonal: 80,
 		Dimensions:  []match.DimensionResult{{Name: "sleep", Score: 100, Weight: 1, Aligned: true, Note: "x"}},
 		Alignments:  []string{"a"},
@@ -36,7 +36,8 @@ func TestTemplatesRender(t *testing.T) {
 			"CSRF": "t",
 			"Dims": []qdim{{Dim: "sleep", Label: "Sleep", Hint: "h", Question: "How long do you leave the trash?",
 				Options: []string{"early"}, Value: "early", Weight: 1}}},
-		"matches": {"Title": "Matches", "Authed": true, "Empty": false, "CSRF": "t",
+		"matches": {"Title": "Matches", "Authed": true, "Empty": false, "CSRF": "t", "Searching": false,
+			"AreaFilter": "", "Nudge": "Add a short bio.",
 			"Matches": []matchView{{ID: 2, FirstName: "Bo", AreaText: "Yaba",
 				Gender: "Man", Occupation: "Nurse", Bio: "b", Total: 80, TopAlign: "top",
 				Saved: true, Mutual: true}}},

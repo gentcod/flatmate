@@ -109,7 +109,7 @@ func main() {
 			BudgetMin: sp.BudgetMin, BudgetMax: sp.BudgetMax, Currency: sp.Currency,
 			MoveEarliest: sp.MoveEarliest, DurationMonths: sp.DurationMonths,
 			Gender: sp.Gender, GenderPref: sp.GenderPref, Occupation: sp.Occupation,
-			Bio: sp.Bio, ContactHandle: sp.ContactHandle}
+			Bio: sp.Bio, ContactHandle: sp.ContactHandle, Searching: true}
 		if err := profile.Upsert(ctx, dbc, p); err != nil {
 			log.Fatalf("profile %s: %v", u.Email, err)
 		}

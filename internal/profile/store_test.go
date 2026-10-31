@@ -112,3 +112,77 @@ func TestUpsertDerivesLatest(t *testing.T) {
 		t.Errorf("missing profile: found=%v err=%v", found, err)
 	}
 }
+
+func TestSearchingRoundTrip(t *testing.T) {
+	d, err := db.Open(":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer d.Close()
+	if err := db.Migrate(d, "../../migrations"); err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	res, err := database.New(d).CreateUser(ctx, database.CreateUserParams{
+		EmailHash: []byte("search-hash"), PassHash: []byte("pw"), CreatedAt: "2026-01-01T00:00:00Z",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		t.Fatal(err)
+	}
+	p := testProfile()
+	p.UserID = id
+	p.Searching = true
+	if err := Upsert(ctx, d, p); err != nil {
+		t.Fatalf("upsert: %v", err)
+	}
+	got, _, err := Get(ctx, d, id)
+	if err != nil || got == nil || !got.Searching {
+		t.Errorf("round trip true: got %+v err=%v", got, err)
+	}
+	p.Searching = false
+	if err := Upsert(ctx, d, p); err != nil {
+		t.Fatalf("upsert false: %v", err)
+	}
+	got, _, err = Get(ctx, d, id)
+	if err != nil || got == nil || got.Searching {
+		t.Errorf("round trip false: got %+v err=%v", got, err)
+	}
+}
+
+func TestSearchingMigrationDefault(t *testing.T) {
+	d, err := db.Open(":memory:")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer d.Close()
+	if err := db.Migrate(d, "../../migrations"); err != nil {
+		t.Fatal(err)
+	}
+	res, err := database.New(d).CreateUser(context.Background(), database.CreateUserParams{
+		EmailHash: []byte("legacy-hash"), PassHash: []byte("pw"), CreatedAt: "2026-01-01T00:00:00Z",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		t.Fatal(err)
+	}
+	// A row written before migration 004 carries no searching value;
+	// it must read back as visible.
+	_, err = d.Exec(`INSERT INTO profiles (user_id, first_name, mode, area_text, relocating, budget_min, budget_max, currency, move_earliest, move_latest, bio, contact_handle, duration_months, gender, gender_pref, occupation) VALUES (?, 'Ada', 'have-room', 'Yaba', 0, 100, 200, 'NGN', '2026-12-01', '2027-06-01', '', '', 6, 'woman', 'anyone', 'Nurse')`, id)
+	if err != nil {
+		t.Fatalf("legacy insert: %v", err)
+	}
+	got, found, err := Get(context.Background(), d, id)
+	if err != nil || !found {
+		t.Fatalf("legacy get: found=%v err=%v", found, err)
+	}
+	if !got.Searching {
+		t.Error("legacy row: searching=false, want true")
+	}
+}

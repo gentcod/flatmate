@@ -23,6 +23,8 @@ type Config struct {
 	ModelEndpoint string `json:"FLATMATE_MODEL_ENDPOINT"`
 	ModelName     string `json:"FLATMATE_MODEL_NAME"`
 	ModelToken    string `json:"FLATMATE_MODEL_TOKEN"`
+	UI            string `json:"FLATMATE_UI"`
+	ClientDist    string `json:"CLIENT_DIST"`
 }
 
 func defaults() Config {
@@ -33,6 +35,8 @@ func defaults() Config {
 		WebDir:        "web",
 		MigrationsDir: "migrations",
 		SeedPath:      "seeds/global.json",
+		UI:            "legacy",
+		ClientDist:    "client/dist",
 	}
 }
 
@@ -118,5 +122,11 @@ func overlayEnv(c *Config) {
 	}
 	if v := os.Getenv("FLATMATE_MODEL_TOKEN"); v != "" {
 		c.ModelToken = v
+	}
+	if v := os.Getenv("FLATMATE_UI"); v != "" {
+		c.UI = v
+	}
+	if v := os.Getenv("CLIENT_DIST"); v != "" {
+		c.ClientDist = v
 	}
 }
