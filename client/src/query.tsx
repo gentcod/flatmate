@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+/* eslint-disable react-refresh/only-export-components -- hooks + provider live here by design */
 import type { ReactNode } from 'react'
 import { api } from './api'
 import type {

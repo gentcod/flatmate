@@ -61,6 +61,7 @@ func (s *Server) handleProfilePost(w http.ResponseWriter, r *http.Request) {
 	p.Gender = r.FormValue("gender")
 	p.GenderPref = r.FormValue("gender_pref")
 	p.Searching = r.FormValue("searching") == "1"
+	p.ContactSelfConfirmed = r.FormValue("contact_self_confirmed") == "1"
 	p.Occupation = strings.TrimSpace(r.FormValue("occupation"))
 	p.Bio = strings.TrimSpace(r.FormValue("bio"))
 	p.ContactHandle = strings.TrimSpace(r.FormValue("contact_handle"))

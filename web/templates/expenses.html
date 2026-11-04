@@ -1,0 +1,48 @@
+{{define "content"}}
+<p><a href="/chat/{{.PeerID}}">← Back to chat</a></p>
+<h1>Shared expenses with {{.PeerName}}</h1>
+<p class="hint">Tracking only — settle up however suits you both.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<h2>Balance</h2>
+{{if .Balances}}
+<ul>
+{{range .Balances}}<li>{{.Currency}}: {{if gt .Amount 0}}they owe you {{.Amount}}{{else if lt .Amount 0}}you owe {{.Abs}}{{else}}settled{{end}}</li>{{end}}
+</ul>
+{{else}}<p class="hint">Nothing shared yet.</p>{{end}}
+<h2>Expenses</h2>
+{{range .Expenses}}
+<article class="card">
+<p><strong>{{.Currency}} {{.Amount}}</strong> — {{if .PaidByMe}}you paid{{else}}{{$.PeerName}} paid{{end}} ({{.Split}})</p>
+{{if .Note}}<p>{{.Note}}</p>{{end}}
+<p class="hint">{{if gt .OwedToMe 0}}owes you {{.OwedToMe}}{{else if gt .OwedByMe 0}}you owe {{.OwedByMe}}{{else}}settled{{end}}</p>
+<form method="post" action="/expenses/item/{{.ID}}/delete" onsubmit="return confirm('Delete this expense?');">
+<input type="hidden" name="csrf_token" value="{{$.CSRF}}">
+<button type="submit" class="danger">Delete</button>
+</form>
+</article>
+{{else}}
+<p>No shared expenses yet.</p>
+{{end}}
+<h2>Add expense</h2>
+<form method="post" action="/expenses/{{.PeerID}}">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Amount <input type="text" name="amount" inputmode="numeric" required></label>
+<label>Currency <input type="text" name="currency" maxlength="8" value="USD"></label>
+<label>Note <input type="text" name="note" maxlength="200" placeholder="e.g. electricity bill"></label>
+<label>Who paid?
+<select name="payer">
+<option value="me">I paid</option>
+<option value="them">They paid</option>
+</select></label>
+<label>Split
+<select name="split">
+<option value="equal">Split equally</option>
+<option value="mine">Payer covers all</option>
+<option value="theirs">Other covers all</option>
+<option value="custom">Custom shares</option>
+</select></label>
+<label>Payer share (custom only) <input type="text" name="payer_share" inputmode="numeric"></label>
+<label>Other share (custom only) <input type="text" name="peer_share" inputmode="numeric"></label>
+<button type="submit">Add expense</button>
+</form>
+{{end}}

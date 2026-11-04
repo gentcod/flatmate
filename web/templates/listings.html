@@ -1,0 +1,46 @@
+{{define "content"}}
+<h1>Room listings</h1>
+<p class="hint">Rooms on offer from people with profiles. Listings are unverified.</p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+<form method="get" action="/listings">
+<input type="text" name="area" value="{{.AreaFilter}}" placeholder="Filter by area, e.g. Lagos" maxlength="120" aria-label="Filter by area">
+<input type="text" name="max_rent" value="{{.MaxRentFilter}}" placeholder="Max rent" inputmode="numeric" aria-label="Max rent">
+<button type="submit">Filter</button>
+{{if or .AreaFilter .MaxRentFilter}}<a href="/listings">Clear</a>{{end}}
+</form>
+<h2>Saved searches</h2>
+{{if .Searches}}
+{{range .Searches}}<p><a href="/listings?area={{.Area}}&max_rent={{.MaxRent}}">{{.Name}}</a>{{if .MaxRent}} · under {{.MaxRent}}{{end}} ({{.NewListings}} new)
+<form class="inline" method="post" action="/searches/{{.ID}}/delete"><input type="hidden" name="csrf_token" value="{{$.CSRF}}"><button type="submit">Delete</button></form></p>
+{{end}}
+{{else}}<p class="hint">No saved searches.</p>{{end}}
+<form method="post" action="/searches">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Name <input type="text" name="name" maxlength="40" required></label>
+<label>Area <input type="text" name="area" value="{{.AreaFilter}}" maxlength="120"></label>
+<label>Max rent (0 = any) <input type="text" name="max_rent" inputmode="numeric"></label>
+<button type="submit">Save search</button>
+</form>
+{{range .Listings}}
+<article class="card">
+{{if .PhotoURL}}<img src="{{.PhotoURL}}" alt="" loading="lazy" class="listing-photo">{{end}}
+<h2><a href="/listing/{{.ID}}">{{.Title}}</a></h2>
+<p class="hint">{{.AreaText}} · {{.OwnerName}}</p><p>{{if .Mine}}<span class="badge">Yours</span>{{end}}{{if eq .Status "rented"}} <span class="badge">Rented</span>{{end}}</p>
+<p><span class="pill-score">{{.Currency}} {{.MonthlyRent}}/mo</span></p>
+{{if .Description}}<p>{{.Description}}</p>{{end}}
+</article>
+{{else}}
+<p>No listings yet.</p>
+{{end}}
+<h2>Post a room</h2>
+<form method="post" action="/listings">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Title <input type="text" name="title" maxlength="80" required></label>
+<label>Area <input type="text" name="area_text" maxlength="120" placeholder="e.g. Yaba, Lagos" required></label>
+<label>Monthly rent <input type="text" name="monthly_rent" inputmode="numeric" required></label>
+<label>Currency <input type="text" name="currency" maxlength="8" value="USD"></label>
+<label>Photo URL (optional) <input type="text" name="photo_url" maxlength="500" placeholder="/placeholders/room-1.svg"></label>
+<label>Description <textarea name="description" maxlength="1000" rows="3"></textarea></label>
+<button type="submit">Post listing</button>
+</form>
+{{end}}

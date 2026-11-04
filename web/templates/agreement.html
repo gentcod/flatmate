@@ -1,0 +1,6 @@
+{{define "content"}}
+<p><a href="/match/{{.PeerID}}">← Back to match</a></p>
+<h1>Roommate agreement draft</h1>
+<p class="warn">Not legal advice — a starting point for your conversation. {{if .Enhanced}}Drafted with AI.{{else}}Template version (AI unavailable).{{end}}</p>
+{{range .Sections}}<h2>{{.Heading}}</h2><ul>{{range .Points}}<li>{{.}}</li>{{end}}</ul>{{end}}
+{{end}}

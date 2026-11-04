@@ -1,21 +1,30 @@
 {{define "content"}}
-<h1>Matches</h1>
-<p class="hint">Ranked by lifestyle fit. Scores advise; you decide.</p>
+<h1>Explore matches</h1>
+<p class="hint">Ranked by compatibility from a fixed formula — every score is explained.</p>
 {{if not .Searching}}<p class="warn">You're hidden from matches. <a href="/profile">Show your profile again</a> when you're looking.</p>{{end}}
 {{if .Nudge}}<p class="hint">{{.Nudge}} <a href="/profile">Edit profile</a></p>{{end}}
 <form method="get" action="/matches">
-<input type="text" name="area" value="{{.AreaFilter}}" placeholder="Filter by area, e.g. Lagos" maxlength="120">
+<input type="text" name="q" value="{{.NLQuery}}" placeholder="Describe your ideal flatmate…" maxlength="200" aria-label="Describe your ideal flatmate">
+<button type="submit">Search</button>
+{{if .NLQuery}}<a href="/matches">Clear</a>{{end}}
+</form>
+{{if .NLDesc}}<p class="hint"><strong>Interpreted intent:</strong> {{.NLDesc}}</p>{{end}}
+<form method="get" action="/matches">
+<input type="text" name="area" value="{{.AreaFilter}}" placeholder="Filter by area, e.g. Lagos" maxlength="120" aria-label="Filter by area">
 <button type="submit">Filter</button>
 {{if .AreaFilter}}<a href="/matches">Clear</a>{{end}}
 </form>
+{{if .Proposals}}<h2>Stay proposals</h2>{{range .Proposals}}<p><a href="/match/{{.PeerID}}">{{.PeerName}}</a> says you live together.
+<form class="inline" method="post" action="/stays/{{.ID}}/accept"><input type="hidden" name="csrf_token" value="{{$.CSRF}}"><input type="hidden" name="back" value="/matches"><button type="submit">Confirm</button></form>
+<form class="inline" method="post" action="/stays/{{.ID}}/decline"><input type="hidden" name="csrf_token" value="{{$.CSRF}}"><input type="hidden" name="back" value="/matches"><button type="submit">Decline</button></form></p>{{end}}{{end}}
 {{if .Empty}}<p>No eligible matches yet. Check back after more people complete their profiles.</p>{{end}}
 {{range .Matches}}
 <article class="card">
-<h2><a href="/match/{{.ID}}">{{.FirstName}}</a> <span class="score">{{.Total}}</span></h2>
+<h2><a href="/match/{{.ID}}">{{.FirstName}}</a> <span class="pill-score">{{.Total}}%</span></h2>
 <p class="hint">{{.AreaText}} · {{.Gender}}{{if .Occupation}} · {{.Occupation}}{{end}}</p>
 <p>{{.Bio}}</p>
 {{if .TopAlign}}<p>{{.TopAlign}}</p>{{end}}
-<p class="hint">{{if .Saved}}Saved · {{end}}{{if .Mutual}}Mutual interest{{end}}</p>
+<p>{{if .Saved}}<span class="badge">Saved</span> {{end}}{{if .Mutual}}<span class="badge">Mutual interest</span>{{end}}</p>
 </article>
 {{end}}
 {{end}}

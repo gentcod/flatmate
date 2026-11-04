@@ -94,6 +94,32 @@ export async function api<T>(path: string, init?: ApiInit): Promise<T> {
 export interface Session {
   authed: boolean
   user_id?: number
+  is_admin?: boolean
+}
+
+export interface AdminReport {
+  id: number
+  reporter: number
+  reporter_name: string
+  target: number
+  target_name: string
+  reason: string
+  created_at: string
+  resolved_at: string | null
+  resolution: string
+}
+
+export interface ReportListResponse {
+  reports: AdminReport[]
+}
+
+export interface MetricsResponse {
+  users: number
+  active_users: number
+  open_reports: number
+  listings: number
+  reviews: number
+  expenses: number
 }
 
 export interface Credentials {
@@ -120,6 +146,7 @@ export interface Profile {
   bio: string
   contact_handle: string
   searching: boolean
+  contact_self_confirmed: boolean
 }
 
 export interface ProfileResponse {
@@ -208,10 +235,15 @@ export interface DetailPerson {
   budget_str: string
   move_window: string
   contact: string
+  contact_self_confirmed: boolean
   mutual: boolean
   saved: boolean
   my_interest: boolean
   ineligible: boolean
+  stay_id: number
+  stay_status: string
+  stay_proposed_by_me: boolean
+  can_review: boolean
 }
 
 export interface MatchDetailResponse {
@@ -223,6 +255,9 @@ export interface MatchDetailResponse {
   enhanced?: boolean
   discuss_q?: string[]
   bridges?: Bridge[]
+  reviews?: Review[]
+  review_avg?: number
+  review_count?: number
 }
 
 export interface Turn {
@@ -249,4 +284,196 @@ export interface InterviewResponse {
   message?: string
   fallback?: boolean
   error?: string
+}
+
+export interface ExpenseItem {
+  id: number
+  paid_by_me: boolean
+  amount: number
+  currency: string
+  note: string
+  split: string
+  owed_by_me: number
+  owed_to_me: number
+  created_at: string
+}
+
+export interface Balance {
+  currency: string
+  amount: number
+}
+
+export interface ExpenseLedgerResponse {
+  peer: { id: number; first_name: string }
+  expenses: ExpenseItem[]
+  balances: Balance[]
+}
+
+export interface ExpenseInput {
+  amount: number
+  currency: string
+  note: string
+  split: string
+  payer: 'me' | 'them'
+  payer_share: number
+  peer_share: number
+}
+
+export interface SavedSearch {
+  id: number
+  name: string
+  area: string
+  max_rent: number
+  created_at: string
+  new_listings: number
+}
+
+export interface SearchListResponse {
+  searches: SavedSearch[]
+}
+
+export interface SearchInput {
+  name: string
+  area: string
+  max_rent: number
+}
+
+export interface AgreementSection {
+  heading: string
+  points: string[]
+}
+
+export interface AgreementResponse {
+  sections: AgreementSection[]
+  enhanced: boolean
+}
+
+export interface NLFilters {
+  area: string
+  max_rent: number
+  smoking: string
+  pets: string
+  wfh_max: number
+}
+
+export interface NLSearchResponse {
+  matches: MatchItem[]
+  empty: boolean
+  description: string
+  enhanced: boolean
+  filters: NLFilters
+}
+
+export interface Listing {
+  id: number
+  user_id: number
+  owner_name: string
+  title: string
+  description: string
+  area_text: string
+  monthly_rent: number
+  currency: string
+  photo_url: string
+  created_at: string
+  status: string
+  mine: boolean
+}
+
+export interface ListingListResponse {
+  listings: Listing[]
+}
+
+export interface ListingResponse {
+  listing: Listing
+}
+
+export interface ListingInput {
+  title: string
+  description: string
+  area_text: string
+  monthly_rent: number
+  currency: string
+  photo_url?: string
+}
+
+export interface Conversation {
+  peer_id: number
+  peer_name: string
+  last_body: string
+  last_at: string
+  last_from_me: boolean
+  unread_count: number
+}
+
+export interface ConversationListResponse {
+  conversations: Conversation[]
+}
+
+export interface ChatMessage {
+  id: number
+  from_me: boolean
+  body: string
+  created_at: string
+}
+
+export interface ThreadResponse {
+  peer: { id: number; first_name: string }
+  messages: ChatMessage[]
+}
+
+export interface Review {
+  author_id: number
+  author_name: string
+  rating: number
+  body: string
+  created_at: string
+  verified_stay: boolean
+}
+
+export interface ReviewListResponse {
+  reviews: Review[]
+  avg: number
+  count: number
+}
+
+export interface ReviewInput {
+  rating: number
+  body: string
+}
+
+export interface Stay {
+  id: number
+  peer_id: number
+  peer_name: string
+  status: string
+  proposed_by_me: boolean
+  listing_id: number
+  listing_title: string
+}
+
+export interface StayListResponse {
+  stays: Stay[]
+}
+
+export interface ListingReview {
+  author_id: number
+  author_name: string
+  rating: number
+  body: string
+  kind: string
+  created_at: string
+}
+
+export interface ListingReviewListResponse {
+  stay_reviews: ListingReview[]
+  visit_reviews: ListingReview[]
+  trust_score: number
+  stay_count: number
+  visit_count: number
+}
+
+export interface ListingReviewInput {
+  rating: number
+  body: string
+  kind: string
 }

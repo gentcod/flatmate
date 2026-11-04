@@ -5,6 +5,7 @@
 <form method="post" action="/profile">
 <input type="hidden" name="csrf_token" value="{{.CSRF}}">
 <label><input type="checkbox" name="searching" value="1" {{if .P.Searching}}checked{{end}}> Visible to matches — uncheck once you've found a roommate</label>
+<label><input type="checkbox" name="contact_self_confirmed" value="1" {{if .P.ContactSelfConfirmed}}checked{{end}}> I've confirmed my contact reaches me (self-confirmed — not ID-verified)</label>
 <label>First name <input type="text" name="first_name" value="{{.P.FirstName}}" maxlength="50" required></label>
 <label>What are you looking for?
 <select name="mode">

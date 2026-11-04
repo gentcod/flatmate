@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@100..900&amp;family=Plus+Jakarta+Sans:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary-container":"#1e3f35","inverse-on-surface":"#e9f3ee","on-secondary-fixed-variant":"#793019","on-tertiary":"#ffffff","on-tertiary-fixed":"#002118","inverse-primary":"#aacec0","background":"#f2fcf6","outline-variant":"#c1c8c4","surface-container":"#e6f0eb","surface-dim":"#d2dcd7","primary-fixed":"#c6ebdc","on-error":"#ffffff","tertiary":"#002a20","secondary":"#97472e","error":"#ba1a1a","on-primary-container":"#87aa9d","on-surface-variant":"#414845","tertiary-fixed-dim":"#a1d1bf","primary-fixed-dim":"#aacec0","surface-container-low":"#ecf6f1","on-secondary":"#ffffff","tertiary-fixed":"#bcedda","on-tertiary-fixed-variant":"#214f41","surface-container-high":"#e0eae5","secondary-fixed-dim":"#ffb59f","on-primary-fixed-variant":"#2c4d42","on-background":"#141d1b","surface-container-lowest":"#ffffff","error-container":"#ffdad6","tertiary-container":"#114134","surface-variant":"#dbe5e0","on-secondary-fixed":"#3a0a00","surface-container-highest":"#dbe5e0","surface-bright":"#f2fcf6","inverse-surface":"#29322f","secondary-fixed":"#ffdbd0","on-primary-fixed":"#002018","surface-tint":"#44655a","surface":"#f2fcf6","secondary-container":"#fe997a","on-primary":"#ffffff","on-secondary-container":"#772f18","primary":"#052920","on-surface":"#141d1b","on-error-container":"#93000a","on-tertiary-container":"#7ead9c","outline":"#717975"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-lg":"1.5rem","space-xl":"2.5rem","margin-mobile":"1.25rem","margin":"3rem","gutter-mobile":"1rem","space-md":"1rem","gutter":"1.5rem","space-sm":"0.5rem","space-xs":"0.25rem"},fontFamily:{"headline-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Newsreader"],"headline-lg":["Newsreader"],"body-sm":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"editorial-quote":["Newsreader"],"body-md":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"display-lg":["Newsreader"],"display-lg-mobile":["Newsreader"],"label-md":["Plus Jakarta Sans"],"headline-md":["Newsreader"],"body-lg":["Plus Jakarta Sans"]},fontSize:{"headline-sm":["20px",{lineHeight:"28px",letterSpacing:"-0.005em",fontWeight:"600"}],"headline-lg-mobile":["28px",{lineHeight:"36px",letterSpacing:"-0.01em",fontWeight:"400"}],"headline-lg":["36px",{lineHeight:"44px",letterSpacing:"-0.015em",fontWeight:"400"}],"body-sm":["13px",{lineHeight:"19px",letterSpacing:"0.005em",fontWeight:"400"}],"label-sm":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"editorial-quote":["21px",{lineHeight:"30px",letterSpacing:"-0.005em",fontWeight:"400"}],"body-md":["15px",{lineHeight:"23px",letterSpacing:"0em",fontWeight:"400"}],"title-md":["17px",{lineHeight:"24px",letterSpacing:"0em",fontWeight:"600"}],"display-lg":["52px",{lineHeight:"60px",letterSpacing:"-0.02em",fontWeight:"400"}],"display-lg-mobile":["36px",{lineHeight:"44px",letterSpacing:"-0.01em",fontWeight:"400"}],"label-md":["14px",{lineHeight:"20px",letterSpacing:"0.01em",fontWeight:"500"}],"headline-md":["26px",{lineHeight:"34px",letterSpacing:"-0.01em",fontWeight:"500"}],"body-lg":["17px",{lineHeight:"26px",letterSpacing:"0em",fontWeight:"400"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 right-0 z-50 bg-[#FBF9F5]/90 backdrop-blur-xl border-b border-[#E5DFD5] shadow-[0_1px_8px_rgba(28,37,34,0.04)]"><div class="h-20 max-w-7xl mx-auto px-margin-mobile lg:px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-3"><img alt="Roost Housing Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBmCJWIuvz70qPsldlOKxLODKLICKCC1s05XJBaudFFS-oOk1xdw2nJ9U_mydYJJ5ZYxaxZ08o3WKhUVslloD75cyMxF57XsWfZ3oYcZrb6qqNeQUlKZ8J9xKsqbtjXOAWeO4rcmwpjnimX-BYU6QCm_R1YAJw2b4QIvoKeuST81-T-GC5Cz4sER3kSVxkkJzBu2jnjhLcHABwpXVMuPJ_Jo49MCYTwN4-Y08q7RfU"/><div class="flex flex-col"><span class="font-headline-md text-headline-md text-primary tracking-tight leading-none">Roost</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-0.5">Shared Living</span></div></div><nav class="hidden xl:flex items-center gap-1 ml-space-md" data-active-classes="bg-primary-container text-on-primary-container font-title-md"><a class="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="explore-matches" href="#">Explore Matches</a><a class="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="room-listings" href="#">Room Listings</a><a class="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="questionnaire-and-ai-setup" href="#">Questionnaire &amp; AI Setup</a><a class="px-3.5 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" data-path="messages-and-agreements" href="#">Messages &amp; Agreements</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-low border border-[#E5DFD5]"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-sm text-label-sm text-on-surface-variant">Searching Active</span></div><button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-secondary"></span></button><div class="flex items-center gap-3 pl-space-xs"><div class="flex flex-col text-right hidden md:flex"><div class="flex items-center justify-end gap-1.5"><span class="font-title-md text-title-md text-on-surface leading-tight">Maya Lin</span><span class="px-1.5 py-0.5 rounded font-label-sm text-[10px] uppercase tracking-wide bg-[#F4EFEB] text-on-surface-variant border border-[#E5DFD5]">Self-confirmed</span></div><span class="font-label-sm text-label-sm text-outline">Brooklyn, NY</span></div><div class="relative flex items-center"><img alt="Profile" class="w-9 h-9 rounded-full object-cover ring-2 ring-[#E5DFD5]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqrf_Ol2TL12PqCaqw9wzuJr0yUP_7VMtXa3ZqbU0mRM8pXCNHigUCE9M0ZuXVF7JOquMOb3ol8lThI0wK9ak0YHXVFYILCZsjigH6QLvkCWByjVmKBLiOe5UF_tLskjreweeNzreW7bzhGcxi8xs4YK3Ith04gTWCbz-JrIXy2CbueelNOrqD2DHn8wgRt70zPa5cbpkYziW7zBVg3ftvt5f17l_32q6iINzXWI-M"/></div></div></div></div></header><main class="w-full pt-20 bg-surface min-h-[calc(100vh-140px)]"><div class="flex flex-col w-full">
+<!-- HERO SECTION -->
+<section class="relative w-full overflow-hidden pb-space-xl pt-space-md">
+<!-- Ambient organic gradient depth elements -->
+<div class="absolute -top-32 right-10 w-[580px] h-[580px] bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-80 -left-20 w-[420px] h-[420px] bg-secondary-fixed/30 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<!-- Tag / Sub-editorial kicker -->
+<div class="flex items-center gap-3 mb-space-sm">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+          Intentionally Aligned Co-Living
+        </span>
+<span class="hidden md:inline-block font-label-sm text-label-sm text-outline">v2.4 Live in Berlin, London &amp; Amsterdam</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Hero Left Column: Editorial Headline & Search -->
+<div class="lg:col-span-7 flex flex-col justify-center pt-2">
+<h1 class="font-headline-lg lg:font-display-lg text-headline-lg lg:text-display-lg text-primary tracking-tight leading-[1.08] mb-space-md">
+            Find a home where your rhythms <span class="italic font-editorial-quote text-secondary">actually match</span>.
+          </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mb-space-lg leading-relaxed">
+            Beyond generic classifieds. Discover flatmates and rooms matched by sleep schedules, kitchen cleanliness standards, guest boundaries, and warm-rent affordability.
+          </p>
+<!-- Interactive Natural Language Search Bar Card -->
+<div class="bg-surface-container-lowest p- space-md lg:p-space-lg rounded-xl shadow-md flex flex-col gap-space-md max-w-2xl">
+<div class="flex flex-col gap-2">
+<label class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant" for="nl-search-input">
+<span>Express what you seek in human terms</span>
+<span class="text-outline text-[11px]">AI Habit Filter</span>
+</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[22px]">psychology_alt</span>
+<input class="w-full pl-11 pr-4 py-3 bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:bg-surface-container-lowest transition-all" id="nl-search-input" type="text" value="quiet graphic designer, early riser, plant lover under €750/mo in Prenzlauer Berg"/>
+</div>
+</div>
+<!-- Pill Presets -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="font-label-sm text-label-sm text-outline mr-1">Presets:</span>
+<button class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">Berlin</button>
+<button class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">London</button>
+<button class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">Amsterdam</button>
+<button class="px-2.5 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">Private Room in WG</button>
+<button class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm hover:bg-primary-fixed-dim transition-colors" type="button">Team-up</button>
+</div>
+<!-- CTA Action Row -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
+<button class="px-6 py-3 rounded-lg bg-primary text-on-primary font-title-md text-title-md hover:bg-primary-container transition-colors shadow-sm flex items-center justify-center gap-2" type="button">
+<span>Explore Matches</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+<button class="px-5 py-3 rounded-lg bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Take 3-Min Lifestyle Quiz</span>
+</button>
+</div>
+</div>
+<!-- Trust Proof Metrics -->
+<div class="flex flex-wrap items-center gap-y-2 gap-x-6 mt-space-lg text-on-surface-variant">
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>14,200+ harmonic pairings</span>
+</div>
+<span class="text-outline-variant hidden sm:inline">•</span>
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">shield_person</span>
+<span>Zero unvetted brokers</span>
+</div>
+<span class="text-outline-variant hidden sm:inline">•</span>
+<div class="flex items-center gap-2 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">handshake</span>
+<span>Purely advisory, never algorithmic locks</span>
+</div>
+</div>
+</div>
+<!-- Hero Right Column: Asymmetric Mosaic / Floating Pair Showcase -->
+<div class="lg:col-span-5 relative mt-space-md lg:mt-0">
+<!-- Stacked Card 1: Flatmate Candidate Preview -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-xl relative z-10 transition-transform hover:-translate-y-1">
+<div class="flex items-start gap-4">
+<img class="w-16 h-16 rounded-full object-cover shadow-sm ring-2 ring-surface-container" data-alt="Intimate film photography portrait of an energetic young architect in her bright Brooklyn apartment bathed in soft natural afternoon sunlight, wearing neutral linen shirt, smiling gently at camera, botanical plants in soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_jnXoDkfiFkyX1rcOPzCbi_ow8wE-fasRKYIHHUdv9u_SBQTJmVjNYTAyjlMmLlExR2jBPHflqFWycUO0C1gDk25Vp7s_V_Me9LROel0qcXmxBpq8xM-eyXJ2l7z6tVQcm7ieFy2HuhIE4wUIAbMVm_7A9IXWoRB4diA8K_3oAfUoBoevSvbYPINWvGbNGknKGiAT4ctshlMrRHXigxLH6ZsIL-8WaFG6s5TIeEiX"/>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Nora Vance, 28</h3>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-primary font-label-sm text-[11px] font-semibold">94% Harmony</span>
+</div>
+<p class="font-label-sm text-label-sm text-outline">Industrial Designer • Kreuzberg, Berlin</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-sm text-[10px] uppercase">ID Verified</span>
+<span class="px-1.5 py-0.5 rounded bg-surface-container-low text-on-surface-variant font-label-sm text-[10px]">Landlord Ref</span>
+</div>
+</div>
+</div>
+<!-- Lifestyle Alignment Bars -->
+<div class="mt-4 pt-3 space-y-2.5 bg-surface-container-low/60 p-3 rounded-lg">
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-[11px]">
+<span class="text-on-surface-variant">Sleep Schedule (Night Owl)</span>
+<span class="font-semibold text-primary">Synchronized (00:30 bedtime)</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 95%;"></div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex justify-between font-label-sm text-[11px]">
+<span class="text-on-surface-variant">Kitchen Cleanliness Protocol</span>
+<span class="font-semibold text-secondary">"Within 2 Hours" agreement</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 88%;"></div>
+</div>
+</div>
+</div>
+<p class="mt-3 font-editorial-quote text-[15px] italic text-on-surface-variant leading-snug">
+              "Looking for quiet weekday evenings with shared weekend market strolls and occasional community cooking."
+            </p>
+</div>
+<!-- Stacked Card 2: Attached Room Preview overlapping -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-lg -mt-6 lg:-mt-10 ml-4 lg:ml-12 relative z-20 transition-transform hover:-translate-y-1">
+<div class="flex gap-4">
+<div class="w-28 h-28 rounded-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Sunlit minimalist Scandinavian bedroom with high ceiling, exposed vintage herringbone parquet floor, large sash window looking out onto leafy European tree-lined avenue, potted fiddle leaf fig plant, warm linen bedding in sage and cream" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALxjsDAaB6Nb_nizpO4FQmWDM3KHW18iyUVr7nhCDhthkdSfM84i0RW3k58X90Pp2Q5B7KsMcKmZrOfHLObKoUY0I7VWnK9e-feNSbMHxU7uxlUIDb0X0ziW9Ua6WNz456eogikmatwuAofty_dSGUpFpmNQ55wHG_PQq0FwuNwkeUY3fRrQ1dex4aRQpg-mfCIgK6xkA3nWP48DokBgwArk_MgtTeLz7n7flKIeEv"/>
+</div>
+<div class="flex flex-col justify-between flex-1 min-w-0">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Available Oct 1</span>
+<span class="font-headline-sm text-headline-sm text-primary">€720<span class="font-body-sm text-body-sm text-outline">/mo warm</span></span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface truncate mt-0.5">High-Ceiling Altbau Bedroom</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Graefekiez, Kreuzberg • 22 m²</p>
+</div>
+<!-- Affordability Health Check Pill -->
+<div class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-[#EBF1EE] text-primary-container font-label-sm text-[11px] self-start mt-2">
+<span class="material-symbols-outlined text-[14px]">account_balance_wallet</span>
+<span>Meets 30% Net Rent Rule</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro Floating Badge -->
+<div class="absolute -bottom-4 right-2 z-30 bg-primary text-on-primary px-3.5 py-1.5 rounded-full font-label-sm text-label-sm shadow-md flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span>Roommate Agreement Attached</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CONTRAST / PROBLEM SECTION -->
+<section class="w-full bg-surface-container-low py-space-xl my-space-md">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<div class="max-w-2xl mb-space-lg">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">The Roommate Dilemma</span>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1 mb-2">
+          Shared living shouldn't feel like a lottery.
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Traditional classifieds focus purely on square meters and rent. They ignore how humans actually live together—leading to silent resentment, dish wars, and awkward lease breaks.
+        </p>
+</div>
+<!-- Contrast Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- The Status Quo -->
+<div class="bg-surface-container rounded-xl p-space-lg flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-outline mb-4">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider">The Standard Marketplace</span>
+</div>
+<ul class="space-y-3.5 font-body-md text-body-md text-on-surface-variant">
+<li class="flex items-start gap-2.5">
+<span class="text-error mt-0.5">•</span>
+<span>Hundreds of repetitive "Hey, is this still free?" copy-pasted messages.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-error mt-0.5">•</span>
+<span>Anxiety-inducing WG "casting" sessions that feel like hostile job interviews.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-error mt-0.5">•</span>
+<span>Unspoken expectations around guests, cleaning, and quiet hours that ignite after week 3.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-error mt-0.5">•</span>
+<span>Hidden utility bills, shady sublets, and zero legal clarity.</span>
+</li>
+</ul>
+</div>
+<div class="mt-6 pt-4 bg-surface-container-high/50 p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-outline">Result: 43% of roommate relationships end prematurely in friction.</span>
+</div>
+</div>
+<!-- The Roost Way -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 text-primary mb-4">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">The Roost Philosophy</span>
+</div>
+<ul class="space-y-3.5 font-body-md text-body-md text-on-surface">
+<li class="flex items-start gap-2.5">
+<span class="text-primary mt-0.5 font-bold">✓</span>
+<span>Pre-aligned lifestyle indicators: match on 12 explicit domestic dimensions before chatting.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-primary mt-0.5 font-bold">✓</span>
+<span>Warm rent transparency: all heating, electric, and Wi-Fi costs verified up front.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-primary mt-0.5 font-bold">✓</span>
+<span>Radical dignity: explicit 'Self-reported' vs 'Verified' tags—no gamified deceptive checkmarks.</span>
+</li>
+<li class="flex items-start gap-2.5">
+<span class="text-primary mt-0.5 font-bold">✓</span>
+<span>Collaborative House Agreements drafted seamlessly before move-in.</span>
+</li>
+</ul>
+</div>
+<div class="mt-6 pt-4 bg-primary-fixed/30 p-3 rounded-lg">
+<span class="font-label-sm text-label-sm text-primary font-semibold">Result: 91% of Roost flatshares renew leases together for year 2+.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3 KEY PILLARS -->
+<section class="w-full py-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<div class="text-center max-w-2xl mx-auto mb-space-xl">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Built For Sanctuary</span>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">
+          Three architectural pillars of thoughtful co-living
+        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Pillar 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-[26px]">bedtime</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Pillar 01</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-2">
+              12-Dimension Domestic Rhythm Calibration
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              We look at how you recharge. Compare schedules, dishwashing timing, remote work hours, overnight guest norms, and sensory noise tolerance without awkward questionnaires.
+            </p>
+</div>
+<div class="mt-6 pt-4 flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Sleep sync</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Kitchen rules</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Guest cadence</span>
+</div>
+</div>
+<!-- Pillar 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-[26px]">account_balance</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Pillar 02</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-2">
+              Financial Transparency &amp; Rent Health
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Every room listing details true warm rent plus estimated utility reserves. Built-in affordability health checks recommend pairings that honor the European 33% income rule.
+            </p>
+</div>
+<div class="mt-6 pt-4 flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Warm rent breakdown</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Shared expenses escrow</span>
+</div>
+</div>
+<!-- Pillar 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-[26px]">verified_user</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Pillar 03</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mt-1 mb-2">
+              Honest Trust-Lite Verification
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              No invasive surveillance or fake badges. Clear distinctions between 'Self-reported', 'Government ID confirmed', and 'Prior flatmate references on file' give honest context.
+            </p>
+</div>
+<div class="mt-6 pt-4 flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">ID verification</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-low text-[11px] text-on-surface-variant">Landlord references</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- INTERACTIVE COMPATIBILITY PREVIEW & HOW IT WORKS -->
+<section class="w-full bg-surface-container py-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg gap-4">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">How Roost Works</span>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">
+            From everyday scenarios to effortless harmony
+          </h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          Instead of clinical personality tests, we use micro-scenarios reflecting real domestic life.
+        </p>
+</div>
+<!-- Process Steps Horizontal -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-space-xl">
+<div class="flex items-start gap-4">
+<span class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-[16px]">1</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Set your living rhythm</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Complete our 3-min conversational setup or import habits via natural language.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-[16px]">2</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Discover mutual alignment</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Browse transparent profiles with advisory match drivers. See where you sync and where you differ.</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-[16px]">3</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Co-create house agreements</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Connect with mutual consent and lock in quiet hours, chores, and utility expectations before signing.</p>
+</div>
+</div>
+</div>
+<!-- Interactive Widget: Scenario Slider Sandbox -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-md max-w-4xl mx-auto">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-space-md border-b border-surface-container-high">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wide text-primary font-semibold">Interactive Sandbox</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-0.5">Scenario: "The Sink at Midnight"</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Live alignment score:</span>
+<span class="font-headline-sm text-headline-sm text-primary" id="calculated-score">91%</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg pt-space-md items-center">
+<div class="space-y-5">
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-2">
+<span class="text-on-surface font-medium">Your Kitchen Standard</span>
+<span class="text-secondary font-semibold" id="your-habit-label">Dishes soaked &amp; cleared by 10am</span>
+</div>
+<input class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary" id="slider-kitchen" max="4" min="1" type="range" value="3"/>
+<div class="flex justify-between text-[11px] text-outline mt-1 font-label-sm">
+<span>Immediate wipe-down</span>
+<span>Within 2 hours</span>
+<span>Next morning ok</span>
+<span>Weekly team clean</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-md text-label-md mb-2">
+<span class="text-on-surface font-medium">Weekday Quiet Hours</span>
+<span class="text-secondary font-semibold" id="your-noise-label">Soft quiet after 22:30</span>
+</div>
+<input class="w-full h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer accent-primary" id="slider-noise" max="4" min="1" type="range" value="2"/>
+<div class="flex justify-between text-[11px] text-outline mt-1 font-label-sm">
+<span>Strict 21:00</span>
+<span>Soft 22:30</span>
+<span>Casual 00:00</span>
+<span>No preference</span>
+</div>
+</div>
+</div>
+<!-- Dynamic Compatibility Insight Panel -->
+<div class="bg-surface-container-low p-space-md rounded-xl flex flex-col justify-between h-full">
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">psychology</span>
+<span class="font-title-md text-title-md text-primary">Roost Advisory Insight</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed" id="insight-text">
+                You and your matches in this bracket value a clean countertop before coffee, but forgive a tea mug left overnight. Perfect balance for collaborative creatives.
+              </p>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline">1,240 compatible rooms in Berlin</span>
+<button class="text-primary font-label-md text-label-md font-semibold hover:underline flex items-center gap-1" type="button">
+<span>View these matches</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- FEATURED NEIGHBORHOODS & VERIFIED ROOM LISTINGS PREVIEW -->
+<section class="w-full py-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<!-- Section Intro -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg gap-4">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Active Neighborhoods</span>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">
+            Curated room openings with transparent flatmate profiles
+          </h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-outline">Filter city:</span>
+<button class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm" type="button">Berlin</button>
+<button class="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">London</button>
+<button class="px-3 py-1 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">Amsterdam</button>
+</div>
+</div>
+<!-- Listings Grid (3 Columns) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+<!-- Room 1 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="relative h-56 w-full">
+<img class="w-full h-full object-cover" data-alt="Bright high-ceiling Berlin Altbau bedroom with stucco moldings, warm morning sunlight streaming through French balcony doors, exposed timber floors, queen bed with terracotta linen duvet, ficus lyrata plant in ceramic pot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgUqxugN29DD1sBoG6tmHuKdkX8Py1yU3-rr-bBfAERs23Bllvquto4v02gjKKRwdT6f0WA7nrnwEH9CZd0P1GcgfHcIzVfrTD87NpxyKH86IWrArHdnKuCaEHjZkZQfQhG5voTiI0RDiLGMERYnlXvE3MLEakOQG6sh85tMuHAnAeoPMs2LM2JskvZ0inbIoROfiGYl_105dMZwlTWS14IPcTMOywMDXgsNnrPckh"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur px-2.5 py-1 rounded font-label-sm text-label-sm text-primary font-semibold">
+              Prenzlauer Berg
+            </div>
+<div class="absolute bottom-3 right-3 bg-primary text-on-primary px-3 py-1 rounded-lg font-headline-sm text-headline-sm">
+              €720 <span class="text-body-sm font-normal text-on-primary/80">warm</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-secondary font-medium">Free from Nov 1</span>
+<span class="font-label-sm text-label-sm text-outline">24 m² • 3-Person WG</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-1">Quiet Stucco Room facing Courtyard</h3>
+<!-- Flatmate Snippet -->
+<div class="flex items-center gap-3 mt-3 pt-3 bg-surface-container-low p-2.5 rounded-lg">
+<img class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-container" data-alt="Editorial portrait of gentle mid-twenties male ceramics artist with glasses and curly brown hair, smiling warmly in his pottery studio in Berlin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWJDmWOxsOWRHFAZ7Q4JZwE6maBAoCicpGzhqgdx7kc0Bv2ZHzy3m4yyUXBLHqjU3MpSmiERJeP8SlWzEzsn6GlR6PZNNTZJyvQJS3CW2PIKDjW9Wl-AlNoG_D2yJf4XU65vQkxO7Yw2S1Q-pd4BbWwxatiouJ08lCIKVxwhP1W_TTsb1jZztY222Sxfr2El4VpDHeXX1hx9ClXK3h_Bb8GVU3Q4vJa1kjklrT5M7Q"/>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-[14px] text-on-surface truncate">Lukas &amp; Miriam</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Night owl • Plant lovers • Hybrid work</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-surface-container-high">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>93% Compatibility Match</span>
+</div>
+<button class="text-secondary font-label-md text-label-md font-semibold hover:underline" type="button">View Room</button>
+</div>
+</div>
+</div>
+<!-- Room 2 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="relative h-56 w-full">
+<img class="w-full h-full object-cover" data-alt="Modern loft apartment bedroom in Kreuzberg with industrial brick wall, oversized steel frame window, minimalist platform wooden bed, olive green textiles and soft reading lamp lighting in warm dusk ambiance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX4BdJM2NiTVUJtFaZ0AaaNMECaBPtVooEKZUkNbsxzCajyQxEGlhXmXZrJIjVqTuuu539mTojNnyZCLhN8IdpvK0yp9aYqvSkC6Dg0Dtfsyr0FPl8HuLTJ1W_1mZiBsZwMnm2etRLjDtxeTrC0zJls06qitcNwyPXBYzcSuCO9e4UVIgY9Qt1js9unfp_-3Mr73c-2c5vXSJ4OTAoenAPGVVUU7hQ4druvUoooEBV"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur px-2.5 py-1 rounded font-label-sm text-label-sm text-primary font-semibold">
+              Kreuzberg (Graefekiez)
+            </div>
+<div class="absolute bottom-3 right-3 bg-primary text-on-primary px-3 py-1 rounded-lg font-headline-sm text-headline-sm">
+              €690 <span class="text-body-sm font-normal text-on-primary/80">warm</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-secondary font-medium">Immediate Move-in</span>
+<span class="font-label-sm text-label-sm text-outline">19 m² • 2-Person WG</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-1">Canal-Facing Creative Haven</h3>
+<!-- Flatmate Snippet -->
+<div class="flex items-center gap-3 mt-3 pt-3 bg-surface-container-low p-2.5 rounded-lg">
+<img class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-container" data-alt="Authentic warm candid portrait of a female software designer in her late 20s wearing cozy woolen knit sweater, smiling serenely holding a ceramic mug in bright kitchen" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzpSdV8bDjftZsPoVCnkTaO4mAxZHzXADyksdtQ914ES0GAuPh1k_dqiRjinulbPQ6SwPJD_lpIYhFnFMSY8em-7FwuzL8xFPB1Gmhn9ZAFbh8Q6bPr9iWUbBk7B5gvewcLvKISg52W8C3sNkXyPfTXeTFhSCXLSwN9PhmD34JiWDfAbkNYIRibWGcEFx0eKScOZ8xust52ea1SK6mQB3zU6K3czJaIbIkpuqtsDIl"/>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-[14px] text-on-surface truncate">Sara Chen</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Early riser • Vegetarian kitchen • Quiet nights</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-surface-container-high">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>88% Compatibility Match</span>
+</div>
+<button class="text-secondary font-label-md text-label-md font-semibold hover:underline" type="button">View Room</button>
+</div>
+</div>
+</div>
+<!-- Room 3 -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
+<div class="relative h-56 w-full">
+<img class="w-full h-full object-cover" data-alt="Sun-drenched bedroom in Neukolln rooftop attic conversion with sloped wooden beamed ceilings, skylight window showing blue sky, low tatami bed, warm terracotta and sage accents, minimalist reading corner with armchair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg3wjbJcJ41z231tAnLWhHIiCLiPGJMPTvqcxjgSws9bn4n1ZJcndPqlKjJ9897im2ybOGeFy6eMhIpIdA3RtUHP0pgLh9O2woOeOiOkM9qFaiZdZBLqN52S5czNLZf1QeY6pi48FEwi39-ebhHXMlNNC5QU4yh5y9q8s0qR4m9EFEmaiKdkAu-GMP9GxLmwc80k_7VSO2nsg21FwD4WLGK3j6SQ2hALxjGAWw2O0T"/>
+<div class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur px-2.5 py-1 rounded font-label-sm text-label-sm text-primary font-semibold">
+              Neukölln (Reuterkiez)
+            </div>
+<div class="absolute bottom-3 right-3 bg-primary text-on-primary px-3 py-1 rounded-lg font-headline-sm text-headline-sm">
+              €640 <span class="text-body-sm font-normal text-on-primary/80">warm</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-secondary font-medium">Free from Oct 15</span>
+<span class="font-label-sm text-label-sm text-outline">18 m² • 2-Person WG</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface line-clamp-1">Attic Studio with Rooftop Balcony</h3>
+<!-- Flatmate Snippet -->
+<div class="flex items-center gap-3 mt-3 pt-3 bg-surface-container-low p-2.5 rounded-lg">
+<img class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-container" data-alt="Natural relaxed portrait of a young environmental journalist wearing olive jacket sitting in a cozy botanical cafe in Berlin, smiling authentically" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0m-Rq-dePAy5ATlqkU3Xrbni1EEiTapqU0WrtnBMIpDTYUttIyKhJ2b5W3AC9pg_n896Ls82IkuUB8xyfad6PuwMck2C_UILBEld9UOTkNNBfFbOgka6nTVgp1ZqmYaj4VT0HhQaAVe493YYto-gE-eVpDptsqDEx0gnF6eB41Unn777bi9arvtu6h4jUWGidu5iU_NOh6v7b8e4jwAaMUZw10sqaO8F0hxJgSpcN"/>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-[14px] text-on-surface truncate">Felix &amp; Otto (Cat)</span>
+<span class="font-label-sm text-[11px] text-on-surface-variant truncate">Cat friendly • Film enthusiast • Respectful</span>
+</div>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between border-t border-surface-container-high">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>95% Compatibility Match</span>
+</div>
+<button class="text-secondary font-label-md text-label-md font-semibold hover:underline" type="button">View Room</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TESTIMONIALS / REAL CO-LIVING STORIES -->
+<section class="w-full bg-surface-container-low py-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<div class="max-w-2xl mb-space-lg">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Real Co-Living Pairs</span>
+<h2 class="font-headline-lg text-headline-lg text-primary tracking-tight mt-1">
+          When home feels like a calm exhale
+        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Story 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-4 mb-4">
+<div class="flex -space-x-3">
+<img class="w-12 h-12 rounded-full object-cover ring-2 ring-surface-container-lowest" data-alt="Editorial close portrait of a thoughtful young female designer with dark hair in a serene minimal apartment setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0XHco-c8--urrtt6oZlet7YssEus5dHNXf-8uv5E_ka-dEDLve3LHcsovKf4nRVzLEcTxyW1muz-bQyjObmA0m5SlQxr-LD7jLesP2COk98F4HZCdaMVVOE1GibyWgU8eXu2_clvunSRSBtxsoj8bJPDNBfSYJNWmSLLHrXLCVzjXEwheRCeCZkLSx_lQ3j7FeWfe85i_JexJc3rqAXVDC5UpjSTi0QdtED5aZZMD"/>
+<img class="w-12 h-12 rounded-full object-cover ring-2 ring-surface-container-lowest" data-alt="Editorial portrait of a warm young male musician with warm expression in natural daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYqKpx5Q9wonBCxTck5ostTy_vowz5HyLnD0oU10q0P9VOtRw-4_5yiihMb_jSDbvjiNYZ-rnn9Le9kgBjX4Xuu6BiG4sfW8vszDpokqdf0884wkc2UMl7_UW-iCzNf4JPKGIcv9zG0NXm5toSwRaUBwLJH0F-5URLj-s5GBp34gGbiD2rM59z8Fr6ITkhjXS72vE0xkgeNnWN3svHuBnXEPzbh7PZ_WWa0oMAcz1c"/>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Clara &amp; Tobias</h4>
+<p class="font-label-sm text-label-sm text-outline">Flatmates in Prenzlauer Berg since 2023</p>
+</div>
+</div>
+<p class="font-editorial-quote text-editorial-quote italic text-on-surface-variant leading-relaxed">
+              "We both work hybrid and dread small talk before morning coffee. Roost flagged our exact morning recharge routines before we even met. Two years later, our flat is the calmest sanctuary in the city."
+            </p>
+</div>
+<div class="mt-6 pt-4 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Aligned on: Morning Quiet &amp; Shared Olive Oil</span>
+<span class="text-primary font-semibold">96% Synchronized</span>
+</div>
+</div>
+<!-- Story 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-4 mb-4">
+<div class="flex -space-x-3">
+<img class="w-12 h-12 rounded-full object-cover ring-2 ring-surface-container-lowest" data-alt="Editorial portrait of a young professional woman smiling gently in front of large book shelves in sunny living room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoHiQyMipRLHc86mixbIhrXraZ1j6DC6pOW1_7hdcwL1IOz8KvZ2DWwVOxkhs8v3WvYOC3rCSlJQVGHA2pEYdkGkrjPZ1xpyw_TcvF_PmOkP9MfN8ZtKT-wCXOn9KdK3q0sLFcdsBld8_DEzT0Y0GGA2dEqeI_LsxPdziuq1rOHT6LGDe3ZDZyC0hBZyzF879oyHp-yYPm3VIeXQNx8-Ntuu0PSLAn_35nlLmYmk8F"/>
+<img class="w-12 h-12 rounded-full object-cover ring-2 ring-surface-container-lowest" data-alt="Editorial portrait of a smiling male architect wearing casual neutral linen shirt in bright room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk9isNUgm7La_LBbxYv6SUBzWVLqfv0aayUCkfsUcwgpuaLAAVkOf-UG7jvwb4ZK0SMYs4AF0R2ggq1iM8bFV7mT49kl_APBBtvlbzZ1uOJf196XsUX9pCpln7NCDLMLpV2I3J6RhebE_YlZYhLJct9znjY5OiwD6Bz3MOVYrTahbyNGfWwkdp_NwdWRdygJ28pssmzUPT2lg33LKXNMTc2ztrotl9e_v6wqqy8c8f"/>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface">Maya &amp; Julian</h4>
+<p class="font-label-sm text-label-sm text-outline">Flatmates in Kreuzberg since 2022</p>
+</div>
+</div>
+<p class="font-editorial-quote text-editorial-quote italic text-on-surface-variant leading-relaxed">
+              "The upfront house agreement feature eliminated all the awkward money conversations. We agreed on heating caps and weekend guest boundaries before signing the lease. No passive-aggressive sticky notes ever."
+            </p>
+</div>
+<div class="mt-6 pt-4 flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Aligned on: Weekend Hosting &amp; Warm-Rent Split</span>
+<span class="text-primary font-semibold">91% Synchronized</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TRUST, SAFETY & ETHICS BANNER -->
+<section class="w-full py-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<div class="bg-surface-container-low rounded-xl p-space-lg lg:p-space-xl flex flex-col lg:flex-row items-center justify-between gap-space-lg">
+<div class="flex items-start gap-4 max-w-2xl">
+<div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-1">
+              "Compatibility scores are purely advisory insights. You decide who you share home with."
+            </h3>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              We never broker your data to third parties, landlords, or credit agencies. Hide your profile instantly with one click whenever you pause your search. Verification is voluntary, transparent, and built on mutual respect.
+            </p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+<a class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors text-center" href="#">
+            Read Trust Charter
+          </a>
+<a class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors text-center" href="#">
+            Community Guidelines
+          </a>
+</div>
+</div>
+</div>
+</section>
+<!-- FINAL CALL TO ACTION (Pre-footer) -->
+<section class="w-full pb-space-xl">
+<div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin">
+<div class="bg-primary text-on-primary rounded-xl p-space-lg lg:p-space-xl shadow-xl relative overflow-hidden text-center lg:text-left flex flex-col lg:flex-row items-center justify-between gap-space-lg">
+<!-- Ambient decorative circles contained inside -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary-container rounded-full blur-2xl pointer-events-none opacity-50"></div>
+<div class="absolute left-10 -top-20 w-60 h-60 bg-secondary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 max-w-xl">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary-fixed font-semibold">Stop Gambling on Strangers</span>
+<h2 class="font-headline-lg lg:font-display-lg text-headline-lg lg:text-display-lg text-on-primary tracking-tight mt-2 mb-space-sm leading-tight">
+            Ready to find flatmates who match your domestic pace?
+          </h2>
+<p class="font-body-lg text-body-lg text-inverse-on-surface/90 leading-relaxed">
+            Create your living habit profile in 3 minutes. Zero listing fees, zero spam bots, and verified room openings ready for move-in.
+          </p>
+</div>
+<div class="relative z-10 flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto justify-end">
+<button class="w-full sm:w-auto px-7 py-3.5 rounded-lg bg-secondary text-on-secondary font-title-md text-title-md hover:bg-secondary-container hover:text-on-secondary-container transition-colors shadow-sm text-center" type="button">
+            Get Started Free
+          </button>
+<button class="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-primary-container text-inverse-on-surface font-title-md text-title-md hover:bg-surface-tint transition-colors text-center" type="button">
+            Browse Rooms
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- INLINE CLIENT-SIDE JAVASCRIPT FOR SCENARIO SANDBOX -->
+<script>
+    (function initSandbox() {
+      const kitchenSlider = document.getElementById('slider-kitchen');
+      const noiseSlider = document.getElementById('slider-noise');
+      const scoreDisplay = document.getElementById('calculated-score');
+      const kitchenLabel = document.getElementById('your-habit-label');
+      const noiseLabel = document.getElementById('your-noise-label');
+      const insightText = document.getElementById('insight-text');
+
+      if (!kitchenSlider || !noiseSlider || !scoreDisplay) return;
+
+      const kitchenDescriptions = [
+        "Immediate wipe-down after every single meal",
+        "Dishes cleared within 2 hours of dining",
+        "Dishes soaked & cleared by 10am next day",
+        "Casual shared sink with weekly team sweep"
+      ];
+
+      const noiseDescriptions = [
+        "Strict silence begins at 21:00",
+        "Soft quiet hours after 22:30",
+        "Casual quiet after midnight (00:00)",
+        "Social flat with no fixed quiet curfew"
+      ];
+
+      const insights = [
+        "High-structure sanctuary: Ideal for focused writers, thesis students, and early-shift healthcare workers seeking deep restorative silence.",
+        "Gentle domestic harmony: The gold-standard Roost sweet spot. Predictable weeknights with relaxed flexibility for shared dinners.",
+        "Creative flow mode: For night owls and freelance creators whose most inspiring hours happen after dark. Aligns with fellow studio minds.",
+        "Social collective: High energy, frequent community dinners, open living room vibes where spontaneous hosting is welcomed."
+      ];
+
+      function updateSandbox() {
+        const kVal = parseInt(kitchenSlider.value, 10) - 1;
+        const nVal = parseInt(noiseSlider.value, 10) - 1;
+
+        kitchenLabel.textContent = kitchenDescriptions[kVal];
+        noiseLabel.textContent = noiseDescriptions[nVal];
+
+        // Harmonic score formula simulation
+        const delta = Math.abs(kVal - nVal);
+        let baseScore = 96 - (delta * 7);
+        if (baseScore < 72) baseScore = 72;
+        scoreDisplay.textContent = baseScore + "%";
+
+        const insightIndex = Math.min(Math.round((kVal + nVal) / 2), insights.length - 1);
+        insightText.textContent = insights[insightIndex];
+      }
+
+      kitchenSlider.addEventListener('input', updateSandbox);
+      noiseSlider.addEventListener('input', updateSandbox);
+    })();
+  </script>
+</div></main><footer class="w-full bg-[#FBF9F5] border-t border-[#E5DFD5] py-space-xl"><div class="max-w-7xl mx-auto px-margin-mobile lg:px-margin flex flex-col md:flex-row items-center justify-between gap-space-lg"><p class="font-editorial-quote text-editorial-quote italic text-on-surface-variant max-w-xl text-center md:text-left">Roost compatibility scores are purely advisory insights. You decide who you share home with.</p><div class="flex flex-wrap items-center justify-center gap-space-md"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="trust-and-verification" href="#">Trust &amp; Verification</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="community-guidelines" href="#">Community Guidelines</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacy-policy" href="#">Privacy Policy</a></div></div></footer></body></html>

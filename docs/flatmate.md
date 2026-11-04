@@ -60,10 +60,19 @@ The MVP tests one idea: **people will use structured compatibility matching inst
 - Ranked matches with full score transparency: total, three group scores, top strengths, and a dimension-by-dimension table.
 - Save, dismiss, and express interest. Mutual interest reveals contact details.
 - Block and report; account deactivation.
+- Room listings with area filter, mutual-interest chat, and one-per-pair flatmate reviews gated on verified stays.
+- Listing photos via URL (seeded rooms use built-in placeholder artwork; uploads later).
+- Listing pages connect with the owner in place: show interest, then chat, contact reveal, and agreement drafting on mutual interest.
+- Decide/live-together tools: shared expense tracker with running balances, an AI agreement drafter (template fallback, not legal advice), natural-language match search, saved searches, affordability checks on listings, and self-confirmed contact labels.
+- Trust-ops: admin report queue (dismiss or deactivate) and metrics in both UIs, per-request logging, `make backup` snapshots, CLI-only admin promotion.
+- Verified stays: mutual handshake (propose/confirm) proves two users rented together; flatmate reviews require a verified stay and carry a verified tag. Listings take stay reviews (verified tenants) and visit reviews (anyone), shown in separate views with a trust score weighting tenants 3-to-1. Accepting a stay auto-marks its listing rented; owners can re-list.
+- Installable PWA: precached app shell with an honest offline notice, update prompt, install icons — API calls always go to the network, never the cache.
+- Action feedback everywhere: blocking loading modal for slow processes (agreement drafts, interview, auth), button spinners plus toast verdicts for fast actions (interest, save, dismiss, chat), hand pointer on all clickables, lazy-loaded routes and listing photos. Legacy forms show a working overlay and lock their submit buttons.
+- Public landing page at `/` for logged-out visitors (both UIs): hero with habit-search teaser, example match and room previews, the Flatmate contrast, three pillars, an interactive scenario sandbox (SPA), trust banner, and signup CTAs. Signed-in users still land on matches. All previews are labeled examples; no fake stats, ID badges, or hotlinked photos.
 - Two clients on one JSON API: the React SPA and the legacy server-rendered pages.
 
 **Not included yet**
-Payments, identity verification, in-app messaging, landlord or agent tools, property listings, rent or lease tools, machine-learning ranking, and personality analysis.
+Payments, identity verification, landlord or agent tools, machine-learning ranking, and personality analysis. (The agreement drafter and expense tracker are informal helpers, not legal or payment tools.)
 
 ## 6. The Questionnaire
 
@@ -110,6 +119,8 @@ AI assists the experience. It does not make decisions.
 - Clean up messy area text on profile save (the user's wording is kept on any failure).
 - Turn the computed score breakdown into a readable explanation.
 - Suggest neutral questions to discuss for flagged differences, plus one practical compromise per difference.
+- Draft a plain-language flatmate agreement from both sides' profiles and answers (template fallback; never legal advice).
+- Parse a natural-language line ("quiet cleaner under 300k") into match filters with a shown interpretation.
 
 **AI is not used to:**
 - Rank, filter, or score people.
@@ -122,11 +133,15 @@ If the AI is unavailable, the product still works with a plain form and template
 - Secure login: salted password hashes, signed session cookies, CSRF tokens, login rate limits.
 - Searching visibility toggle: hide yourself from all matching at any time.
 - Block and report on every profile.
+- Chat is limited to mutual-interest pairs; hidden, blocked, and deactivated users can't be messaged, and listing owners are reportable. Opening a thread marks it read; unread counts show as badges on the inbox, the SPA nav, and the legacy inbox.
 - Blocked users never see each other.
 - Only first name and general area are shown. No exact addresses; the model never receives contact details or precise coordinates.
 - Contact details are shared only after mutual interest.
 - Users can deactivate their account.
 - The UI states plainly what has been verified.
+- Contacts carry honest labels: self-confirmed or unverified. There is still no identity verification.
+- Admins triage reports from a queue (dismiss, or deactivate the reported user); admin rights are granted from the command line, never self-serve.
+- Flatmate reviews require a verified stay and carry a verified tag. Listing reviews split into tenant (verified stay, 3x weight) and visitor views with a trust score.
 
 ## 10. Measuring Success
 
@@ -150,8 +165,8 @@ Measure whether people form useful connections, not time spent in the app.
 ## 12. Later (Not Now)
 
 - **Monetization:** Test a time-limited access pass or boosts after value is proven. Rent norms vary by market (annual lump sums vs. monthly), so monthly subscriptions may not fit everywhere; research this before deciding.
-- **Verification:** Add identity checks when cost and operations allow.
-- **Growth:** Add listings, partners, or new cities only after the first markets work.
+- **Verification:** Self-confirmed contact labels ship now; add identity checks when cost and operations allow.
+- **Growth:** Add partners or new cities only after the first markets work.
 - **Personality research:** Consider only if validated against real outcomes.
 
 ## 13. Decision Test

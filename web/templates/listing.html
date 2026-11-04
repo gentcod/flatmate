@@ -1,0 +1,74 @@
+{{define "content"}}
+<p><a href="/listings">← All listings</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{if .L.PhotoURL}}<img src="{{.L.PhotoURL}}" alt="" class="listing-photo">{{end}}
+<h1>{{.L.Title}}</h1>
+<p class="hint">{{.L.AreaText}} · posted by {{.L.OwnerName}}</p>
+<p><span class="pill-score">{{.L.Currency}} {{.L.MonthlyRent}}/mo</span>{{if eq .L.Status "rented"}} <span class="badge">Rented</span>{{end}}</p>
+{{if .L.Description}}<p>{{.L.Description}}</p>{{end}}
+{{if not .Mine}}<p><a href="/match/{{.L.UserID}}">View {{.L.OwnerName}}'s profile</a></p>{{end}}
+{{if and (not .Mine) .Mutual}}
+<p class="ok">Mutual interest — <a href="/chat/{{.L.UserID}}">open chat</a> · <a href="/match/{{.L.UserID}}/agreement">draft agreement</a></p>
+{{if .Contact}}<p>Contact: {{.Contact}} ({{if .ContactSelf}}self-confirmed{{else}}unverified{{end}})</p>{{end}}
+{{end}}
+{{if and (not .Mine) .Mutual}}<form method="post" action="/stays"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><input type="hidden" name="peer_id" value="{{.L.UserID}}"><input type="hidden" name="listing_id" value="{{.L.ID}}"><button type="submit">We live here together — confirm stay</button></form>{{end}}
+{{if and (not .Mine) (not .Mutual)}}
+{{if .MyInterest}}<p class="hint">Interest sent — you'll unlock chat if {{.L.OwnerName}} is interested back.</p>{{else}}<form method="post" action="/match/{{.L.UserID}}/interest"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Show interest in {{.L.OwnerName}}</button></form>{{end}}
+{{end}}
+<h2>Can you afford this?</h2>
+<label>Monthly income <input type="text" id="aff-income" inputmode="numeric"></label>
+<label>Max % on rent <input type="text" id="aff-pct" value="30" inputmode="numeric"></label>
+<button type="button" onclick="afford()">Check</button>
+<p id="aff-result" class="hint"></p>
+<script>
+function afford() {
+  var income = parseInt(document.getElementById('aff-income').value, 10);
+  var pct = parseInt(document.getElementById('aff-pct').value, 10);
+  var rent = {{.L.MonthlyRent}};
+  var el = document.getElementById('aff-result');
+  if (isNaN(income) || isNaN(pct) || income <= 0 || pct <= 0) { el.textContent = 'Enter numbers above 0.'; return; }
+  var max = Math.floor(income * pct / 100);
+  el.textContent = max >= rent ? 'Yes — your ceiling is ' + max + '.' : 'Tight — your ceiling is ' + max + ', rent is ' + rent + '.';
+}
+</script>
+<h2>Reviews <span class="hint">trust {{.TrustScore}}/5</span></h2>
+<h3>From tenants</h3>
+{{if .StayReviews}}<ul>{{range .StayReviews}}<li><strong>{{.AuthorName}}</strong> {{.Rating}}/5 — {{.Body}} <span class="badge">Verified stay</span></li>{{end}}</ul>{{else}}<p class="hint">No tenant reviews yet.</p>{{end}}
+<h3>From visitors</h3>
+{{if .VisitReviews}}<ul>{{range .VisitReviews}}<li><strong>{{.AuthorName}}</strong> {{.Rating}}/5 — {{.Body}}</li>{{end}}</ul>{{else}}<p class="hint">No visitor reviews yet.</p>{{end}}
+{{if not .Mine}}
+<form method="post" action="/listing/{{.L.ID}}/reviews">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Rating <select name="rating"><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></label>
+<label>I <select name="kind"><option value="visit">visited this place</option>{{if .CanStay}}<option value="stay">lived here (verified tenant)</option>{{end}}</select></label>
+<label>Review <input type="text" name="body" maxlength="500" required></label>
+<button type="submit">Save review</button>
+</form>
+{{end}}
+{{if .Mine}}
+<h2>Edit</h2>
+<form method="post" action="/listing/{{.L.ID}}/edit">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Title <input type="text" name="title" value="{{.L.Title}}" maxlength="80" required></label>
+<label>Area <input type="text" name="area_text" value="{{.L.AreaText}}" maxlength="120" required></label>
+<label>Monthly rent <input type="text" name="monthly_rent" value="{{.L.MonthlyRent}}" inputmode="numeric" required></label>
+<label>Currency <input type="text" name="currency" value="{{.L.Currency}}" maxlength="8"></label>
+<label>Photo URL (optional) <input type="text" name="photo_url" value="{{.L.PhotoURL}}" maxlength="500"></label>
+<label>Description <textarea name="description" maxlength="1000" rows="3">{{.L.Description}}</textarea></label>
+<button type="submit">Save changes</button>
+</form>
+<form method="post" action="/listing/{{.L.ID}}/status"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><input type="hidden" name="status" value="{{if eq .L.Status "rented"}}available{{else}}rented{{end}}"><button type="submit">{{if eq .L.Status "rented"}}Mark available{{else}}Mark rented{{end}}</button></form>
+<form method="post" action="/listing/{{.L.ID}}/delete" onsubmit="return confirm('Delete this listing?');">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<button type="submit" class="danger">Delete listing</button>
+</form>
+{{else}}
+<h2>Safety</h2>
+<p class="hint">Listings are unverified. Reporting flags the owner for review.</p>
+<form method="post" action="/listing/{{.L.ID}}/report">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Reason <input type="text" name="reason" maxlength="500"></label>
+<button type="submit">Report this listing</button>
+</form>
+{{end}}
+{{end}}

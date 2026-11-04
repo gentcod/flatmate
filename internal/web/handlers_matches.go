@@ -28,20 +28,25 @@ type matchView struct {
 }
 
 type detailView struct {
-	ID         int64
-	FirstName  string
-	AreaText   string
-	Gender     string
-	Occupation string
-	Bio        string
-	ModeLabel  string
-	BudgetStr  string
-	MoveWindow string
-	Contact    string
-	Mutual     bool
-	Saved      bool
-	MyInterest bool
-	Ineligible bool
+	ID          int64
+	FirstName   string
+	AreaText    string
+	Gender      string
+	Occupation  string
+	Bio         string
+	ModeLabel   string
+	BudgetStr   string
+	MoveWindow  string
+	Contact     string
+	ContactSelf bool
+	Mutual      bool
+	Saved       bool
+	MyInterest  bool
+	Ineligible  bool
+	StayID      int64
+	StayStatus  string
+	StayByMe    bool
+	CanReview   bool
 }
 
 type candidateBundle struct {
@@ -62,12 +67,13 @@ func (s *Server) handleMatchesShow(w http.ResponseWriter, r *http.Request) {
 	toMe := s.interestToMe(r, id)
 	reported := s.reportedByMe(r, id)
 	area := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("area")))
+	filters, nlQuery := s.nlFilters(r, id)
 	var views []matchView
 	for _, c := range others {
 		if blocked[c.id] || reported[c.id] || acts[c.id]["dismiss"] {
 			continue
 		}
-		if area != "" && !strings.Contains(strings.ToLower(c.p.AreaText), area) {
+		if area != "" && !strings.Contains(strings.ToLower(c.p.AreaText), area) || !nlKeep(filters, c.p, c.a) {
 			continue
 		}
 		cand := toMatchCandidate(c.p, c.a)
@@ -90,7 +96,8 @@ func (s *Server) handleMatchesShow(w http.ResponseWriter, r *http.Request) {
 	s.render(w, "matches", map[string]any{
 		"Title": "Matches", "Authed": true, "Matches": views, "Empty": len(views) == 0,
 		"Searching": s.searching(r, id), "AreaFilter": strings.TrimSpace(r.URL.Query().Get("area")),
-		"Nudge": s.profileNudge(r, id), "CSRF": s.csrfToken(w, r),
+		"Nudge": s.profileNudge(r, id), "NLQuery": nlQuery, "NLDesc": nlDescribe(filters),
+		"Proposals": s.stayProposals(r, id), "CSRF": s.csrfToken(w, r),
 	})
 }
 
@@ -121,6 +128,18 @@ func (s *Server) handleMatchDetail(w http.ResponseWriter, r *http.Request) {
 		BudgetStr:  commas(p.BudgetMin) + " – " + commas(p.BudgetMax) + " " + p.Currency,
 		MoveWindow: p.MoveEarliest + " → " + p.MoveLatest + " (" + strconv.Itoa(p.DurationMonths) + " mo)"}
 	data := map[string]any{"Title": p.FirstName, "Authed": true, "M": dv, "CSRF": s.csrfToken(w, r)}
+	if revs, err := database.New(s.DB).ListReviewsForUser(r.Context(), target); err == nil && len(revs) > 0 {
+		views := make([]reviewView, 0, len(revs))
+		for _, rv := range revs {
+			views = append(views, reviewView{AuthorName: s.authorName(r, rv.Author), Rating: rv.Rating, Body: rv.Body, VerifiedStay: s.verifiedStay(r, rv.Author, target)})
+		}
+		data["Reviews"] = views
+		data["ReviewAvg"] = strconv.FormatFloat(reviewAvg(revs), 'f', 1, 64)
+		data["ReviewCount"] = len(revs)
+	}
+	if msg := strings.TrimSpace(r.URL.Query().Get("err")); msg != "" {
+		data["Error"] = msg
+	}
 	cand := toMatchCandidate(p, a)
 	if !match.Eligible(me, cand, false, false) {
 		dv.Ineligible = true
@@ -136,8 +155,14 @@ func (s *Server) handleMatchDetail(w http.ResponseWriter, r *http.Request) {
 	dv.Saved = acts[target]["save"]
 	dv.MyInterest = acts[target]["interest"]
 	dv.Mutual = mutual
+	if st, ok := s.stayBetween(r, id, target); ok {
+		dv.StayID, dv.StayStatus = st.ID, st.Status
+		dv.StayByMe = st.ProposedBy == id
+		dv.CanReview = st.Status == StayActive || st.Status == StayEnded
+	}
 	if mutual && p.ContactHandle != "" {
 		dv.Contact = p.ContactHandle
+		dv.ContactSelf = p.ContactSelfConfirmed
 		database.New(s.DB).AddAction(r.Context(), database.AddActionParams{
 			Actor: id, Target: target, Kind: "reveal", CreatedAt: nowRFC3339(),
 		})

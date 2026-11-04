@@ -1,11 +1,11 @@
 # 3-Minute Demo Script
 
-Setup: `make tools && make tidy && make demo`, then open http://localhost:8080 (legacy UI).
+Setup: `make serve`, then open http://localhost:8080 (legacy UI).
 All seed passwords are `Seedpass123!`.
 
-SPA setup (needs Node 22+): `make client-install`, then with `make demo` running,
-`cd client && npm run dev` and open http://localhost:5173.
-SPA production: `make client-build`, then `FLATMATE_UI=spa make demo` on :8080.
+SPA setup (needs Node 22+): `make client-setup`, then `FLATMATE_UI=spa make serve`
+and open http://localhost:8080. For SPA dev instead: `make client-install`, then
+with `make serve` running, `cd client && npm run dev` and open http://localhost:5173.
 
 ## Beats (180s)
 
@@ -34,5 +34,5 @@ Same script on either UI; routes match (`/matches`, `/match/:id`, `/questionnair
 
 ## AI on/off
 
-- Off (default): no `FLATMATE_MODEL_ENDPOINT` → detail pages show the raw breakdown; onboarding falls back to the plain form. Nothing dead-ends.
-- On: set `FLATMATE_MODEL_ENDPOINT`, `FLATMATE_MODEL_NAME`, `FLATMATE_MODEL_TOKEN` (see `TODO(fill)` in CONTEXT.md §14) → "In plain language" section appears on match details.
+- Off (default): no `FLATMATE_MODEL_TOKEN` → detail pages show the raw breakdown; onboarding falls back to the plain form. Nothing dead-ends.
+- On: set `FLATMATE_MODEL_TOKEN` (endpoint defaults to the Meta Responses API, model to `muse-wonder-1.0`; see CONTEXT.md §14) → "In plain language" section appears on match details.

@@ -80,11 +80,12 @@ func main() {
 		CookieSecure: secure,
 		LoginLimiter: web.NewLimiter(10, time.Minute),
 		AILimiter:    web.NewLimiter(30, time.Minute),
+		MsgLimiter:   web.NewLimiter(30, time.Minute),
 		Interviews:   web.NewInterviews(2 * time.Hour),
 		UI:           *uiMode, ClientDist: *clientDir}
 	log.Printf("db=%s weights=%s", *dbPath, *weights)
 	log.Printf("listening on %s", *addr)
-	log.Fatal(http.ListenAndServe(*addr, srv.NewMux(filepath.Join(*webDir, "static"))))
+	log.Fatal(http.ListenAndServe(*addr, web.LogRequests(srv.NewMux(filepath.Join(*webDir, "static")))))
 }
 
 func sessionsFromConfig(key, addr string, secure bool) (*auth.Sessions, error) {

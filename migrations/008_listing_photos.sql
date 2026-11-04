@@ -1,0 +1,1 @@
+ALTER TABLE listings ADD COLUMN photo_url TEXT NOT NULL DEFAULT '';

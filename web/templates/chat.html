@@ -1,0 +1,13 @@
+{{define "content"}}
+<h1>Chats</h1>
+<p class="hint">Only mutual-interest matches can message you.</p>
+{{range .Conversations}}
+<article class="card">
+<h2><a href="/chat/{{.PeerID}}">{{.PeerName}}</a>{{if .Unread}} <span class="badge alert">{{.Unread}} new</span>{{end}}</h2>
+<p{{if .Unread}} class="unread"{{end}}>{{if .LastFromMe}}You: {{end}}{{.LastBody}}</p>
+<p class="hint">{{.LastAt}}</p>
+</article>
+{{else}}
+<p>No chats yet. Express interest in a match — once it's mutual, you can talk here.</p>
+{{end}}
+{{end}}

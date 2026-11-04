@@ -7,7 +7,7 @@ not just budget and location.
 
 Budget and area get you a shortlist; cleanliness, noise, guests, routines,
 and conflict style decide whether sharing a home works. This app makes that
-judgment structured: answer 11 questions about observable living habits, and
+judgment structured: answer questions across 12 living-habit dimensions, and
 get ranked matches with plain-language explanations of what lines up, what
 differs, and what's worth discussing before moving in.
 
@@ -24,27 +24,40 @@ differs, and what's worth discussing before moving in.
 
 Signup/login, profiles, questionnaire (form or AI-drafted), ranked matches,
 save/dismiss/express interest, mutual-interest contact reveal, block/report,
+room listings, mutual-interest chat, flatmate reviews, expense tracking,
+agreement drafting, natural-language search, admin moderation, metrics,
+verified stays with trust-scored reviews, a public landing page,
 and 27 seed profiles. Single Go binary, SQLite, JSON API plus two UIs:
 the legacy server-rendered pages and the React SPA in `client/`.
 
 ## Run it
 
 ```sh
-make tools                              # one-time: install sqlc codegen
-make tidy && make test && make demo    # legacy UI at http://localhost:8080
+make test                               # unit tests (recommended first run)
+make serve                              # tidy, build, seed, run: legacy UI at http://localhost:8080
 ```
 
 SPA dev (needs Node 22+):
 
 ```sh
-make client-install
-make demo                               # Go API on :8080 (terminal 1)
+make client-install                     # once: install client dependencies
+make serve                              # Go API on :8080 (terminal 1)
 cd client && npm run dev                # SPA at http://localhost:5173 (terminal 2)
 ```
 
-SPA production: `make client-build`, then `make demo ADDR=:8080`
-with `FLATMATE_UI=spa` — Go serves `client/dist` itself on `:8080`.
+SPA production: `make client-setup`, then `FLATMATE_UI=spa make serve` —
+Go serves `client/dist` itself on `:8080`.
+
+PWA (installable): icons generate from `client/public/icon.svg` as part of
+`make client-setup`. The app precaches its shell for offline page views
+(saving still needs a connection) and prompts when a new version is ready.
+Re-run `make pwa-assets` if you change the icon.
+
+Ops: `make backup` snapshots the DB into `backups/`;
+`make promote EMAIL=x@y.z` / `make demote EMAIL=x@y.z` manage admins,
+who triage reports at `/admin` (SPA) or `/admin/reports` (legacy).
 
 Config comes from a `.env` file or the environment (see `.env.example`).
 Seed logins use password `Seedpass123!` (e.g. `tunde@example.com`).
 Demo script: [docs/demo.md](docs/demo.md). Build contract: [CONTEXT.md](CONTEXT.md).
+Design system: [docs/designs](docs/designs) (Warm Editorial — Newsreader + Plus Jakarta Sans).
