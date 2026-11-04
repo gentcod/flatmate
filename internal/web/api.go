@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/gentcod/flatmate/internal/admin"
 	"github.com/gentcod/flatmate/internal/ai"
 	"github.com/gentcod/flatmate/internal/auth"
 	"github.com/gentcod/flatmate/internal/database"
@@ -84,6 +85,35 @@ func (s *Server) registerAPI(mux *http.ServeMux) {
 	mux.Handle("GET /api/v1/onboarding", s.requireAuthAPI(http.HandlerFunc(s.apiOnboardingGet)))
 	mux.Handle("POST /api/v1/onboarding", s.requireAuthAPI(http.HandlerFunc(s.apiOnboardingPost)))
 	mux.Handle("POST /api/v1/account/deactivate", s.requireAuthAPI(http.HandlerFunc(s.apiDeactivate)))
+	mux.Handle("GET /api/v1/listings", s.requireAuthAPI(http.HandlerFunc(s.apiListingsList)))
+	mux.Handle("POST /api/v1/listings", s.requireAuthAPI(http.HandlerFunc(s.apiListingsCreate)))
+	mux.Handle("GET /api/v1/listings/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiListingGet)))
+	mux.Handle("PUT /api/v1/listings/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiListingPut)))
+	mux.Handle("DELETE /api/v1/listings/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiListingDelete)))
+	mux.Handle("GET /api/v1/conversations", s.requireAuthAPI(http.HandlerFunc(s.apiConversationsList)))
+	mux.Handle("GET /api/v1/conversations/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiThreadGet)))
+	mux.Handle("POST /api/v1/conversations/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiThreadPost)))
+	mux.Handle("GET /api/v1/users/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiReviewsGet)))
+	mux.Handle("PUT /api/v1/users/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiReviewsPut)))
+	mux.Handle("GET /api/v1/expenses/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiExpensesGet)))
+	mux.Handle("POST /api/v1/expenses/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiExpensesPost)))
+	mux.Handle("DELETE /api/v1/expenses/item/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiExpenseDelete)))
+	mux.Handle("GET /api/v1/searches", s.requireAuthAPI(http.HandlerFunc(s.apiSearchesList)))
+	mux.Handle("POST /api/v1/searches", s.requireAuthAPI(http.HandlerFunc(s.apiSearchesCreate)))
+	mux.Handle("DELETE /api/v1/searches/{id}", s.requireAuthAPI(http.HandlerFunc(s.apiSearchesDelete)))
+	mux.Handle("POST /api/v1/matches/{id}/agreement", s.requireAuthAPI(http.HandlerFunc(s.apiAgreementPost)))
+	mux.Handle("POST /api/v1/matches/search", s.requireAuthAPI(http.HandlerFunc(s.apiMatchesSearch)))
+	mux.Handle("GET /api/v1/stays", s.requireAuthAPI(http.HandlerFunc(s.apiStaysList)))
+	mux.Handle("POST /api/v1/stays", s.requireAuthAPI(http.HandlerFunc(s.apiStaysPropose)))
+	mux.Handle("POST /api/v1/stays/{id}/accept", s.requireAuthAPI(http.HandlerFunc(s.apiStayAccept)))
+	mux.Handle("POST /api/v1/stays/{id}/decline", s.requireAuthAPI(http.HandlerFunc(s.apiStayDecline)))
+	mux.Handle("POST /api/v1/stays/{id}/end", s.requireAuthAPI(http.HandlerFunc(s.apiStayEnd)))
+	mux.Handle("GET /api/v1/listings/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiListingReviewsGet)))
+	mux.Handle("PUT /api/v1/listings/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiListingReviewsPut)))
+	mux.Handle("POST /api/v1/listings/{id}/status", s.requireAuthAPI(http.HandlerFunc(s.apiListingStatus)))
+	mux.Handle("GET /api/v1/admin/reports", s.requireAdminAPI(http.HandlerFunc(s.apiReportsList)))
+	mux.Handle("POST /api/v1/admin/reports/{id}/resolve", s.requireAdminAPI(http.HandlerFunc(s.apiReportResolve)))
+	mux.Handle("GET /api/v1/admin/metrics", s.requireAdminAPI(http.HandlerFunc(s.apiMetrics)))
 }
 
 // apiCSRF mints the double-submit cookie and hands the token to the
@@ -97,6 +127,7 @@ func (s *Server) apiSession(w http.ResponseWriter, r *http.Request) {
 	if id, ok := s.userID(r); ok {
 		out["authed"] = true
 		out["user_id"] = id
+		out["is_admin"] = admin.IsAdmin(r.Context(), database.New(s.DB), id)
 	}
 	writeJSON(w, http.StatusOK, out)
 }
@@ -205,24 +236,25 @@ func (s *Server) apiLogout(w http.ResponseWriter, r *http.Request) {
 
 // apiProfile mirrors profile.Profile for JSON.
 type apiProfile struct {
-	FirstName      string   `json:"first_name"`
-	Mode           string   `json:"mode"`
-	AreaText       string   `json:"area_text"`
-	Lat            *float64 `json:"lat"`
-	Lng            *float64 `json:"lng"`
-	Relocating     bool     `json:"relocating"`
-	BudgetMin      int64    `json:"budget_min"`
-	BudgetMax      int64    `json:"budget_max"`
-	Currency       string   `json:"currency"`
-	MoveEarliest   string   `json:"move_earliest"`
-	MoveLatest     string   `json:"move_latest"`
-	DurationMonths int      `json:"duration_months"`
-	Gender         string   `json:"gender"`
-	GenderPref     string   `json:"gender_pref"`
-	Occupation     string   `json:"occupation"`
-	Bio            string   `json:"bio"`
-	ContactHandle  string   `json:"contact_handle"`
-	Searching      bool     `json:"searching"`
+	FirstName            string   `json:"first_name"`
+	Mode                 string   `json:"mode"`
+	AreaText             string   `json:"area_text"`
+	Lat                  *float64 `json:"lat"`
+	Lng                  *float64 `json:"lng"`
+	Relocating           bool     `json:"relocating"`
+	BudgetMin            int64    `json:"budget_min"`
+	BudgetMax            int64    `json:"budget_max"`
+	Currency             string   `json:"currency"`
+	MoveEarliest         string   `json:"move_earliest"`
+	MoveLatest           string   `json:"move_latest"`
+	DurationMonths       int      `json:"duration_months"`
+	Gender               string   `json:"gender"`
+	GenderPref           string   `json:"gender_pref"`
+	Occupation           string   `json:"occupation"`
+	Bio                  string   `json:"bio"`
+	ContactHandle        string   `json:"contact_handle"`
+	Searching            bool     `json:"searching"`
+	ContactSelfConfirmed bool     `json:"contact_self_confirmed"`
 }
 
 func toAPIProfile(p *profile.Profile) apiProfile {
@@ -233,7 +265,8 @@ func toAPIProfile(p *profile.Profile) apiProfile {
 		MoveEarliest: p.MoveEarliest, MoveLatest: p.MoveLatest,
 		DurationMonths: p.DurationMonths, Gender: p.Gender, GenderPref: p.GenderPref,
 		Occupation: p.Occupation, Bio: p.Bio, ContactHandle: p.ContactHandle,
-		Searching: p.Searching,
+		Searching:            p.Searching,
+		ContactSelfConfirmed: p.ContactSelfConfirmed,
 	}
 }
 
@@ -269,6 +302,7 @@ func (s *Server) apiProfilePut(w http.ResponseWriter, r *http.Request) {
 		DurationMonths: in.DurationMonths, Gender: in.Gender, GenderPref: in.GenderPref,
 		Occupation: strings.TrimSpace(in.Occupation), Bio: strings.TrimSpace(in.Bio),
 		ContactHandle: strings.TrimSpace(in.ContactHandle), Searching: in.Searching,
+		ContactSelfConfirmed: in.ContactSelfConfirmed,
 	}
 	if p.Currency == "" {
 		p.Currency = "USD"
@@ -454,20 +488,25 @@ func (s *Server) apiMatchesList(w http.ResponseWriter, r *http.Request) {
 }
 
 type apiDetail struct {
-	ID         int64  `json:"id"`
-	FirstName  string `json:"first_name"`
-	AreaText   string `json:"area_text"`
-	Gender     string `json:"gender"`
-	Occupation string `json:"occupation"`
-	Bio        string `json:"bio"`
-	ModeLabel  string `json:"mode_label"`
-	BudgetStr  string `json:"budget_str"`
-	MoveWindow string `json:"move_window"`
-	Contact    string `json:"contact"`
-	Mutual     bool   `json:"mutual"`
-	Saved      bool   `json:"saved"`
-	MyInterest bool   `json:"my_interest"`
-	Ineligible bool   `json:"ineligible"`
+	ID                   int64  `json:"id"`
+	FirstName            string `json:"first_name"`
+	AreaText             string `json:"area_text"`
+	Gender               string `json:"gender"`
+	Occupation           string `json:"occupation"`
+	Bio                  string `json:"bio"`
+	ModeLabel            string `json:"mode_label"`
+	BudgetStr            string `json:"budget_str"`
+	MoveWindow           string `json:"move_window"`
+	Contact              string `json:"contact"`
+	ContactSelfConfirmed bool   `json:"contact_self_confirmed"`
+	Mutual               bool   `json:"mutual"`
+	Saved                bool   `json:"saved"`
+	MyInterest           bool   `json:"my_interest"`
+	Ineligible           bool   `json:"ineligible"`
+	StayID               int64  `json:"stay_id"`
+	StayStatus           string `json:"stay_status"`
+	StayProposedByMe     bool   `json:"stay_proposed_by_me"`
+	CanReview            bool   `json:"can_review"`
 }
 
 type apiDimResult struct {
@@ -541,13 +580,30 @@ func (s *Server) apiMatchDetail(w http.ResponseWriter, r *http.Request) {
 	dv.Saved = acts[target]["save"]
 	dv.MyInterest = acts[target]["interest"]
 	dv.Mutual = mutual
+	if st, ok := s.stayBetween(r, id, target); ok {
+		dv.StayID, dv.StayStatus = st.ID, st.Status
+		dv.StayProposedByMe = st.ProposedBy == id
+		dv.CanReview = st.Status == StayActive || st.Status == StayEnded
+	}
 	if mutual && p.ContactHandle != "" {
 		dv.Contact = p.ContactHandle
+		dv.ContactSelfConfirmed = p.ContactSelfConfirmed
 		database.New(s.DB).AddAction(r.Context(), database.AddActionParams{
 			Actor: id, Target: target, Kind: "reveal", CreatedAt: nowRFC3339(),
 		})
 	}
 	out := map[string]any{"m": dv, "bd": toAPIBreakdown(bd), "top": topStrengths(bd)}
+	if revs, err := s.toAPIReviews(r, target); err == nil {
+		var sum int64
+		for _, rv := range revs {
+			sum += rv.Rating
+		}
+		avg := 0.0
+		if len(revs) > 0 {
+			avg = float64(sum) / float64(len(revs))
+		}
+		out["reviews"], out["review_avg"], out["review_count"] = revs, avg, len(revs)
+	}
 	var flagged []string
 	for _, dr := range bd.Dimensions {
 		if dr.Discuss && dr.Name != "budget" && dr.Name != "area" && dr.Name != "dates" {

@@ -2,7 +2,6 @@ flatmate
 flatmate.exe
 flatmate.db-*
 .env
-internal/database/
 bin/
 roadmap.md
 .gocache

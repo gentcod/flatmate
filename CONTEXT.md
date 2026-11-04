@@ -6,6 +6,8 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - Generate and optimize code only. Do NOT run app-related commands (`go build|run|test|vet`, `make`, binary, sqlite writes).
 - Exception: you MAY create/edit `Makefile`; never invoke its targets.
 - Request user approval before any execution; user runs approved `make` targets.
+- The user owns all git and branch management (branches, commits, pushes, remotes). The assistant never creates branches, commits, or pushes and never asks to.
+- Every implementation round is delivered as one entire scope: all modules, both UIs, tests, and docs in the same round unless the user narrows it.
 - SQL lives in `sql/queries/*.sql`; Go uses generated `internal/database`. Never inline SQL in handlers.
 - Keep changes minimal, stdlib-first, typed, commented only where non-obvious.
 - Update this file when a decision changes; note conflicts with spec explicitly.
@@ -23,8 +25,8 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - Explain every recommendation in plain checkable language. Collect minimal personal data.
 
 ## 4. Scope
-- In: signup/login, profile, conversational onboarding, eligibility filter, weighted scoring + breakdown, match list/detail + discussion prompts, save/dismiss/interest, mutual-interest contact reveal, block/report, 25–30 seeds.
-- Out: payments, identity verification, real-time chat (user ideal but deferred for hackathon; contact reveal only), landlord/agent tools, listings, rent/lease, ML ranking, analytics, multi-currency/locale logic.
+- In: signup/login, profile, conversational onboarding, eligibility filter, weighted scoring + breakdown, match list/detail + discussion prompts, save/dismiss/interest, mutual-interest contact reveal, block/report, room listings (photos via URL, uploads later), mutual-interest chat, flatmate reviews, expense tracker, agreement drafter, NL match search, saved searches, affordability checks, self-confirmed contact labels, admin report queue + metrics, request logging, SQLite backups, installable PWA (offline shell, update prompt), 27 user seeds + 10 listing seeds, verified stays (mutual handshake) with stay-gated flatmate reviews, listing stay/visit reviews with 3-to-1 trust scores, public landing page, chat read/unread tracking.
+- Out: payments, identity verification, websocket chat, landlord/agent tools, rent/lease processing (the expense tracker and agreement drafter are informal helpers, not payment/legal tools), ML ranking, analytics, multi-currency/locale logic.
 
 ## 5. Architecture + Muse boundary (hard rules)
 - Matching engine is pure Go: no network, no LLM, no clock reads; fully unit-tested.
@@ -41,6 +43,8 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - T5 interview-step. In: `{transcript, covered:[...]}`. Out: `{"done":false,"question":"...","answers":[...]}` (answers cumulative). Rules: same dimension/value rules as T1; exactly one short follow-up unless done; done when all covered or user stops.
 - T6 suggest-bridges. In: `{differences:["sleep"]}`. Out: `{"bridges":[{"dimension":"sleep","suggestion":"..."}]}`. Rules: one practical compromise each, names its difference, neutral, no invented facts.
 - T7 generate-questions. In: `{dimensions:[...]}`. Out: `{"questions":[{"dimension":"...","variants":["...","..."]}]}`. Rules: natural one-sentence scenarios answerable by exactly the listed options; never name the dimension/scale. Applies to cleanliness, noise, guests, privacy, social, disagreements; sleep/expenses/smoking/pets/wfh/employment stay direct. Caller picks one random variant per load; any failure falls back to labels.
+- T8 draft-agreement. In: `{me:{...}, mate:{...}}` (profiles + answers, no contacts/coords). Out: `{"title":"...","sections":[{"heading":"...","bullets":["..."]}]}`. Rules: plain-language flatmate agreement covering rent split, bills, cleaning, guests, quiet hours, exit notice; never legal advice, never invented facts; template fallback renders the same inputs.
+- T9 parse-search. In: `{query:"quiet cleaner under 300k"}`. Out: `{"area":"...","max_budget":300000,"dimensions":{"cleanliness":4},"gender":""}`. Rules: extract only stated filters; empty query returns empty filters; keyword fallback scans the lowercased query. The model never selects people — Go applies the filters to computed matches.
 
 ## 7. Resilience + fallbacks
 - Every model call: validate → retry once on invalid/timeout → deterministic template/form.
@@ -55,7 +59,7 @@ func CompleteJSON[T any](ctx context.Context, llm LLM, prompt, schema string, va
 
 ## 8. Stack + repo layout
 - Go 1.23+, stdlib `net/http` ServeMux; `modernc.org/sqlite`; paseto+cookie; `weights.yaml`; sqlc queries in `sql/queries` → `internal/database`; env via `internal/util`.
-- Frontend: React 19 + Vite + TypeScript SPA in `client/` (Router, TanStack Query, Tailwind) talking to the Go JSON API (`internal/web/api.go`, `/api/v1/*`). Legacy `html/template` pages remain behind `FLATMATE_UI=legacy` (default); `-ui=spa` serves `client/dist` from the Go binary. Cutover deletes `web/templates` + `web/static`.
+- Frontend: React 19 + Vite + TypeScript SPA in `client/` (Router, TanStack Query, Tailwind) talking to the Go JSON API (`internal/web/api.go`, `/api/v1/*`). Both UIs use the Warm Editorial system (`docs/designs/`: Newsreader + Plus Jakarta Sans + Material Symbols, limestone/eucalyptus/terracotta). Legacy `html/template` pages remain behind `FLATMATE_UI=legacy` (default); `-ui=spa` serves `client/dist` from the Go binary. Cutover deletes `web/templates` + `web/static`.
 ```
 cmd/server/main.go  internal/{auth,profile,match,ai,web,db,database,util}/
 client/{src,package.json,vite.config.ts}  web/{templates,static}/  sql/queries/*.sql
@@ -63,12 +67,18 @@ migrations/*.sql  weights.yaml  seeds/global.json  Makefile  CONTEXT.md  docs/fl
 ```
 
 ## 9. Data model (SQLite, key columns)
-- `users(id, email_hash, pass_hash, created_at, deactivated_at)`
+- `users(id, email_hash, pass_hash, created_at, deactivated_at, is_admin BOOL DEFAULT 0)` — admins via `cmd/admin` only, never self-serve
 - `profiles(user_id PK, first_name, mode, gender, gender_pref, occupation, area_text, lat, lng, relocating BOOL, budget_min, budget_max, currency, move_earliest, move_latest DERIVED as move_earliest + duration_months, duration_months 1–36, bio, contact_handle TEXT free-text phone/email/WhatsApp, searching BOOL DEFAULT 1)` — searching=false hides the user from match lists and detail (404), toggled from profile (legacy) or Settings (SPA)
 - `onboarding_drafts(user_id PK, description, drafts JSON, created_at, updated_at)` — saved AI description flow state, shown back on onboarding/questionnaire for reference
 - `answers(user_id, dimension, value, hard BOOL, weight INT, PRIMARY KEY(user_id, dimension))`
 - `actions(actor, target, kind, created_at)` kind ∈ save|dismiss|interest; mutual interest = both interest.
 - `blocks(blocker, blocked)` + `reports(reporter, target, reason, created_at)`; blocked pairs never match.
+- `reports.resolved_at NULL + resolution TEXT DEFAULT ''` — admin dismiss/deactivate via the queue; `resolution` ∈ dismiss|deactivate.
+- `listings.photo_url TEXT DEFAULT ''` — empty, /path, or https:// only; seeds use `/placeholders/room-N.svg` served by Go in both UI modes; uploads are a follow-up.
+- `expenses(id, group_id, payer_id, amount, currency, note, spent_at, created_at)` + `saved_searches(id, user_id, name, query, created_at)`; `profiles.contact_self_confirmed BOOL DEFAULT 0` (user asserts their own contact works — not ID verification).
+- `stays(id, user_a, user_b, proposed_by, listing_id NULL, status proposed|active|ended|declined, created_at, updated_at)` — UNIQUE(user_a, user_b) with canonical min/max ordering; active|ended counts as verified. Flatmate reviews require one.
+- `listing_reviews(listing_id, author, rating, body, kind stay|visit, created_at)` — UNIQUE(listing_id, author); kind=stay requires a verified stay on that listing. Trust score = weighted mean, stay 3x, visit 1x.
+- `listings.status available|rented DEFAULT available` — accepting a listing-linked stay flips it to rented; owners toggle back. `messages.read_at NULL` — NULL means unread; opening a thread marks it read.
 
 ## 10. Matching spec
 | dimension | type | scale | compare |
@@ -97,7 +107,7 @@ type Breakdown struct { Total, Practical, Lifestyle, Interpersonal int; Dimensio
 - Show first name + general area only; no exact address; coords never rendered precisely.
 - Reveal `contact_handle` (user-supplied phone/email/WhatsApp) only after mutual interest; log reveal in `actions`.
 - Block/report on every profile; deactivation hides profile immediately.
-- State "unverified" plainly; never show unverified as trusted.
+- State "unverified" plainly; never show unverified as trusted. Contacts are labeled self-confirmed or unverified; self-confirm is the user's own assertion, never an ID check.
 - CSRF: double-submit cookie + hidden form token on every POST (see `internal/auth`); failures 403.
 - Rate limits (in-memory, per-IP login/signup 10/min, per-user AI routes 30/min): auth failures re-render with a message; AI limits degrade to non-AI output, never 429.
 - Cookies HttpOnly + SameSite=Lax always; Secure unless loopback (override `FLATMATE_COOKIE_SECURE=0/1`).

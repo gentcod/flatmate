@@ -6,6 +6,7 @@ import {
   ErrorNote,
   Field,
   Loading,
+  Notice,
   PageTitle,
   errorMessage,
   ghostBtnCls,
@@ -35,7 +36,7 @@ const GENDER_PREFS = [
   { value: 'nonbinary', label: 'Non-binary people' },
 ]
 
-function ProfileForm({ initial }: { initial: Profile }) {
+function ProfileForm({ initial, isNew }: { initial: Profile; isNew: boolean }) {
   const [firstName, setFirstName] = useState(initial.first_name)
   const [mode, setMode] = useState(initial.mode || 'have-room')
   const [areaText, setAreaText] = useState(initial.area_text)
@@ -53,12 +54,14 @@ function ProfileForm({ initial }: { initial: Profile }) {
   const [bio, setBio] = useState(initial.bio)
   const [contact, setContact] = useState(initial.contact_handle)
   const [formError, setFormError] = useState('')
+  const [saved, setSaved] = useState(false)
   const save = useSaveProfile()
   const navigate = useNavigate()
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     setFormError('')
+    setSaved(false)
     if (budgetMin.trim() === '' || budgetMax.trim() === '') {
       setFormError('Budget must be plain numbers, e.g. 400000.')
       return
@@ -99,8 +102,17 @@ function ProfileForm({ initial }: { initial: Profile }) {
       bio: bio.trim(),
       contact_handle: contact.trim(),
       searching: initial.searching,
+      contact_self_confirmed: initial.contact_self_confirmed ?? false,
     }
-    save.mutate(profile, { onSuccess: () => navigate('/questionnaire') })
+    save.mutate(profile, {
+      onSuccess: () => {
+        if (isNew) {
+          navigate('/questionnaire')
+          return
+        }
+        setSaved(true)
+      },
+    })
   }
 
   const error = formError || (save.isError ? errorMessage(save.error) : '')
@@ -113,6 +125,7 @@ function ProfileForm({ initial }: { initial: Profile }) {
             <Field label="First name">
               <input
                 required
+                maxLength={50}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 className={inputCls}
@@ -136,12 +149,12 @@ function ProfileForm({ initial }: { initial: Profile }) {
                 className={inputCls}
               />
             </Field>
-            <label className="flex items-center gap-2 text-sm font-medium text-stone-800">
+            <label className="flex items-center gap-2 text-sm font-medium text-ink">
               <input
                 type="checkbox"
                 checked={relocating}
                 onChange={(e) => setRelocating(e.target.checked)}
-                className="h-4 w-4 accent-emerald-800"
+                className="h-5 w-5 accent-eucalyptus"
               />
               I am relocating to this area
             </label>
@@ -169,7 +182,7 @@ function ProfileForm({ initial }: { initial: Profile }) {
         </Card>
         <Card>
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-3">
               <Field label="Budget min">
                 <input
                   required
@@ -226,7 +239,7 @@ function ProfileForm({ initial }: { initial: Profile }) {
                     onChange={(e) => setDuration(e.target.value)}
                     className={inputCls}
                   />
-                  <span className="text-sm text-stone-600">months</span>
+                  <span className="text-sm text-sage">months</span>
                 </div>
               </Field>
             </div>
@@ -290,6 +303,11 @@ function ProfileForm({ initial }: { initial: Profile }) {
           </div>
         </Card>
       </div>
+      {saved && (
+        <div className="mt-4">
+          <Notice message="Saved." />
+        </div>
+      )}
       {error && (
         <div className="mt-4">
           <ErrorNote message={error} />
@@ -317,7 +335,7 @@ export function ProfilePage() {
         title={query.data.found ? 'Your profile' : 'Tell us about yourself'}
         sub="The practical facts matching runs on."
       />
-      <ProfileForm initial={query.data.profile} />
+      <ProfileForm initial={query.data.profile} isNew={!query.data.found} />
     </>
   )
 }

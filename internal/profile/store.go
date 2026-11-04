@@ -36,25 +36,26 @@ const (
 // Profile mirrors the profiles table. Lat/Lng are nil when unset.
 // MoveLatest is derived as MoveEarliest + DurationMonths on every save.
 type Profile struct {
-	UserID         int64
-	FirstName      string
-	Mode           string
-	AreaText       string
-	Lat            *float64
-	Lng            *float64
-	Relocating     bool
-	BudgetMin      int64
-	BudgetMax      int64
-	Currency       string
-	MoveEarliest   string // YYYY-MM-DD
-	MoveLatest     string // YYYY-MM-DD, derived
-	DurationMonths int    // 1–36
-	Gender         string // woman|man|nonbinary
-	GenderPref     string // anyone|women|men|nonbinary
-	Occupation     string // optional, shown to matches
-	Bio            string
-	ContactHandle  string
-	Searching      bool // visible in matching; new profiles start true
+	UserID               int64
+	FirstName            string
+	Mode                 string
+	AreaText             string
+	Lat                  *float64
+	Lng                  *float64
+	Relocating           bool
+	BudgetMin            int64
+	BudgetMax            int64
+	Currency             string
+	MoveEarliest         string // YYYY-MM-DD
+	MoveLatest           string // YYYY-MM-DD, derived
+	DurationMonths       int    // 1–36
+	Gender               string // woman|man|nonbinary
+	GenderPref           string // anyone|women|men|nonbinary
+	Occupation           string // optional, shown to matches
+	Bio                  string
+	ContactHandle        string
+	Searching            bool // visible in matching; new profiles start true
+	ContactSelfConfirmed bool // user asserts their contact reaches them; never "verified"
 }
 
 // Validate checks user-supplied profile fields.
@@ -159,7 +160,8 @@ func Get(ctx context.Context, d *sql.DB, userID int64) (p *Profile, found bool, 
 		DurationMonths: int(row.DurationMonths), Gender: row.Gender, GenderPref: row.GenderPref,
 		Occupation: row.Occupation,
 		Bio:        row.Bio, ContactHandle: row.ContactHandle,
-		Searching: row.Searching == 1,
+		Searching:            row.Searching == 1,
+		ContactSelfConfirmed: row.ContactSelfConfirmed == 1,
 	}
 	return p, true, nil
 }
@@ -182,7 +184,8 @@ func Upsert(ctx context.Context, d *sql.DB, p *Profile) error {
 		DurationMonths: int64(p.DurationMonths), Gender: p.Gender, GenderPref: p.GenderPref,
 		Occupation: p.Occupation,
 		Bio:        p.Bio, ContactHandle: p.ContactHandle,
-		Searching: boolInt64(p.Searching),
+		Searching:            boolInt64(p.Searching),
+		ContactSelfConfirmed: boolInt64(p.ContactSelfConfirmed),
 	})
 }
 

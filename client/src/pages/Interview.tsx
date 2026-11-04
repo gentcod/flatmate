@@ -5,6 +5,7 @@ import {
   Card,
   ErrorNote,
   Loading,
+  LoadingModal,
   Notice,
   PageTitle,
   ScoreBar,
@@ -23,8 +24,8 @@ function Turns({ turns }: { turns: Turn[] }) {
           <p
             className={`max-w-[80%] rounded-xl px-4 py-2 text-sm ${
               t.role === 'user'
-                ? 'bg-emerald-800 text-white'
-                : 'border border-stone-200 bg-white text-stone-900'
+                ? 'bg-eucalyptus text-white'
+                : 'border border-sand bg-white text-ink shadow-card'
             }`}
           >
             {t.text}
@@ -80,17 +81,17 @@ export function InterviewPage() {
       />
       {turns.length === 0 ? (
         <Card>
-          <p className="text-sm text-stone-700">
+          <p className="text-[15px] text-sage">
             Mention whatever comes to mind: tidiness, noise, sleep hours, guests, privacy, how you
             split bills, smoking, pets, working from home. A few sentences is plenty — you review
             everything before it counts.
           </p>
           {info.data.text && (
-            <details className="mt-3 rounded-lg border border-stone-200 bg-stone-50 px-4 py-2 text-sm">
-              <summary className="cursor-pointer font-semibold text-stone-800">
+            <details className="mt-3 rounded-xl border border-sand bg-parchment px-4 py-2 text-sm">
+              <summary className="cursor-pointer font-semibold text-ink">
                 Your previous description
               </summary>
-              <p className="mt-2 whitespace-pre-line text-stone-700">{info.data.text}</p>
+              <p className="mt-2 whitespace-pre-line text-sage">{info.data.text}</p>
             </details>
           )}
           <form onSubmit={send} className="mt-4 flex flex-col gap-3">
@@ -107,7 +108,7 @@ export function InterviewPage() {
               </button>
               <Link
                 to="/questionnaire"
-                className="text-sm font-semibold text-emerald-800 hover:underline"
+                className="text-sm font-semibold text-eucalyptus hover:underline"
               >
                 Skip to the plain form
               </Link>
@@ -121,7 +122,7 @@ export function InterviewPage() {
               <div className="flex-1">
                 <ScoreBar value={prog.done} max={Math.max(prog.total, 1)} />
               </div>
-              <span className="text-xs font-semibold tabular-nums text-stone-600">
+              <span className="text-xs font-semibold tabular-nums text-sage">
                 {prog.done}/{prog.total} drafted
               </span>
             </div>
@@ -132,6 +133,7 @@ export function InterviewPage() {
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
                 placeholder="Reply…"
+                autoFocus
                 disabled={post.isPending}
                 className={inputCls}
               />
@@ -141,7 +143,7 @@ export function InterviewPage() {
                 </button>
                 <Link
                   to="/questionnaire"
-                  className="text-sm font-semibold text-emerald-800 hover:underline"
+                  className="text-sm font-semibold text-eucalyptus hover:underline"
                 >
                   Skip to the plain form
                 </Link>
@@ -155,6 +157,7 @@ export function InterviewPage() {
           )}
         </>
       )}
+      {post.isPending && <LoadingModal label="Thinking…" />}
       {post.isError && (
         <div className="mt-4">
           <ErrorNote message={errorMessage(post.error)} />

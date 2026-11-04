@@ -1,13 +1,14 @@
 {{define "content"}}
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 {{if .M.Ineligible}}
 <h1>Not eligible</h1>
 <p>You can't match with this person based on hard requirements.</p>
 <p><a href="/matches">Back to matches</a></p>
 {{else}}
-<h1>{{.M.FirstName}} <span class="score">{{.BD.Total}}</span></h1>
-<p class="hint">{{.M.AreaText}} · {{.M.Gender}}{{if .M.Occupation}} · {{.M.Occupation}}{{end}} · {{.M.ModeLabel}} · Unverified</p>
+<h1>{{.M.FirstName}} <span class="pill-score">{{.BD.Total}}%</span></h1>
+<p class="hint">{{.M.AreaText}} · {{.M.Gender}}{{if .M.Occupation}} · {{.M.Occupation}}{{end}} · {{.M.ModeLabel}}</p><p><span class="badge">Unverified</span> <span class="hint">IDs aren't checked — meet in public first.</span></p>
 <p>{{.M.Bio}}</p>
-<p class="hint">Budget: {{.M.BudgetStr}} · Move: {{.M.MoveWindow}}</p>
+<p><span class="chip">Budget: {{.M.BudgetStr}}</span> <span class="chip">Move: {{.M.MoveWindow}}</span></p>
 <h2>Fit</h2>
 <div class="bars">
 <div class="bar-row"><span>Practical</span><div class="bar"><span style="width:{{.BD.Practical}}%"></span></div><strong>{{.BD.Practical}}</strong></div>
@@ -29,6 +30,33 @@
 <tr><th>Area</th><th>Score</th><th>Note</th></tr>
 {{range .BD.Dimensions}}<tr><td>{{.Name}}</td><td>{{.Score}}</td><td>{{.Note}}</td></tr>{{end}}
 </table>
+<h2>Flatmate reviews</h2>
+{{if .Reviews}}<p class="hint">{{.ReviewAvg}} average from {{.ReviewCount}}</p>
+<ul>{{range .Reviews}}<li><strong>{{.AuthorName}}</strong> {{.Rating}}/5 — {{.Body}}{{if .VerifiedStay}} <span class="badge">Verified stay</span>{{end}}</li>{{end}}</ul>
+{{else}}<p class="hint">No reviews yet.</p>{{end}}
+{{if .M.CanReview}}
+<form method="post" action="/match/{{.M.ID}}/review">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Rating <select name="rating"><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></label>
+<label>Review <input type="text" name="body" maxlength="500" required></label>
+<button type="submit">Save review</button>
+</form>
+{{else}}<p class="hint">Reviews unlock after a verified stay together.</p>{{end}}
+<p><a href="/match/{{.M.ID}}/agreement">Draft a roommate agreement →</a></p>
+<h2>Shared home</h2>
+{{if .M.StayStatus}}
+{{if eq .M.StayStatus "active"}}<p class="ok">Living together — verified stay.</p>
+<form method="post" action="/stays/{{.M.StayID}}/end"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">End stay</button></form>
+{{else if eq .M.StayStatus "ended"}}<p class="hint">Lived together before — verified stay.</p>
+{{else if eq .M.StayStatus "proposed"}}{{if .M.StayByMe}}<p class="hint">Stay proposal sent — waiting for them to confirm.</p>{{else}}<p>{{.M.FirstName}} says you live together.</p>
+<form method="post" action="/stays/{{.M.StayID}}/accept"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Confirm stay</button></form>
+<form method="post" action="/stays/{{.M.StayID}}/decline"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Decline</button></form>{{end}}
+{{else if eq .M.StayStatus "declined"}}<p class="hint">Stay proposal declined.</p>
+{{if .M.Mutual}}<form method="post" action="/stays"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><input type="hidden" name="peer_id" value="{{.M.ID}}"><button type="submit">Propose stay again</button></form>{{end}}{{end}}
+{{else}}
+{{if .M.Mutual}}<form method="post" action="/stays"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><input type="hidden" name="peer_id" value="{{.M.ID}}"><button type="submit">We live together — propose stay</button></form>
+{{else}}<p class="hint">Stay verification unlocks on mutual interest.</p>{{end}}
+{{end}}
 <h2>Actions</h2>
 {{if .M.Saved}}
 <form method="post" action="/match/{{.M.ID}}/unsave"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Unsave</button></form>
@@ -43,10 +71,10 @@
 <form method="post" action="/match/{{.M.ID}}/dismiss"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Dismiss</button></form>
 {{if .M.Mutual}}
 <h2>Contact</h2>
-{{if .M.Contact}}<p>{{.M.Contact}}</p>{{else}}<p>Mutual interest, but no contact added yet. <a href="/profile">Add yours</a>.</p>{{end}}
+{{if .M.Contact}}<p>{{.M.Contact}} ({{if .M.ContactSelf}}self-confirmed — not ID-verified{{else}}unverified{{end}})</p>{{else}}<p>Mutual interest, but no contact added yet. <a href="/profile">Add yours</a>.</p>{{end}}
 {{end}}
 <h2>Safety</h2>
-<form method="post" action="/match/{{.M.ID}}/block"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Block</button></form>
+<form method="post" action="/match/{{.M.ID}}/block" onsubmit="return confirm('Block this person? This hides you from each other.');"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Block</button></form>
 <form method="post" action="/match/{{.M.ID}}/report">
 <input type="hidden" name="csrf_token" value="{{.CSRF}}">
 <label>Reason <input type="text" name="reason" maxlength="500"></label>

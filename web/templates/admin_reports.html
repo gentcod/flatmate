@@ -1,0 +1,25 @@
+{{define "content"}}
+<h1>Reports</h1>
+<p><a href="/admin/metrics">Metrics</a></p>
+{{if .Reports}}
+<table class="dims">
+<tr><th>ID</th><th>Reporter</th><th>Target</th><th>Reason</th><th>Filed</th><th>Status</th><th>Action</th></tr>
+{{range .Reports}}
+<tr>
+<td>{{.ID}}</td>
+<td><a href="/match/{{.Reporter}}">{{.ReporterName}}</a></td>
+<td><a href="/match/{{.Target}}">{{.TargetName}}</a></td>
+<td>{{.Reason}}</td>
+<td>{{.CreatedAt}}</td>
+{{if .ResolvedAt}}<td>Resolved ({{.Resolution}})</td><td>—</td>{{else}}<td>Open</td>
+<td>
+<form class="inline" method="post" action="/admin/reports/{{.ID}}/resolve"><input type="hidden" name="csrf_token" value="{{$.CSRF}}"><input type="hidden" name="action" value="dismiss"><button type="submit">Dismiss</button></form>
+<form class="inline" method="post" action="/admin/reports/{{.ID}}/resolve" onsubmit="return confirm('Deactivate this user? They will be signed out and hidden.');"><input type="hidden" name="csrf_token" value="{{$.CSRF}}"><input type="hidden" name="action" value="deactivate"><button type="submit">Deactivate user</button></form>
+</td>{{end}}
+</tr>
+{{end}}
+</table>
+{{else}}
+<p>No reports.</p>
+{{end}}
+{{end}}

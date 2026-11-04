@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"encoding/json"
 	"flag"
 	"log"
@@ -42,6 +43,16 @@ type seedProfile struct {
 	ContactHandle  string   `json:"contact_handle"`
 }
 
+type seedListing struct {
+	Email       string `json:"email"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	AreaText    string `json:"area_text"`
+	MonthlyRent int64  `json:"monthly_rent"`
+	Currency    string `json:"currency"`
+	Photo       string `json:"photo"`
+}
+
 type seedUser struct {
 	Email    string                `json:"email"`
 	Password string                `json:"password"`
@@ -57,6 +68,7 @@ func main() {
 	dbPath := flag.String("db", cfg.DBPath, "sqlite database path (DB_PATH)")
 	seedPath := flag.String("seeds", cfg.SeedPath, "seed file (SEED_PATH)")
 	migDir := flag.String("migrations", cfg.MigrationsDir, "migrations directory (MIGRATIONS_DIR)")
+	listingsPath := flag.String("listings", "seeds/listings.json", "listing seeds file")
 	flag.Parse()
 
 	raw, err := os.ReadFile(*seedPath)
@@ -123,4 +135,55 @@ func main() {
 		added++
 	}
 	log.Printf("seeded %d users (%d skipped)", added, skipped)
+	seedListings(ctx, dbc, *listingsPath)
+}
+
+func seedListings(ctx context.Context, dbc *sql.DB, path string) {
+	raw, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			log.Printf("no listing seeds at %s, skipping", path)
+			return
+		}
+		log.Fatalf("read listing seeds: %v", err)
+	}
+	var listings []seedListing
+	if err := json.Unmarshal(raw, &listings); err != nil {
+		log.Fatalf("parse listing seeds: %v", err)
+	}
+	q := database.New(dbc)
+	added, skipped := 0, 0
+	for _, sl := range listings {
+		u, err := q.GetUserByEmailHash(ctx, auth.HashEmail(sl.Email))
+		if err != nil {
+			log.Printf("listing %q: unknown user %s, skipping", sl.Title, sl.Email)
+			skipped++
+			continue
+		}
+		existing, err := q.ListListingsByUser(ctx, u.ID)
+		if err != nil {
+			log.Fatalf("list listings for %s: %v", sl.Email, err)
+		}
+		dup := false
+		for _, e := range existing {
+			if e.Title == sl.Title {
+				dup = true
+				break
+			}
+		}
+		if dup {
+			skipped++
+			continue
+		}
+		now := time.Now().UTC().Format(time.RFC3339)
+		if _, err := q.CreateListing(ctx, database.CreateListingParams{
+			UserID: u.ID, Title: sl.Title, Description: sl.Description,
+			AreaText: sl.AreaText, MonthlyRent: sl.MonthlyRent, Currency: sl.Currency,
+			PhotoUrl: sl.Photo, CreatedAt: now, UpdatedAt: now,
+		}); err != nil {
+			log.Fatalf("insert listing %q: %v", sl.Title, err)
+		}
+		added++
+	}
+	log.Printf("seeded %d listings (%d skipped)", added, skipped)
 }

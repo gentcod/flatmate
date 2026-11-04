@@ -19,7 +19,7 @@
 {{if .Error}}<p class="error">{{.Error}}</p>{{end}}
 <form method="post" action="/onboarding">
 <input type="hidden" name="csrf_token" value="{{.CSRF}}">
-<textarea name="description" rows="6" maxlength="2000">{{.Text}}</textarea>
+<textarea name="description" rows="6" maxlength="2000" aria-label="Describe your living habits">{{.Text}}</textarea>
 <button type="submit">Start the interview</button>
 </form>
 <p>Prefer the plain form? <a href="/questionnaire">Fill it directly</a>.</p>

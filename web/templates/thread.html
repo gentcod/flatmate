@@ -1,0 +1,16 @@
+{{define "content"}}
+<p><a href="/chat">← All chats</a></p>
+<h1>{{.PeerName}}</h1>
+<p><a href="/expenses/{{.PeerID}}">Split expenses →</a></p>
+{{if .Error}}<p class="error">{{.Error}}</p>{{end}}
+{{range .Messages}}
+{{if .Mine}}<p class="turn-user">{{.Body}} <span class="hint">{{.At}}</span></p>{{else}}<p class="turn-assistant">{{.Body}} <span class="hint">{{.At}}</span></p>{{end}}
+{{else}}
+<p class="hint">No messages yet. Say hello — keep it friendly, meet in public first.</p>
+{{end}}
+<form method="post" action="/chat/{{.PeerID}}">
+<input type="hidden" name="csrf_token" value="{{.CSRF}}">
+<label>Message <input type="text" name="body" maxlength="2000" required></label>
+<button type="submit">Send</button>
+</form>
+{{end}}

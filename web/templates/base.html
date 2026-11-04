@@ -4,17 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Title}} — Flatmate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/app.css">
 <script src="https://unpkg.com/htmx.org@1.9.12"></script>
 </head>
 <body>
 <header>
 <nav>
-<a class="brand" href="/">Flatmate</a>
+<a class="brand" href="/">Flatmate<span class="brand-sub">Shared Living</span></a>
 {{if .Authed}}
 <a href="/matches">Matches</a>
 <a href="/profile">Profile</a>
 <a href="/questionnaire">Questionnaire</a>
+<a href="/listings">Listings</a>
+<a href="/chat">Chat</a>
+{{if .IsAdmin}}<a href="/admin/reports">Admin</a>{{end}}
 <form class="inline" method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Log out</button></form>
 {{else}}
 <a href="/login">Log in</a>
@@ -28,5 +34,18 @@
 <footer>
 <p class="hint">Flatmate demo — profiles are unverified. Scores advise; you decide.</p>
 </footer>
+<div id="busy" class="busy-overlay" hidden><div class="busy-card"><span class="spinner" aria-hidden="true"></span><p>Working…</p></div></div>
+<script>
+document.addEventListener('submit', function (e) {
+  var f = e.target;
+  if (f && f.tagName === 'FORM') {
+    var b = document.getElementById('busy');
+    if (b) b.hidden = false;
+    f.querySelectorAll('button[type="submit"], input[type="submit"]').forEach(function (el) {
+      el.disabled = true;
+    });
+  }
+});
+</script>
 </body>
 </html>{{end}}

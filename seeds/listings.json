@@ -1,0 +1,92 @@
+[
+  {
+    "email": "adaeze@example.com",
+    "title": "Sunny room in Yaba flat",
+    "description": "Private room in a calm 3-bedroom shared with two working professionals. In-unit washer, borehole water, and a prepaid meter. Quiet after 10pm on weeknights.",
+    "area_text": "Yaba, Lagos",
+    "monthly_rent": 180000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-1.svg"
+  },
+  {
+    "email": "tunde@example.com",
+    "title": "Room near UNILAG with balcony",
+    "description": "Furnished room, 10 minutes from the university gate. Shared kitchen and sitting room, cleaning rota on the fridge. Looking for a tidy student or corps member.",
+    "area_text": "Akoka, Lagos",
+    "monthly_rent": 150000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-2.svg"
+  },
+  {
+    "email": "chiamaka@example.com",
+    "title": " Ensuite room in Lekki Phase 1",
+    "description": "Spacious ensuite room in a serviced estate. 24-hour power, security, and parking for one car. Ideal for a remote worker — fibre internet already installed.",
+    "area_text": "Lekki Phase 1, Lagos",
+    "monthly_rent": 650000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-3.svg"
+  },
+  {
+    "email": "emeka@example.com",
+    "title": "Cozy room in Surulere",
+    "description": "Room in a friendly 2-bedroom close to Adeniran Ogunsanya. Shared bills split evenly, guests fine on weekends with a heads-up.",
+    "area_text": "Surulere, Lagos",
+    "monthly_rent": 200000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-4.svg"
+  },
+  {
+    "email": "funmi@example.com",
+    "title": "Quiet room in Gbagada estate",
+    "description": "Neat room facing the courtyard — no road noise. Estate with good water and a small gym nearby. No smoking indoors.",
+    "area_text": "Gbagada, Lagos",
+    "monthly_rent": 220000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-5.svg"
+  },
+  {
+    "email": "ibrahim@example.com",
+    "title": "Room in Ikeja GRA duplex",
+    "description": "Large room with wardrobe wall in a shared duplex. Boys-quarters kitchen access, POP ceilings, and a standby generator.",
+    "area_text": "Ikeja GRA, Lagos",
+    "monthly_rent": 350000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-6.svg"
+  },
+  {
+    "email": "ngozi@example.com",
+    "title": "Affordable room in Ajah",
+    "description": "Simple clean room near the Ajah bridge. Shared kitchen, prepaid meter, danfo and BRT nearby. First month plus agreement fee.",
+    "area_text": "Ajah, Lagos",
+    "monthly_rent": 130000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-1.svg"
+  },
+  {
+    "email": "olumide@example.com",
+    "title": "Victoria Island studio share",
+    "description": "Half of a large studio on Ahmadu Bello Way — partitioned sleeping areas, shared bath and kitchenette. Great for a young banker or analyst.",
+    "area_text": "Victoria Island, Lagos",
+    "monthly_rent": 450000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-2.svg"
+  },
+  {
+    "email": "aisha@example.com",
+    "title": "Room in Maryland family flat",
+    "description": "One room in a 3-bedroom family flat; the family travels often so it is mostly quiet. Separate entrance, shared kitchen.",
+    "area_text": "Maryland, Lagos",
+    "monthly_rent": 190000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-3.svg"
+  },
+  {
+    "email": "kunle@example.com",
+    "title": "Ogudu waterfront room",
+    "description": "Airy room overlooking the water in Ogudu. Work-from-home friendly, backup inverter, and a housemate who cooks on Sundays.",
+    "area_text": "Ogudu, Lagos",
+    "monthly_rent": 280000,
+    "currency": "NGN",
+    "photo": "/placeholders/room-4.svg"
+  }
+]

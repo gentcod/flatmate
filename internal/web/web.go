@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/gentcod/flatmate/internal/admin"
 	"github.com/gentcod/flatmate/internal/ai"
 	"github.com/gentcod/flatmate/internal/auth"
 	"github.com/gentcod/flatmate/internal/database"
@@ -27,6 +28,7 @@ type Server struct {
 	CookieSecure bool
 	LoginLimiter *Limiter
 	AILimiter    *Limiter
+	MsgLimiter   *Limiter
 	Interviews   *Interviews
 	// UI selects the frontend: "legacy" serves the Go templates,
 	// "spa" serves the built client from ClientDist.
@@ -46,7 +48,7 @@ func LoadPages(dir string) (map[string]*template.Template, error) {
 	if err != nil {
 		return nil, err
 	}
-	pages := []string{"signup", "login", "profile", "questionnaire", "matches", "match_detail", "onboarding"}
+	pages := []string{"signup", "login", "profile", "questionnaire", "matches", "match_detail", "onboarding", "listings", "listing", "chat", "thread", "expenses", "agreement", "admin_reports", "admin_metrics", "landing"}
 	out := make(map[string]*template.Template, len(pages))
 	for _, name := range pages {
 		t, err := base.Clone()
@@ -68,6 +70,7 @@ func (s *Server) NewMux(staticDir string) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, _ *http.Request) { w.Write([]byte("ok")) })
 	s.registerAPI(mux)
+	mux.Handle("GET /placeholders/", http.StripPrefix("/placeholders/", http.FileServer(http.Dir(filepath.Join(staticDir, "placeholders")))))
 	if s.UI == "spa" {
 		s.registerSPA(mux)
 		return mux
@@ -94,6 +97,31 @@ func (s *Server) NewMux(staticDir string) *http.ServeMux {
 	mux.Handle("POST /account/deactivate", s.requireAuth(http.HandlerFunc(s.handleDeactivate)))
 	mux.Handle("GET /onboarding", s.requireAuth(http.HandlerFunc(s.handleOnboardingShow)))
 	mux.Handle("POST /onboarding", s.requireAuth(http.HandlerFunc(s.handleOnboardingPost)))
+	mux.Handle("GET /listings", s.requireAuth(http.HandlerFunc(s.handleListingsShow)))
+	mux.Handle("POST /listings", s.requireAuth(http.HandlerFunc(s.handleListingsPost)))
+	mux.Handle("GET /listing/{id}", s.requireAuth(http.HandlerFunc(s.handleListingShow)))
+	mux.Handle("POST /listing/{id}/edit", s.requireAuth(http.HandlerFunc(s.handleListingEdit)))
+	mux.Handle("POST /listing/{id}/delete", s.requireAuth(http.HandlerFunc(s.handleListingDelete)))
+	mux.Handle("POST /listing/{id}/report", s.requireAuth(http.HandlerFunc(s.handleListingReport)))
+	mux.Handle("POST /stays", s.requireAuth(http.HandlerFunc(s.handleStaysPropose)))
+	mux.Handle("POST /stays/{id}/accept", s.requireAuth(http.HandlerFunc(s.handleStayAccept)))
+	mux.Handle("POST /stays/{id}/decline", s.requireAuth(http.HandlerFunc(s.handleStayDecline)))
+	mux.Handle("POST /stays/{id}/end", s.requireAuth(http.HandlerFunc(s.handleStayEnd)))
+	mux.Handle("POST /listing/{id}/reviews", s.requireAuth(http.HandlerFunc(s.handleListingReviewsPost)))
+	mux.Handle("POST /listing/{id}/status", s.requireAuth(http.HandlerFunc(s.handleListingStatus)))
+	mux.Handle("GET /chat", s.requireAuth(http.HandlerFunc(s.handleChatShow)))
+	mux.Handle("GET /chat/{id}", s.requireAuth(http.HandlerFunc(s.handleThreadShow)))
+	mux.Handle("POST /chat/{id}", s.requireAuth(http.HandlerFunc(s.handleThreadPost)))
+	mux.Handle("POST /match/{id}/review", s.requireAuth(http.HandlerFunc(s.handleReviewPost)))
+	mux.Handle("GET /expenses/{id}", s.requireAuth(http.HandlerFunc(s.handleExpensesShow)))
+	mux.Handle("POST /expenses/{id}", s.requireAuth(http.HandlerFunc(s.handleExpensesPost)))
+	mux.Handle("POST /expenses/item/{id}/delete", s.requireAuth(http.HandlerFunc(s.handleExpenseDelete)))
+	mux.Handle("POST /searches", s.requireAuth(http.HandlerFunc(s.handleSearchesPost)))
+	mux.Handle("POST /searches/{id}/delete", s.requireAuth(http.HandlerFunc(s.handleSearchDelete)))
+	mux.Handle("GET /match/{id}/agreement", s.requireAuth(http.HandlerFunc(s.handleAgreementShow)))
+	mux.Handle("GET /admin/reports", s.requireAdmin(http.HandlerFunc(s.handleAdminReports)))
+	mux.Handle("POST /admin/reports/{id}/resolve", s.requireAdmin(http.HandlerFunc(s.handleAdminResolve)))
+	mux.Handle("GET /admin/metrics", s.requireAdmin(http.HandlerFunc(s.handleAdminMetrics)))
 	return mux
 }
 
@@ -107,10 +135,17 @@ func (s *Server) registerSPA(mux *http.ServeMux) {
 		if clean != "/" {
 			full := filepath.Join(s.ClientDist, filepath.FromSlash(clean))
 			if info, err := os.Stat(full); err == nil && !info.IsDir() {
+				if clean == "/sw.js" {
+					w.Header().Set("Cache-Control", "no-cache")
+				}
+				if path.Ext(clean) == ".webmanifest" {
+					w.Header().Set("Content-Type", "application/manifest+json")
+				}
 				http.ServeFile(w, r, full)
 				return
 			}
 		}
+		w.Header().Set("Cache-Control", "no-cache")
 		http.ServeFile(w, r, filepath.Join(s.ClientDist, "index.html"))
 	}))
 }
@@ -172,6 +207,16 @@ func (s *Server) requireAuth(next http.Handler) http.Handler {
 	})
 }
 
+func (s *Server) requireAdmin(next http.Handler) http.Handler {
+	return s.requireAuth(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if !admin.IsAdmin(r.Context(), database.New(s.DB), authedID(r)) {
+			http.Error(w, "admins only", http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}))
+}
+
 func authedID(r *http.Request) int64 {
 	id, _ := r.Context().Value(userKey).(int64)
 	return id
@@ -182,5 +227,5 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/matches", http.StatusSeeOther)
 		return
 	}
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	s.render(w, "landing", map[string]any{"Title": "Find flatmates who match your rhythm", "CSRF": s.csrfToken(w, r)})
 }

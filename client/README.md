@@ -7,7 +7,7 @@ The Go server exposes the JSON API under `/api/v1` (see
 ## Prerequisites
 
 - Node 22+
-- The Go server running (`make demo` from the repo root serves `:8080`)
+- The Go server running (`make serve` from the repo root serves `:8080`)
 
 ## Run
 
@@ -18,9 +18,9 @@ npm run lint    # tsc + eslint, must be clean
 npm run build   # lint + vite build into dist/
 ```
 
-Production: `make client-build`, then run the server with `-ui=spa`
-(or `FLATMATE_UI=spa`); Go serves `client/dist` itself, so the demo
-stays one process.
+Production: from the repo root, `make client-setup` (install, PWA icons,
+build), then run the server with `-ui=spa` (or `FLATMATE_UI=spa`);
+Go serves `client/dist` itself, so the demo stays one process.
 
 ## Notes
 
