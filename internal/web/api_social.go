@@ -34,6 +34,46 @@ func (s *Server) toAPIListing(r *http.Request, id int64, l database.Listing) api
 	}
 }
 
+type apiNotification struct {
+	ID        int64  `json:"id"`
+	Kind      string `json:"kind"`
+	ActorID   int64  `json:"actor_id"`
+	ActorName string `json:"actor_name"`
+	RefID     int64  `json:"ref_id"`
+	Body      string `json:"body"`
+	Read      bool   `json:"read"`
+	CreatedAt string `json:"created_at"`
+}
+
+// apiNotifications lists the caller's notifications, unread first.
+func (s *Server) apiNotifications(w http.ResponseWriter, r *http.Request) {
+	id := authedID(r)
+	notes, err := database.New(s.DB).ListNotifications(r.Context(), database.ListNotificationsParams{UserID: id, Limit: 30})
+	if err != nil {
+		writeErr(w, http.StatusInternalServerError, "Something went wrong. Try again.")
+		return
+	}
+	out := make([]apiNotification, 0, len(notes))
+	var unread int64
+	for _, n := range notes {
+		if !n.ReadAt.Valid {
+			unread++
+		}
+		out = append(out, apiNotification{
+			ID: n.ID, Kind: n.Kind, ActorID: n.ActorID, ActorName: s.authorName(r, n.ActorID),
+			RefID: n.RefID, Body: n.Body, Read: n.ReadAt.Valid, CreatedAt: n.CreatedAt,
+		})
+	}
+	writeJSON(w, http.StatusOK, map[string]any{"notifications": out, "unread_count": unread})
+}
+
+// apiNotificationsRead marks all caller notifications read.
+func (s *Server) apiNotificationsRead(w http.ResponseWriter, r *http.Request) {
+	id := authedID(r)
+	database.New(s.DB).MarkNotificationsRead(r.Context(), database.MarkNotificationsReadParams{ReadAt: sql.NullString{String: nowRFC3339(), Valid: true}, UserID: id})
+	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
+}
+
 func (s *Server) apiListingsList(w http.ResponseWriter, r *http.Request) {
 	id := authedID(r)
 	var rows []database.Listing
@@ -449,6 +489,7 @@ func (s *Server) apiReviewsPut(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusInternalServerError, "Something went wrong. Try again.")
 		return
 	}
+	s.notify(r, target, "user_review", id, id, s.authorName(r, id)+" left you a review.")
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
@@ -542,6 +583,11 @@ func (s *Server) apiStaysPropose(w http.ResponseWriter, r *http.Request) {
 				writeErr(w, http.StatusInternalServerError, "Something went wrong. Try again.")
 				return
 			}
+			other := a
+			if other == id {
+				other = b
+			}
+			s.notify(r, other, "stay_proposed", id, st.ID, s.authorName(r, id)+" wants to confirm you live together.")
 			writeJSON(w, http.StatusOK, map[string]any{"id": st.ID, "status": StayProposed})
 		case StayEnded:
 			writeErr(w, http.StatusConflict, "You already have stay history together.")
@@ -562,6 +608,11 @@ func (s *Server) apiStaysPropose(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	stayID, _ := res.LastInsertId()
+	otherID := a
+	if otherID == id {
+		otherID = b
+	}
+	s.notify(r, otherID, "stay_proposed", id, stayID, s.authorName(r, id)+" wants to confirm you live together.")
 	writeJSON(w, http.StatusCreated, map[string]any{"id": stayID, "status": StayProposed})
 }
 
@@ -608,6 +659,18 @@ func (s *Server) apiStayTransition(w http.ResponseWriter, r *http.Request, actio
 	}); err != nil {
 		writeErr(w, http.StatusInternalServerError, "Something went wrong. Try again.")
 		return
+	}
+	other := st.UserA
+	if other == id {
+		other = st.UserB
+	}
+	switch next {
+	case StayActive:
+		s.notify(r, other, "stay_accepted", id, st.ID, s.authorName(r, id)+" confirmed your stay.")
+	case StayDeclined:
+		s.notify(r, other, "stay_declined", id, st.ID, s.authorName(r, id)+" declined your stay proposal.")
+	case StayEnded:
+		s.notify(r, other, "stay_ended", id, st.ID, s.authorName(r, id)+" ended your stay.")
 	}
 	if next == StayActive && st.ListingID.Valid {
 		_ = database.New(s.DB).UpdateListingStatus(r.Context(), database.UpdateListingStatusParams{
@@ -714,6 +777,7 @@ func (s *Server) apiListingReviewsPut(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusInternalServerError, "Something went wrong. Try again.")
 		return
 	}
+	s.notify(r, l.UserID, "listing_review", id, l.ID, s.authorName(r, id)+" left a "+kind+" review on "+l.Title+".")
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 

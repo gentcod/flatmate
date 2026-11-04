@@ -23,9 +23,12 @@ type Querier interface {
 	CountOpenReports(ctx context.Context) (int64, error)
 	CountReport(ctx context.Context, arg CountReportParams) (int64, error)
 	CountReviews(ctx context.Context) (int64, error)
+	CountUnreadNotifications(ctx context.Context, userID int64) (int64, error)
 	CountUsersByEmailHash(ctx context.Context, emailHash []byte) (int64, error)
 	CreateListing(ctx context.Context, arg CreateListingParams) (sql.Result, error)
+	CreateNotification(ctx context.Context, arg CreateNotificationParams) error
 	CreateSearch(ctx context.Context, arg CreateSearchParams) (sql.Result, error)
+	CreateStay(ctx context.Context, arg CreateStayParams) (sql.Result, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
 	DeactivateUser(ctx context.Context, arg DeactivateUserParams) error
 	DeleteActionsBetween(ctx context.Context, arg DeleteActionsBetweenParams) error
@@ -36,10 +39,14 @@ type Querier interface {
 	GetAnswers(ctx context.Context, userID int64) ([]Answer, error)
 	GetExpense(ctx context.Context, id int64) (Expense, error)
 	GetListing(ctx context.Context, id int64) (Listing, error)
+	GetListingReview(ctx context.Context, arg GetListingReviewParams) (ListingReview, error)
 	GetOnboardingDraft(ctx context.Context, userID int64) (OnboardingDraft, error)
 	GetProfile(ctx context.Context, userID int64) (Profile, error)
 	GetReport(ctx context.Context, id int64) (Report, error)
 	GetReview(ctx context.Context, arg GetReviewParams) (Review, error)
+	GetStay(ctx context.Context, id int64) (Stay, error)
+	GetStayBetween(ctx context.Context, arg GetStayBetweenParams) (Stay, error)
+	GetStayForListing(ctx context.Context, arg GetStayForListingParams) (Stay, error)
 	GetUserAdmin(ctx context.Context, id int64) (int64, error)
 	GetUserByEmailHash(ctx context.Context, emailHash []byte) (User, error)
 	GetUserByID(ctx context.Context, id int64) (User, error)
@@ -53,19 +60,27 @@ type Querier interface {
 	ListConversation(ctx context.Context, arg ListConversationParams) ([]Message, error)
 	ListExpenses(ctx context.Context, arg ListExpensesParams) ([]Expense, error)
 	ListInterestActors(ctx context.Context, target int64) ([]int64, error)
+	ListListingReviews(ctx context.Context, listingID int64) ([]ListingReview, error)
 	ListListings(ctx context.Context, limit int64) ([]Listing, error)
 	ListListingsByUser(ctx context.Context, userID int64) ([]Listing, error)
+	ListNotifications(ctx context.Context, arg ListNotificationsParams) ([]Notification, error)
 	ListRecentForUser(ctx context.Context, arg ListRecentForUserParams) ([]Message, error)
 	ListReportTargets(ctx context.Context, reporter int64) ([]int64, error)
 	ListReports(ctx context.Context, limit int64) ([]Report, error)
 	ListReviewsForUser(ctx context.Context, target int64) ([]Review, error)
 	ListSearches(ctx context.Context, userID int64) ([]SavedSearch, error)
+	ListStaysForUser(ctx context.Context, userID int64) ([]Stay, error)
+	MarkNotificationsRead(ctx context.Context, arg MarkNotificationsReadParams) error
 	MarkThreadRead(ctx context.Context, arg MarkThreadReadParams) error
 	RemoveAction(ctx context.Context, arg RemoveActionParams) error
 	ResolveReport(ctx context.Context, arg ResolveReportParams) error
 	SetUserAdmin(ctx context.Context, arg SetUserAdminParams) error
 	UnreadBySender(ctx context.Context, recipient int64) ([]UnreadBySenderRow, error)
 	UpdateListing(ctx context.Context, arg UpdateListingParams) error
+	UpdateListingStatus(ctx context.Context, arg UpdateListingStatusParams) error
+	UpdateStayProposal(ctx context.Context, arg UpdateStayProposalParams) error
+	UpdateStayStatus(ctx context.Context, arg UpdateStayStatusParams) error
+	UpsertListingReview(ctx context.Context, arg UpsertListingReviewParams) error
 	UpsertOnboardingDraft(ctx context.Context, arg UpsertOnboardingDraftParams) error
 	UpsertProfile(ctx context.Context, arg UpsertProfileParams) error
 	UpsertReview(ctx context.Context, arg UpsertReviewParams) error

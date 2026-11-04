@@ -5,7 +5,7 @@ package ai
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 )
 
 // LLM produces raw JSON for a prompt. Implementations must honor ctx.
@@ -44,6 +44,9 @@ type disabledLLM struct{}
 // The server uses this unless a model endpoint is configured.
 func Disabled() LLM { return disabledLLM{} }
 
+// ErrNotConfigured is returned when no model is configured.
+var ErrNotConfigured = errors.New("ai: model not configured")
+
 func (disabledLLM) CompleteRaw(ctx context.Context, prompt, schema string) (json.RawMessage, error) {
-	return nil, fmt.Errorf("ai: model not configured")
+	return nil, ErrNotConfigured
 }

@@ -53,6 +53,23 @@ func stubbedModel(t *testing.T, status int, reply string) (*httpModel, *roundTri
 	return hm, stub
 }
 
+func TestHTTPModelTimeouts(t *testing.T) {
+	m, err := NewHTTPModel("https://api.meta.ai/v1/responses", "muse-wonder-1.0", "tok")
+	if err != nil {
+		t.Fatal(err)
+	}
+	tr, ok := m.(*httpModel).client.Transport.(*http.Transport)
+	if !ok {
+		t.Fatalf("transport: %T, want *http.Transport", m.(*httpModel).client.Transport)
+	}
+	if tr.TLSHandshakeTimeout == 0 || tr.ResponseHeaderTimeout == 0 || tr.DialContext == nil {
+		t.Error("transport timeouts not set: network stalls would hang until the context deadline")
+	}
+	if tr.Proxy == nil {
+		t.Error("transport proxy not set: environments needing a proxy would hang")
+	}
+}
+
 func TestCompleteRawResponses(t *testing.T) {
 	m, stub := stubbedModel(t, 200, `{"id":"resp_1","status":"completed","output":[
 		{"type":"reasoning","id":"rs_1"},

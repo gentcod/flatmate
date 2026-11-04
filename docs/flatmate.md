@@ -55,7 +55,7 @@ The MVP tests one idea: **people will use structured compatibility matching inst
 - Sign up and log in (secure cookies, rate-limited, CSRF-protected).
 - Profile: arrangement mode, preferred area (+ optional relocating flag and coordinates), budget and currency, move-in date plus stay duration in months, gender and mutual gender preference, occupation, short bio, contact handle.
 - Searching visibility: on by default; hide yourself once you've found a roommate and you disappear from lists and detail pages.
-- Lifestyle questionnaire (see section 6): plain form, AI-drafted scenario prompts, or a capped conversational interview with skip-to-form fallback.
+- Lifestyle questionnaire (see section 6): plain form, AI-drafted scenario prompts, or a one-shot AI description draft with skip-to-form fallback.
 - Eligibility filtering on hard requirements, blocks, and gender preferences.
 - Ranked matches with full score transparency: total, three group scores, top strengths, and a dimension-by-dimension table.
 - Save, dismiss, and express interest. Mutual interest reveals contact details.
@@ -66,8 +66,9 @@ The MVP tests one idea: **people will use structured compatibility matching inst
 - Decide/live-together tools: shared expense tracker with running balances, an AI agreement drafter (template fallback, not legal advice), natural-language match search, saved searches, affordability checks on listings, and self-confirmed contact labels.
 - Trust-ops: admin report queue (dismiss or deactivate) and metrics in both UIs, per-request logging, `make backup` snapshots, CLI-only admin promotion.
 - Verified stays: mutual handshake (propose/confirm) proves two users rented together; flatmate reviews require a verified stay and carry a verified tag. Listings take stay reviews (verified tenants) and visit reviews (anyone), shown in separate views with a trust score weighting tenants 3-to-1. Accepting a stay auto-marks its listing rented; owners can re-list.
+- Alerts for interests, stay proposals/transitions, and reviews: unread badge in both UIs (SPA header bell, legacy nav count), deep links to the match or listing, mark-all-read.
 - Installable PWA: precached app shell with an honest offline notice, update prompt, install icons — API calls always go to the network, never the cache.
-- Action feedback everywhere: blocking loading modal for slow processes (agreement drafts, interview, auth), button spinners plus toast verdicts for fast actions (interest, save, dismiss, chat), hand pointer on all clickables, lazy-loaded routes and listing photos. Legacy forms show a working overlay and lock their submit buttons.
+- Action feedback everywhere: blocking loading modal for slow processes (agreement drafts, answer drafting, auth), button spinners plus toast verdicts for fast actions (interest, save, dismiss, chat), hand pointer on all clickables, lazy-loaded routes and listing photos. Legacy forms show a working overlay and lock their submit buttons. Chat setup shows a visible message for short replies and locks its inputs while the AI thinks; switching chat→form re-seeds the questionnaire.
 - Public landing page at `/` for logged-out visitors (both UIs): hero with habit-search teaser, example match and room previews, the Flatmate contrast, three pillars, an interactive scenario sandbox (SPA), trust banner, and signup CTAs. Signed-in users still land on matches. All previews are labeled examples; no fake stats, ID badges, or hotlinked photos.
 - Two clients on one JSON API: the React SPA and the legacy server-rendered pages.
 

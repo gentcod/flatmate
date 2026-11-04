@@ -74,6 +74,11 @@ func TestTemplatesRender(t *testing.T) {
 		"admin_metrics": {"Title": "Metrics", "Authed": true, "IsAdmin": true,
 			"users": 3, "active_users": 2, "open_reports": 1, "listings": 4, "reviews": 5, "expenses": 6},
 		"landing": {"Title": "Find flatmates who match your rhythm", "CSRF": "t"},
+		"alerts": {"Title": "Alerts", "Authed": true, "CSRF": "t", "UnreadAlerts": int64(1),
+			"Alerts": []alertView{
+				{Kind: "interest", ActorID: 2, ActorName: "Bo", RefID: 2, Body: "Bo showed interest in you.", Unread: true, At: "2026-01-01"},
+				{Kind: "listing_review", ActorID: 2, ActorName: "Bo", RefID: 7, Body: "Bo left a stay review on Sunny room.", At: "2026-01-02"},
+			}},
 	}
 	for name, data := range cases {
 		tmpl, ok := pages[name]
@@ -84,11 +89,5 @@ func TestTemplatesRender(t *testing.T) {
 		if err := tmpl.ExecuteTemplate(io.Discard, "base", data); err != nil {
 			t.Errorf("render %s: %v", name, err)
 		}
-	}
-	iv := map[string]any{"Title": "o", "Authed": true, "CSRF": "t", "Interview": true,
-		"Turns": []Turn{{Role: "user", Text: "hi"}, {Role: "assistant", Text: "q?"}},
-		"Done":  1, "Total": 12}
-	if err := pages["onboarding"].ExecuteTemplate(io.Discard, "base", iv); err != nil {
-		t.Errorf("render onboarding interview: %v", err)
 	}
 }

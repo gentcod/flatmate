@@ -87,8 +87,8 @@ SELECT id, user_a, user_b, proposed_by, listing_id, status, created_at, updated_
 `
 
 type GetStayForListingParams struct {
-	ListingID int64 `json:"listing_id"`
-	UserID    int64 `json:"user_id"`
+	ListingID sql.NullInt64 `json:"listing_id"`
+	UserID    int64         `json:"user_id"`
 }
 
 func (q *Queries) GetStayForListing(ctx context.Context, arg GetStayForListingParams) (Stay, error) {

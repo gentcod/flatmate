@@ -260,30 +260,17 @@ export interface MatchDetailResponse {
   review_count?: number
 }
 
-export interface Turn {
-  role: string
-  text: string
-}
-
 export interface OnboardingInfo {
-  total: number
-  active: boolean
-  turns: Turn[]
-  drafts_done: number
   text: string
   drafts?: Answer[]
 }
 
 export interface InterviewResponse {
   done?: boolean
-  turns?: Turn[]
-  drafts_done?: number
-  total?: number
   seed?: Record<string, Answer>
   transcript?: string
   message?: string
   fallback?: boolean
-  error?: string
 }
 
 export interface ExpenseItem {
@@ -402,6 +389,22 @@ export interface Conversation {
   last_body: string
   last_at: string
   last_from_me: boolean
+  unread_count: number
+}
+
+export interface NotificationItem {
+  id: number
+  kind: string
+  actor_id: number
+  actor_name: string
+  ref_id: number
+  body: string
+  read: boolean
+  created_at: string
+}
+
+export interface NotificationListResponse {
+  notifications: NotificationItem[]
   unread_count: number
 }
 

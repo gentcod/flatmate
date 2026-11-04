@@ -241,7 +241,7 @@ function QuestionnaireForm({
           <p className="mt-2 whitespace-pre-line text-sage">{description}</p>
         </details>
       )}
-      <div className="mb-6 flex justify-end">
+      <div className="sticky top-24 z-30 mb-6 flex justify-end">
         <div className="flex items-center gap-3 rounded-2xl border border-sand bg-white px-4 py-3 shadow-card">
           <div className="flex flex-col">
             <span className="text-[13px] text-sage">Calibrated</span>
@@ -298,6 +298,7 @@ export function QuestionnairePage() {
       /* private mode: seeds last until refresh */
     }
   }
+  const seedKey = navState.seed ? JSON.stringify(navState.seed) : 'server'
   let state = navState
   if (!state.seed) {
     try {
@@ -317,6 +318,7 @@ export function QuestionnairePage() {
         sub="Choose the path that fits how you express yourself. Every path calibrates the same 12 living compatibility dimensions."
       />
       <QuestionnaireForm
+        key={seedKey}
         dims={query.data.dims}
         description={query.data.description}
         notice={query.data.notice}

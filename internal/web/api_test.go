@@ -45,8 +45,7 @@ func testAPIServerFull(t *testing.T) *Server {
 	srv := &Server{DB: d, Sessions: sessions, Weights: weights, AI: ai.Disabled(),
 		LoginLimiter: NewLimiter(1000, time.Minute),
 		AILimiter:    NewLimiter(1000, time.Minute),
-		MsgLimiter:   NewLimiter(1000, time.Minute),
-		Interviews:   NewInterviews(time.Minute)}
+		MsgLimiter:   NewLimiter(1000, time.Minute)}
 	return srv
 }
 
@@ -356,8 +355,8 @@ func TestAPIOnboardingFallback(t *testing.T) {
 
 	var get map[string]any
 	decodeBody(t, c.do("GET", "/api/v1/onboarding", nil), &get)
-	if get["active"] != false {
-		t.Errorf("fresh onboarding: active=%v", get["active"])
+	if get["text"] != "" {
+		t.Errorf("fresh onboarding: text=%v", get["text"])
 	}
 	var post map[string]any
 	rec := c.do("POST", "/api/v1/onboarding", map[string]string{
@@ -880,6 +879,60 @@ func TestAPIStays(t *testing.T) {
 	first, _ := stays[0].(map[string]any)
 	if first["status"] != "ended" || first["peer_name"] != "Ada" {
 		t.Errorf("stay row: %v", first)
+	}
+	_ = aID
+}
+
+func TestAPINotifications(t *testing.T) {
+	mux := testAPIServer(t)
+	a := newAPIClient(t, mux)
+	b := newAPIClient(t, mux)
+	aID := signupFull(t, a, "ada@example.com")
+	bID := signupFull(t, b, "bo@example.com")
+	unread := func(c *apiClient) (int64, []any) {
+		t.Helper()
+		var got map[string]any
+		decodeBody(t, c.do("GET", "/api/v1/notifications", nil), &got)
+		n, _ := got["unread_count"].(float64)
+		items, _ := got["notifications"].([]any)
+		return int64(n), items
+	}
+	expressInterest(t, a, bID)
+	if n, _ := unread(b); n != 1 {
+		t.Fatalf("after interest: b unread=%d, want 1", n)
+	}
+	if n, _ := unread(a); n != 0 {
+		t.Fatalf("after interest: a unread=%d, want 0", n)
+	}
+	expressInterest(t, a, bID) // repeat: no duplicate alert
+	if n, _ := unread(b); n != 1 {
+		t.Fatalf("after repeat interest: b unread=%d, want 1", n)
+	}
+	expressInterest(t, b, aID)
+	stayID := proposeStay(t, a, bID, 0)
+	if n, _ := unread(b); n != 2 {
+		t.Fatalf("after propose: b unread=%d, want 2", n)
+	}
+	stayAction(t, b, stayID, "accept")
+	if n, _ := unread(a); n != 2 {
+		t.Fatalf("after accept: a unread=%d, want 2", n)
+	}
+	if rec := a.do("PUT", "/api/v1/users/"+strconv.FormatInt(bID, 10)+"/reviews", map[string]any{"rating": 5, "body": "great flatmate"}); rec.Code != http.StatusOK {
+		t.Fatalf("review: status %d: %s", rec.Code, rec.Body.String())
+	}
+	n, items := unread(b)
+	if n != 3 {
+		t.Fatalf("after review: b unread=%d, want 3", n)
+	}
+	first, _ := items[0].(map[string]any)
+	if first["kind"] != "user_review" || first["read"] != false {
+		t.Errorf("newest: kind=%v read=%v, want user_review/unread", first["kind"], first["read"])
+	}
+	if rec := b.do("POST", "/api/v1/notifications/read", map[string]string{}); rec.Code != http.StatusOK {
+		t.Fatalf("mark read: status %d", rec.Code)
+	}
+	if n, _ := unread(b); n != 0 {
+		t.Fatalf("after read: b unread=%d, want 0", n)
 	}
 	_ = aID
 }

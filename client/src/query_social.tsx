@@ -11,6 +11,7 @@ import type {
   ListingReviewInput,
   ListingReviewListResponse,
   NLSearchResponse,
+  NotificationListResponse,
   ReviewInput,
   ReviewListResponse,
   SearchInput,
@@ -80,6 +81,24 @@ export function useConversations() {
     queryKey: ['conversations'],
     queryFn: () => api<ConversationListResponse>('/api/v1/conversations'),
     refetchInterval: 15_000,
+  })
+}
+
+export function useNotifications() {
+  return useQuery({
+    queryKey: ['notifications'],
+    queryFn: () => api<NotificationListResponse>('/api/v1/notifications'),
+    refetchInterval: 30_000,
+  })
+}
+
+export function useMarkNotificationsRead() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: () => api<{ ok: boolean }>('/api/v1/notifications/read', { method: 'POST' }),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ['notifications'] })
+    },
   })
 }
 

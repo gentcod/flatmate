@@ -4,7 +4,7 @@ import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react
 import type { ReactNode } from 'react'
 import { isApiError } from './api'
 import { useLogout, useProfile, useSession } from './query'
-import { useConversations } from './query_social'
+import { useConversations, useMarkNotificationsRead, useNotifications } from './query_social'
 import { OfflineBanner, UpdateBanner } from './pwa'
 
 export function errorMessage(e: unknown, fallback = 'Something went wrong. Try again.'): string {
@@ -221,8 +221,11 @@ export function Layout() {
   const navigate = useNavigate()
   const location = useLocation()
   const chats = useConversations()
+  const alerts = useNotifications()
+  const markRead = useMarkNotificationsRead()
   const [menuOpen, setMenuOpen] = useState(false)
   const [userOpen, setUserOpen] = useState(false)
+  const [alertsOpen, setAlertsOpen] = useState(false)
   const [toast, setToast] = useState<ToastData | null>(null)
   const profile = useProfile()
   const displayName = profile.data?.profile.first_name.trim() || 'Flatmate'
@@ -232,12 +235,13 @@ export function Layout() {
   useEffect(() => {
     setMenuOpen(false)
     setUserOpen(false)
+    setAlertsOpen(false)
   }, [location.pathname])
   const unreadTotal =
     chats.data?.conversations.reduce((n, c) => n + c.unread_count, 0) ?? 0
   const onLogout = () => {
     logout.mutate(undefined, {
-      onSuccess: () => navigate('/login'),
+      onSuccess: () => navigate('/'),
       onError: (e) => setToast({ id: Date.now(), message: errorMessage(e), tone: 'err' }),
     })
   }
@@ -253,7 +257,66 @@ export function Layout() {
               Shared Living
             </span>
           </Link>
-          <div className="relative md:order-last">
+          <div className="relative flex items-center gap-1 md:order-last">
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setAlertsOpen((v) => !v)}
+                aria-expanded={alertsOpen}
+                aria-haspopup="menu"
+                aria-label="Alerts"
+                className="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-sage hover:bg-parchment hover:text-ink"
+              >
+                <Icon name="notifications" cls="text-[22px]" />
+                {(alerts.data?.unread_count ?? 0) > 0 && (
+                  <span className="absolute right-0.5 top-0.5 inline-flex min-w-5 items-center justify-center rounded-full bg-terracotta px-1.5 py-0.5 text-[11px] font-bold leading-none text-white">
+                    {alerts.data?.unread_count}
+                  </span>
+                )}
+              </button>
+              {alertsOpen && (
+                <div
+                  role="menu"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') setAlertsOpen(false)
+                  }}
+                  className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-sand bg-white py-1 shadow-lift"
+                >
+                  <div className="flex items-center justify-between px-4 pb-1 pt-2">
+                    <p className="text-[13px] font-semibold text-ink">Alerts</p>
+                    <button
+                      type="button"
+                      disabled={markRead.isPending || (alerts.data?.unread_count ?? 0) === 0}
+                      onClick={() => markRead.mutate()}
+                      className="cursor-pointer text-[13px] font-medium text-eucalyptus hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {markRead.isPending ? 'Marking…' : 'Mark all read'}
+                    </button>
+                  </div>
+                  {(alerts.data?.notifications.length ?? 0) === 0 ? (
+                    <p className="px-4 py-3 text-sm text-sage">No alerts yet.</p>
+                  ) : (
+                    alerts.data?.notifications.slice(0, 8).map((n) => (
+                      <Link
+                        key={n.id}
+                        role="menuitem"
+                        to={n.kind === 'listing_review' ? `/listing/${n.ref_id}` : `/match/${n.actor_id}`}
+                        onClick={() => setAlertsOpen(false)}
+                        className={`block px-4 py-2 text-sm hover:bg-parchment ${n.read ? 'text-sage' : 'font-medium text-ink'}`}
+                      >
+                        {!n.read && (
+                          <span
+                            aria-hidden="true"
+                            className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-terracotta"
+                          />
+                        )}
+                        {n.body}
+                      </Link>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
             <button
               type="button"
               onClick={() => setUserOpen((v) => !v)}

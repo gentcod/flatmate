@@ -74,14 +74,13 @@ func main() {
 		log.Print("AI explanations enabled")
 	}
 
-	fmt.Printf("%v", model)
+	// fmt.Printf("%v", model)
 
 	srv := &web.Server{DB: database, Sessions: sessions, Pages: pages, Weights: weightsCfg, AI: model,
 		CookieSecure: secure,
 		LoginLimiter: web.NewLimiter(10, time.Minute),
 		AILimiter:    web.NewLimiter(30, time.Minute),
 		MsgLimiter:   web.NewLimiter(30, time.Minute),
-		Interviews:   web.NewInterviews(2 * time.Hour),
 		UI:           *uiMode, ClientDist: *clientDir}
 	log.Printf("db=%s weights=%s", *dbPath, *weights)
 	log.Printf("listening on %s", *addr)

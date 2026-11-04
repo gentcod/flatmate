@@ -19,8 +19,6 @@ const questionsSchema = `{"type":"object","properties":{"questions":{"type":"arr
 
 const normalizeSchema = `{"type":"object","properties":{"area_text":{"type":"string"},"note":{"type":"string"}},"required":["area_text","note"]}`
 
-const interviewSchema = `{"type":"object","properties":{"done":{"type":"boolean"},"question":{"type":"string"},"answers":{"type":"array","items":{"type":"object","properties":{"dimension":{"type":"string"},"value":{"type":"string"},"hard":{"type":"boolean"},"weight":{"type":"integer","minimum":0,"maximum":3}},"required":["dimension","value"]}}},"required":["done","question","answers"]}`
-
 const bridgesSchema = `{"type":"object","properties":{"bridges":{"type":"array","items":{"type":"object","properties":{"dimension":{"type":"string"},"suggestion":{"type":"string"}},"required":["dimension","suggestion"]}}},"required":["bridges"]}`
 
 const questionGenSchema = `{"type":"object","properties":{"questions":{"type":"array","items":{"type":"object","properties":{"dimension":{"type":"string"},"variants":{"type":"array","items":{"type":"string"}}},"required":["dimension","variants"]}}},"required":["questions"]}`
@@ -51,12 +49,6 @@ type normalizeOut struct {
 	Note     string `json:"note"`
 }
 
-type interviewOut struct {
-	Done     bool    `json:"done"`
-	Question string  `json:"question"`
-	Answers  []Draft `json:"answers"`
-}
-
 // Bridge is one AI-suggested way to handle a flagged difference.
 type Bridge struct {
 	Dimension  string `json:"dimension"`
@@ -79,11 +71,12 @@ type questionGenOut struct {
 // ExtractAnswers (T1) drafts questionnaire answers from free text.
 // The caller shows the plain form on error.
 func ExtractAnswers(ctx context.Context, llm LLM, transcript string) ([]Draft, error) {
-	ctx, cancel := context.WithTimeout(ctx, 25*time.Second)
+	// Matches the HTTP client's 60s budget: slow routes get a chance,
+	// transport timeouts still fail fast on dead connections.
+	ctx, cancel := context.WithTimeout(ctx, 60*time.Second)
 	defer cancel()
-	out, err := CompleteJSON(ctx, llm, extractPrompt(transcript), extractSchema, validateExtract)
+	out, err := CompleteJSON(ctx, llm, extractPrompt(tailTranscript(transcript)), extractSchema, validateExtract)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 	for i := range out.Answers {
@@ -128,22 +121,16 @@ func NormalizeArea(ctx context.Context, llm LLM, raw string) (normalizeOut, erro
 	return CompleteJSON(ctx, llm, normalizePrompt(raw), normalizeSchema, validateNormalize)
 }
 
-// InterviewStep (T5) runs one onboarding interview turn: extract every
-// answer the transcript supports and ask one follow-up for what is still
-// missing. done reports the model believes all dimensions are covered.
-func InterviewStep(ctx context.Context, llm LLM, transcript string, covered []string) (question string, drafts []Draft, done bool, err error) {
-	ctx, cancel := context.WithTimeout(ctx, 25*time.Second)
-	defer cancel()
-	out, err := CompleteJSON(ctx, llm, interviewPrompt(transcript, covered), interviewSchema, validateInterview)
-	if err != nil {
-		return "", nil, false, err
+// maxTranscriptRunes caps the description sent to the model so long
+// messages cannot blow the timeout with slow uploads and generations.
+const maxTranscriptRunes = 6000
+
+func tailTranscript(transcript string) string {
+	runes := []rune(transcript)
+	if len(runes) <= maxTranscriptRunes {
+		return transcript
 	}
-	for i := range out.Answers {
-		if out.Answers[i].Weight == 0 {
-			out.Answers[i].Weight = 1
-		}
-	}
-	return out.Question, out.Answers, out.Done, nil
+	return "[earlier conversation omitted]\n" + string(runes[len(runes)-maxTranscriptRunes:])
 }
 
 // SuggestBridges (T6) drafts one practical compromise per flagged
@@ -230,18 +217,6 @@ func normalizePrompt(raw string) string {
 		"Rules: keep area_text short (neighborhood, city); preserve the original wording in note; never invent an exact address.\nText:\n" + raw
 }
 
-func interviewPrompt(transcript string, covered []string) string {
-	var b strings.Builder
-	b.WriteString("You are interviewing a user to fill a flatmate questionnaire. Reply with JSON only, matching this schema: " + interviewSchema + "\n")
-	b.WriteString("Rules: use only these dimensions and values:\n")
-	b.WriteString(dimensionLines())
-	b.WriteString("Already covered: " + strings.Join(covered, ", ") + " (blank means none yet).\n")
-	b.WriteString("answers: EVERY answer extractable from the whole conversation so far (cumulative, not just this turn). hard=true only for explicit deal-breaker language. weight 1-3 by emphasis, default 1. Never infer beyond the text.\n")
-	b.WriteString("If every dimension is covered, or the user asks to stop, set done=true and question=\"\". Otherwise done=false and ask exactly ONE short follow-up question (one sentence) targeting an uncovered dimension.\n")
-	b.WriteString("Conversation:\n" + transcript)
-	return b.String()
-}
-
 func bridgesPrompt(diffs []string) string {
 	return "Suggest one practical compromise for each flagged flatmate difference. Reply with JSON only: " + bridgesSchema + "\n" +
 		"Rules: each suggestion names the difference it addresses, stays neutral and realistic for shared living, and never invents facts about either person.\nDifferences:\n" + strings.Join(diffs, "\n")
@@ -296,25 +271,6 @@ func validateDraft(a Draft, seen map[string]bool) error {
 func validateExtract(o extractOut) error {
 	if len(o.Answers) == 0 || len(o.Answers) > len(match.Dimensions) {
 		return fmt.Errorf("ai: want 1-%d answers", len(match.Dimensions))
-	}
-	seen := map[string]bool{}
-	for _, a := range o.Answers {
-		if err := validateDraft(a, seen); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func validateInterview(o interviewOut) error {
-	if len(o.Question) > 280 {
-		return fmt.Errorf("ai: question too long")
-	}
-	if !o.Done && strings.TrimSpace(o.Question) == "" {
-		return fmt.Errorf("ai: want a follow-up question")
-	}
-	if len(o.Answers) > len(match.Dimensions) {
-		return fmt.Errorf("ai: too many answers")
 	}
 	seen := map[string]bool{}
 	for _, a := range o.Answers {

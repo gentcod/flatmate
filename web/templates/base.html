@@ -20,6 +20,7 @@
 <a href="/questionnaire">Questionnaire</a>
 <a href="/listings">Listings</a>
 <a href="/chat">Chat</a>
+<a href="/alerts">Alerts{{if .UnreadAlerts}} ({{.UnreadAlerts}}){{end}}</a>
 {{if .IsAdmin}}<a href="/admin/reports">Admin</a>{{end}}
 <form class="inline" method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Log out</button></form>
 {{else}}

@@ -31,12 +31,12 @@ function AuthForm({ mode }: { mode: 'login' | 'signup' }) {
   return (
     <div className="mx-auto max-w-md">
       <OfflineBanner />
-      <div className="mb-6 flex flex-col leading-none">
+      <Link to="/" aria-label="Back to home" className="mb-6 flex w-fit flex-col leading-none">
         <span className="font-display text-2xl tracking-tight text-ink">Flatmate</span>
         <span className="mt-0.5 text-[11px] font-semibold uppercase tracking-widest text-fog">
           Shared Living
         </span>
-      </div>
+      </Link>
       <PageTitle
         title={mode === 'login' ? 'Log in' : 'Create your account'}
         sub={

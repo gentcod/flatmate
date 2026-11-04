@@ -93,7 +93,7 @@ func (s *Server) handleMatchesShow(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	sort.Slice(views, func(i, j int) bool { return views[i].Total > views[j].Total })
-	s.render(w, "matches", map[string]any{
+	s.render(w, r, "matches", map[string]any{
 		"Title": "Matches", "Authed": true, "Matches": views, "Empty": len(views) == 0,
 		"Searching": s.searching(r, id), "AreaFilter": strings.TrimSpace(r.URL.Query().Get("area")),
 		"Nudge": s.profileNudge(r, id), "NLQuery": nlQuery, "NLDesc": nlDescribe(filters),
@@ -144,7 +144,7 @@ func (s *Server) handleMatchDetail(w http.ResponseWriter, r *http.Request) {
 	if !match.Eligible(me, cand, false, false) {
 		dv.Ineligible = true
 		data["M"] = dv
-		s.render(w, "match_detail", data)
+		s.render(w, r, "match_detail", data)
 		return
 	}
 	bd := match.Score(me, cand, s.Weights)
@@ -186,7 +186,7 @@ func (s *Server) handleMatchDetail(w http.ResponseWriter, r *http.Request) {
 	}
 	data["M"] = dv
 	data["BD"] = bd
-	s.render(w, "match_detail", data)
+	s.render(w, r, "match_detail", data)
 }
 
 // myCandidate loads the caller's engine input, redirecting to complete
@@ -374,6 +374,11 @@ func (s *Server) stampAction(w http.ResponseWriter, r *http.Request, kind string
 	if !ok || target == id {
 		http.NotFound(w, r)
 		return
+	}
+	if kind == "interest" {
+		if n, _ := database.New(s.DB).CountInterestFrom(r.Context(), database.CountInterestFromParams{Actor: id, Target: target}); n == 0 {
+			s.notify(r, target, "interest", id, id, s.authorName(r, id)+" showed interest in you.")
+		}
 	}
 	database.New(s.DB).AddAction(r.Context(), database.AddActionParams{
 		Actor: id, Target: target, Kind: kind, CreatedAt: nowRFC3339(),

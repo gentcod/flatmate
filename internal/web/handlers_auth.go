@@ -15,7 +15,7 @@ func (s *Server) handleSignupShow(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	s.render(w, "signup", map[string]any{"Title": "Sign up", "CSRF": s.csrfToken(w, r)})
+	s.render(w, r, "signup", map[string]any{"Title": "Sign up", "CSRF": s.csrfToken(w, r)})
 }
 
 func (s *Server) handleSignupPost(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +25,7 @@ func (s *Server) handleSignupPost(w http.ResponseWriter, r *http.Request) {
 	email := auth.NormalizeEmail(r.FormValue("email"))
 	password := r.FormValue("password")
 	fail := func(msg string) {
-		s.render(w, "signup", map[string]any{
+		s.render(w, r, "signup", map[string]any{
 			"Title": "Sign up", "Error": msg, "Email": email, "CSRF": s.csrfToken(w, r),
 		})
 	}
@@ -86,7 +86,7 @@ func (s *Server) handleLoginShow(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
 	}
-	s.render(w, "login", map[string]any{"Title": "Log in", "CSRF": s.csrfToken(w, r)})
+	s.render(w, r, "login", map[string]any{"Title": "Log in", "CSRF": s.csrfToken(w, r)})
 }
 
 func (s *Server) handleLoginPost(w http.ResponseWriter, r *http.Request) {
@@ -96,7 +96,7 @@ func (s *Server) handleLoginPost(w http.ResponseWriter, r *http.Request) {
 	email := auth.NormalizeEmail(r.FormValue("email"))
 	password := r.FormValue("password")
 	fail := func(msg string) {
-		s.render(w, "login", map[string]any{
+		s.render(w, r, "login", map[string]any{
 			"Title": "Log in", "Error": msg, "Email": email, "CSRF": s.csrfToken(w, r),
 		})
 	}
@@ -123,5 +123,5 @@ func (s *Server) handleLogout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	s.Sessions.ClearCookie(w)
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

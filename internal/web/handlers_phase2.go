@@ -24,7 +24,7 @@ func (s *Server) renderExpenses(w http.ResponseWriter, r *http.Request, peer int
 	if errMsg != "" {
 		data["Error"] = errMsg
 	}
-	s.render(w, "expenses", data)
+	s.render(w, r, "expenses", data)
 }
 
 func (s *Server) handleExpensesShow(w http.ResponseWriter, r *http.Request) {
@@ -205,7 +205,7 @@ func (s *Server) handleAgreementShow(w http.ResponseWriter, r *http.Request) {
 			sections, enhanced = draft, true
 		}
 	}
-	s.render(w, "agreement", map[string]any{"Title": "Roommate agreement", "Authed": true,
+	s.render(w, r, "agreement", map[string]any{"Title": "Roommate agreement", "Authed": true,
 		"PeerID": target, "PeerName": tp.FirstName, "Sections": sections, "Enhanced": enhanced,
 		"CSRF": s.csrfToken(w, r)})
 }

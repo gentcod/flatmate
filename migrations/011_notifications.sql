@@ -1,0 +1,10 @@
+CREATE TABLE notifications (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id),
+  kind TEXT NOT NULL,
+  actor_id INTEGER NOT NULL REFERENCES users(id),
+  ref_id INTEGER NOT NULL DEFAULT 0,
+  body TEXT NOT NULL DEFAULT '',
+  read_at TEXT,
+  created_at TEXT NOT NULL
+);

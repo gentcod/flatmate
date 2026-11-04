@@ -26,7 +26,7 @@ Signup/login, profiles, questionnaire (form or AI-drafted), ranked matches,
 save/dismiss/express interest, mutual-interest contact reveal, block/report,
 room listings, mutual-interest chat, flatmate reviews, expense tracking,
 agreement drafting, natural-language search, admin moderation, metrics,
-verified stays with trust-scored reviews, a public landing page,
+verified stays with trust-scored reviews, alerts for interests/stays/reviews, a public landing page,
 and 27 seed profiles. Single Go binary, SQLite, JSON API plus two UIs:
 the legacy server-rendered pages and the React SPA in `client/`.
 

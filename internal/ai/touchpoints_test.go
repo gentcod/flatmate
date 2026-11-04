@@ -18,31 +18,6 @@ func TestValidateExtract(t *testing.T) {
 	}
 }
 
-func TestValidateInterview(t *testing.T) {
-	good := interviewOut{Done: false, Question: "How do you feel about guests?",
-		Answers: []Draft{{Dimension: "sleep", Value: "late", Weight: 1}}}
-	if err := validateInterview(good); err != nil {
-		t.Errorf("valid: %v", err)
-	}
-	if err := validateInterview(interviewOut{Done: true}); err != nil {
-		t.Errorf("done without question: %v", err)
-	}
-	bad := []interviewOut{
-		{},
-		{Question: "q", Answers: []Draft{{Dimension: "sleep", Value: "sideways", Weight: 1}}},
-		{Question: "q", Answers: []Draft{
-			{Dimension: "sleep", Value: "late", Weight: 1},
-			{Dimension: "sleep", Value: "early", Weight: 1},
-		}},
-		{Question: strings.Repeat("x", 281)},
-	}
-	for i, o := range bad {
-		if err := validateInterview(o); err == nil {
-			t.Errorf("case %d: want error", i)
-		}
-	}
-}
-
 func TestValidateBridges(t *testing.T) {
 	good := bridgesOut{Bridges: []Bridge{{Dimension: "sleep", Suggestion: "Agree on quiet hours after 11pm."}}}
 	if err := validateBridges(good); err != nil {
@@ -115,14 +90,32 @@ func TestGenerateQuestionsPicksVariant(t *testing.T) {
 	}
 }
 
-func TestInterviewStepRetries(t *testing.T) {
+func TestTailTranscript(t *testing.T) {
+	short := "user: hi"
+	if got := tailTranscript(short); got != short {
+		t.Errorf("short: got %q, want unchanged", got)
+	}
+	long := strings.Repeat("x", maxTranscriptRunes+100)
+	got := tailTranscript(long)
+	if len([]rune(got)) > maxTranscriptRunes+50 {
+		t.Errorf("long: tail %d runes, want about %d", len([]rune(got)), maxTranscriptRunes)
+	}
+	if !strings.HasPrefix(got, "[earlier conversation omitted]") {
+		t.Error("long: want omission marker at the front")
+	}
+	if !strings.HasSuffix(got, strings.Repeat("x", maxTranscriptRunes)) {
+		t.Error("long: want the most recent runes kept")
+	}
+}
+
+func TestExtractAnswersRetries(t *testing.T) {
 	stub := &stubLLM{replies: []string{
 		`not json`,
-		`{"done":false,"question":"Any pets?","answers":[{"dimension":"sleep","value":"late","weight":0}]}`,
+		`{"answers":[{"dimension":"sleep","value":"late","weight":0}]}`,
 	}}
-	q, drafts, done, err := InterviewStep(context.Background(), stub, "user: i'm a night owl", nil)
-	if err != nil || done || q != "Any pets?" || len(drafts) != 1 {
-		t.Fatalf("q=%q drafts=%+v done=%v err=%v", q, drafts, done, err)
+	drafts, err := ExtractAnswers(context.Background(), stub, "user: i'm a night owl")
+	if err != nil || len(drafts) != 1 {
+		t.Fatalf("drafts=%+v err=%v", drafts, err)
 	}
 	if drafts[0].Weight != 1 {
 		t.Errorf("weight default = %d", drafts[0].Weight)
