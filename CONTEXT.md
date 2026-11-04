@@ -1,4 +1,4 @@
-# CONTEXT.md — Flatmate Matching Platform (hackathon build brief)
+# CONTEXT.md — Flatmate Matching Platform (build brief)
 
 Read `docs/flatmate.md` for product background. This file is the build contract. Follow it imperatively.
 
@@ -12,11 +12,10 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - Keep changes minimal, stdlib-first, typed, commented only where non-obvious.
 - Update this file when a decision changes; note conflicts with spec explicitly.
 
-## 2. Hackathon constraints
-- Due Nov 4 9:00 PM ET; target submit midday Nov 4. Today Oct 29.
+## 2. Delivery constraints
 - Demo must work end to end in ~3 min, with AI on and off.
-- Judged on creativity, technical ambition, whether it works.
 - Optimize for demo reliability over breadth; cut per §12 when behind.
+- AI features must degrade gracefully; the demo never depends on model availability.
 
 ## 3. Product in brief + code principles
 - Goal: help people judge flatmate compatibility before committing.
@@ -115,13 +114,7 @@ type Breakdown struct { Total, Practical, Lifestyle, Interpersonal int; Dimensio
 - Interview state is in-memory (2h idle TTL) plus the persisted transcript/drafts row; a restart only restarts interviews.
 
 ## 12. Build order + cuts
-- Oct 29: this file + scaffold + migrations + `weights.yaml`.
-- Oct 30: auth/profile/questionnaire form baseline (no AI).
-- Oct 31: engine + unit tests (generated, not run).
-- Nov 1: match list/detail + actions + safety.
-- Nov 2: Muse touchpoints + fallbacks.
-- Nov 3: seeds + `Makefile` + polish.
-- Nov 4: demo rehearse, submit midday.
+- Order: brief + scaffold + migrations + `weights.yaml`; auth/profile/questionnaire form baseline (no AI); engine + unit tests; match list/detail + actions + safety; Muse touchpoints + fallbacks; seeds + `Makefile` + polish; demo rehearse.
 - Cut first: T4 stretch, conversational polish, extra seeds. Never cut eligibility/scoring/explanation/reveal/block.
 
 ## 13. Definition of done + 3-min demo
