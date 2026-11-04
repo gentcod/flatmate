@@ -40,7 +40,7 @@ func (s *Server) renderProfile(w http.ResponseWriter, r *http.Request, p *profil
 	if p.Lng != nil {
 		data["Lng"] = strconv.FormatFloat(*p.Lng, 'f', 4, 64)
 	}
-	s.render(w, "profile", data)
+	s.render(w, r, "profile", data)
 }
 
 func (s *Server) handleProfilePost(w http.ResponseWriter, r *http.Request) {
@@ -190,16 +190,7 @@ func (s *Server) handleQuestionnaireShow(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "load error", http.StatusInternalServerError)
 		return
 	}
-	notice := ""
-	if r.URL.Query().Get("draft") == "1" {
-		if iv, ok := s.Interviews.Get(id); ok && len(iv.Drafts) > 0 {
-			for k, v := range iv.Drafts {
-				saved[k] = v
-			}
-			notice = "Drafted so far — review, adjust, and save to confirm."
-		}
-	}
-	s.renderQuestionnaire(w, r, buildQdims(saved), "", r.URL.Query().Get("saved") == "1", s.savedDescription(r, id), notice)
+	s.renderQuestionnaire(w, r, buildQdims(saved), "", r.URL.Query().Get("saved") == "1", s.savedDescription(r, id), "")
 }
 
 // savedDescription returns the user's AI onboarding text for reference,
@@ -254,7 +245,7 @@ func (s *Server) renderQuestionnaire(w http.ResponseWriter, r *http.Request, dim
 	if notice != "" {
 		data["Notice"] = notice
 	}
-	s.render(w, "questionnaire", data)
+	s.render(w, r, "questionnaire", data)
 }
 
 func (s *Server) handleQuestionnairePost(w http.ResponseWriter, r *http.Request) {
@@ -284,6 +275,5 @@ func (s *Server) handleQuestionnairePost(w http.ResponseWriter, r *http.Request)
 		s.renderQuestionnaire(w, r, dims, err.Error(), false, s.savedDescription(r, id), "")
 		return
 	}
-	s.Interviews.Drop(id) // answers confirmed; any interview is done
 	http.Redirect(w, r, "/questionnaire?saved=1", http.StatusSeeOther)
 }

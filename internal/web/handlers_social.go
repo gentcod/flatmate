@@ -118,7 +118,7 @@ func (s *Server) renderListings(w http.ResponseWriter, r *http.Request, errMsg s
 	if errMsg != "" {
 		data["Error"] = errMsg
 	}
-	s.render(w, "listings", data)
+	s.render(w, r, "listings", data)
 }
 
 func (s *Server) handleListingsShow(w http.ResponseWriter, r *http.Request) {
@@ -231,7 +231,7 @@ func (s *Server) renderListing(w http.ResponseWriter, r *http.Request, l databas
 	if errMsg != "" {
 		data["Error"] = errMsg
 	}
-	s.render(w, "listing", data)
+	s.render(w, r, "listing", data)
 }
 
 func (s *Server) handleListingShow(w http.ResponseWriter, r *http.Request) {
@@ -344,8 +344,40 @@ func (s *Server) handleChatShow(w http.ResponseWriter, r *http.Request) {
 			Unread: it.Unread,
 		})
 	}
-	s.render(w, "chat", map[string]any{"Title": "Chats", "Authed": true,
+	s.render(w, r, "chat", map[string]any{"Title": "Chats", "Authed": true,
 		"Conversations": views, "CSRF": s.csrfToken(w, r)})
+}
+
+type alertView struct {
+	Kind      string
+	ActorID   int64
+	ActorName string
+	RefID     int64
+	Body      string
+	Unread    bool
+	At        string
+}
+
+func (s *Server) handleAlertsShow(w http.ResponseWriter, r *http.Request) {
+	id := authedID(r)
+	rows, err := database.New(s.DB).ListNotifications(r.Context(), database.ListNotificationsParams{UserID: id, Limit: 30})
+	if err != nil {
+		http.Error(w, "load error", http.StatusInternalServerError)
+		return
+	}
+	views := []alertView{}
+	for _, n := range rows {
+		views = append(views, alertView{Kind: n.Kind, ActorID: n.ActorID, ActorName: s.authorName(r, n.ActorID), RefID: n.RefID, Body: n.Body, Unread: !n.ReadAt.Valid, At: n.CreatedAt})
+	}
+	s.render(w, r, "alerts", map[string]any{"Title": "Alerts", "Authed": true, "Alerts": views, "CSRF": s.csrfToken(w, r)})
+}
+
+func (s *Server) handleAlertsRead(w http.ResponseWriter, r *http.Request) {
+	if !s.checkCSRF(w, r) {
+		return
+	}
+	database.New(s.DB).MarkNotificationsRead(r.Context(), database.MarkNotificationsReadParams{ReadAt: sql.NullString{String: nowRFC3339(), Valid: true}, UserID: authedID(r)})
+	http.Redirect(w, r, "/alerts", http.StatusSeeOther)
 }
 
 // threadPeer resolves the peer for a thread view. Reading history stays
@@ -393,7 +425,7 @@ func (s *Server) renderThread(w http.ResponseWriter, r *http.Request, peer int64
 	if errMsg != "" {
 		data["Error"] = errMsg
 	}
-	s.render(w, "thread", data)
+	s.render(w, r, "thread", data)
 }
 
 func (s *Server) handleThreadShow(w http.ResponseWriter, r *http.Request) {
@@ -480,6 +512,7 @@ func (s *Server) handleReviewPost(w http.ResponseWriter, r *http.Request) {
 		fail("Something went wrong. Try again.")
 		return
 	}
+	s.notify(r, target, "user_review", id, id, s.authorName(r, id)+" left you a review.")
 	http.Redirect(w, r, back, http.StatusSeeOther)
 }
 
@@ -532,16 +565,28 @@ func (s *Server) handleStaysPropose(w http.ResponseWriter, r *http.Request) {
 			fail("Something went wrong. Try again.")
 			return
 		}
+		other := a
+		if other == id {
+			other = b
+		}
+		s.notify(r, other, "stay_proposed", id, st.ID, s.authorName(r, id)+" wants to confirm you live together.")
 		http.Redirect(w, r, back, http.StatusSeeOther)
 		return
 	}
-	if _, err := database.New(s.DB).CreateStay(r.Context(), database.CreateStayParams{
+	res, err := database.New(s.DB).CreateStay(r.Context(), database.CreateStayParams{
 		UserA: a, UserB: b, ProposedBy: id, ListingID: listing,
 		Status: StayProposed, CreatedAt: now, UpdatedAt: now,
-	}); err != nil {
+	})
+	if err != nil {
 		fail("Something went wrong. Try again.")
 		return
 	}
+	stayID, _ := res.LastInsertId()
+	otherID := a
+	if otherID == id {
+		otherID = b
+	}
+	s.notify(r, otherID, "stay_proposed", id, stayID, s.authorName(r, id)+" wants to confirm you live together.")
 	http.Redirect(w, r, back, http.StatusSeeOther)
 }
 
@@ -595,6 +640,18 @@ func (s *Server) handleStayTransition(w http.ResponseWriter, r *http.Request, ac
 	}); err != nil {
 		fail("Something went wrong. Try again.")
 		return
+	}
+	other := st.UserA
+	if other == id {
+		other = st.UserB
+	}
+	switch next {
+	case StayActive:
+		s.notify(r, other, "stay_accepted", id, st.ID, s.authorName(r, id)+" confirmed your stay.")
+	case StayDeclined:
+		s.notify(r, other, "stay_declined", id, st.ID, s.authorName(r, id)+" declined your stay proposal.")
+	case StayEnded:
+		s.notify(r, other, "stay_ended", id, st.ID, s.authorName(r, id)+" ended your stay.")
 	}
 	if next == StayActive && st.ListingID.Valid {
 		_ = database.New(s.DB).UpdateListingStatus(r.Context(), database.UpdateListingStatusParams{
@@ -656,6 +713,7 @@ func (s *Server) handleListingReviewsPost(w http.ResponseWriter, r *http.Request
 		fail("Something went wrong. Try again.")
 		return
 	}
+	s.notify(r, l.UserID, "listing_review", id, l.ID, s.authorName(r, id)+" left a "+kind+" review on "+l.Title+".")
 	http.Redirect(w, r, back, http.StatusSeeOther)
 }
 

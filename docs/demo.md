@@ -19,7 +19,7 @@ Same script on either UI; routes match (`/matches`, `/match/:id`, `/questionnair
 | 1:10 | Open Chiamaka | Lower score, guest/social differences flagged "worth discussing" |
 | 1:40 | Express interest in Adaeze; log in as `adaeze@example.com` in a second browser, express interest back | Mutual interest reveals contact on both sides |
 | 2:10 | Dismiss one match; as Adaeze hide "Visible to matches" (Settings on SPA, profile form on legacy), back as Tunde | Both vanish from the list immediately |
-| 2:30 | Chat setup → answer one prompt (needs model env, else the plain form shows) | AI follow-up or graceful fallback; drafts land in Settings |
+| 2:30 | Chat setup → send one message (needs model env, else the plain form shows) | AI drafts what it can or graceful fallback; drafts land in Settings |
 | 2:50 | Point at AI explanation section on a match detail (present only when the model responds) | Raw breakdown always visible below it |
 
 ## Key accounts

@@ -24,7 +24,7 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - Explain every recommendation in plain checkable language. Collect minimal personal data.
 
 ## 4. Scope
-- In: signup/login, profile, conversational onboarding, eligibility filter, weighted scoring + breakdown, match list/detail + discussion prompts, save/dismiss/interest, mutual-interest contact reveal, block/report, room listings (photos via URL, uploads later), mutual-interest chat, flatmate reviews, expense tracker, agreement drafter, NL match search, saved searches, affordability checks, self-confirmed contact labels, admin report queue + metrics, request logging, SQLite backups, installable PWA (offline shell, update prompt), 27 user seeds + 10 listing seeds, verified stays (mutual handshake) with stay-gated flatmate reviews, listing stay/visit reviews with 3-to-1 trust scores, public landing page, chat read/unread tracking.
+- In: signup/login, profile, one-shot description onboarding, eligibility filter, weighted scoring + breakdown, match list/detail + discussion prompts, save/dismiss/interest, mutual-interest contact reveal, block/report, room listings (photos via URL, uploads later), mutual-interest chat, flatmate reviews, expense tracker, agreement drafter, NL match search, saved searches, affordability checks, self-confirmed contact labels, admin report queue + metrics, request logging, SQLite backups, installable PWA (offline shell, update prompt), 27 user seeds + 10 listing seeds, verified stays (mutual handshake) with stay-gated flatmate reviews, listing stay/visit reviews with 3-to-1 trust scores, public landing page, chat read/unread tracking, alert notifications (interests, stay proposals, reviews) with unread counts.
 - Out: payments, identity verification, websocket chat, landlord/agent tools, rent/lease processing (the expense tracker and agreement drafter are informal helpers, not payment/legal tools), ML ranking, analytics, multi-currency/locale logic.
 
 ## 5. Architecture + Muse boundary (hard rules)
@@ -39,7 +39,7 @@ Read `docs/flatmate.md` for product background. This file is the build contract.
 - T2 explain-breakdown. In: `{first_name, breakdown}`. Out: `{"bullets":["..."],"discuss":["..."]}`. Rules: restate computed scores only; never invent scores or rankings.
 - T3 discuss-questions. In: `{differences:["guests"]}`. Out: `{"questions":["..."]}`. Rules: neutral tone, one question per difference, no judgment.
 - T4 normalize-area. In: `{raw:"self-con, BQ available"}`. Out: `{"area_text":"...","note":"..."}`. Rules: preserve user wording in `note`; never geocode to exact address. Wired into profile save (3s timeout, rate-limited); failures keep user text.
-- T5 interview-step. In: `{transcript, covered:[...]}`. Out: `{"done":false,"question":"...","answers":[...]}` (answers cumulative). Rules: same dimension/value rules as T1; exactly one short follow-up unless done; done when all covered or user stops.
+
 - T6 suggest-bridges. In: `{differences:["sleep"]}`. Out: `{"bridges":[{"dimension":"sleep","suggestion":"..."}]}`. Rules: one practical compromise each, names its difference, neutral, no invented facts.
 - T7 generate-questions. In: `{dimensions:[...]}`. Out: `{"questions":[{"dimension":"...","variants":["...","..."]}]}`. Rules: natural one-sentence scenarios answerable by exactly the listed options; never name the dimension/scale. Applies to cleanliness, noise, guests, privacy, social, disagreements; sleep/expenses/smoking/pets/wfh/employment stay direct. Caller picks one random variant per load; any failure falls back to labels.
 - T8 draft-agreement. In: `{me:{...}, mate:{...}}` (profiles + answers, no contacts/coords). Out: `{"title":"...","sections":[{"heading":"...","bullets":["..."]}]}`. Rules: plain-language flatmate agreement covering rent split, bills, cleaning, guests, quiet hours, exit notice; never legal advice, never invented facts; template fallback renders the same inputs.
@@ -77,7 +77,7 @@ migrations/*.sql  weights.yaml  seeds/global.json  Makefile  CONTEXT.md  docs/fl
 - `expenses(id, group_id, payer_id, amount, currency, note, spent_at, created_at)` + `saved_searches(id, user_id, name, query, created_at)`; `profiles.contact_self_confirmed BOOL DEFAULT 0` (user asserts their own contact works — not ID verification).
 - `stays(id, user_a, user_b, proposed_by, listing_id NULL, status proposed|active|ended|declined, created_at, updated_at)` — UNIQUE(user_a, user_b) with canonical min/max ordering; active|ended counts as verified. Flatmate reviews require one.
 - `listing_reviews(listing_id, author, rating, body, kind stay|visit, created_at)` — UNIQUE(listing_id, author); kind=stay requires a verified stay on that listing. Trust score = weighted mean, stay 3x, visit 1x.
-- `listings.status available|rented DEFAULT available` — accepting a listing-linked stay flips it to rented; owners toggle back. `messages.read_at NULL` — NULL means unread; opening a thread marks it read.
+- `listings.status available|rented DEFAULT available` — accepting a listing-linked stay flips it to rented; owners toggle back. `messages.read_at NULL` — NULL means unread; opening a thread marks it read. `notifications(user_id, kind, actor_id, ref_id, body, read_at NULL, created_at)` — first interest only, stay proposals/transitions, both review kinds; explicit mark-read.
 
 ## 10. Matching spec
 | dimension | type | scale | compare |
@@ -111,11 +111,11 @@ type Breakdown struct { Total, Practical, Lifestyle, Interpersonal int; Dimensio
 - Rate limits (in-memory, per-IP login/signup 10/min, per-user AI routes 30/min): auth failures re-render with a message; AI limits degrade to non-AI output, never 429.
 - Cookies HttpOnly + SameSite=Lax always; Secure unless loopback (override `FLATMATE_COOKIE_SECURE=0/1`).
 - Refuse to boot without `FLATMATE_SESSION_KEY` except on loopback, where ephemeral keys warn.
-- Interview state is in-memory (2h idle TTL) plus the persisted transcript/drafts row; a restart only restarts interviews.
+
 
 ## 12. Build order + cuts
 - Order: brief + scaffold + migrations + `weights.yaml`; auth/profile/questionnaire form baseline (no AI); engine + unit tests; match list/detail + actions + safety; Muse touchpoints + fallbacks; seeds + `Makefile` + polish; demo rehearse.
-- Cut first: T4 stretch, conversational polish, extra seeds. Never cut eligibility/scoring/explanation/reveal/block.
+- Cut first: T4 stretch, description-flow polish, extra seeds. Never cut eligibility/scoring/explanation/reveal/block.
 
 ## 13. Definition of done + 3-min demo
 - Done: fresh DB → seed → signup → onboard → ≥1 eligible match with explanation → interest → mutual reveal → block works; no model call needed to complete.

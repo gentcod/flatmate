@@ -12,7 +12,7 @@ func (s *Server) handleAdminReports(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "load error", http.StatusInternalServerError)
 		return
 	}
-	s.render(w, "admin_reports", map[string]any{"Title": "Reports", "Authed": true,
+	s.render(w, r, "admin_reports", map[string]any{"Title": "Reports", "Authed": true,
 		"IsAdmin": true, "Reports": s.reportViews(r, rows), "CSRF": s.csrfToken(w, r)})
 }
 
@@ -41,5 +41,5 @@ func (s *Server) handleAdminMetrics(w http.ResponseWriter, r *http.Request) {
 	counts["Title"] = "Metrics"
 	counts["Authed"] = true
 	counts["IsAdmin"] = true
-	s.render(w, "admin_metrics", counts)
+	s.render(w, r, "admin_metrics", counts)
 }

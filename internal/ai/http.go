@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"os"
 	"sort"
@@ -29,7 +30,14 @@ func NewHTTPModel(endpoint, model, token string) (LLM, error) {
 		return nil, fmt.Errorf("ai: set FLATMATE_MODEL_ENDPOINT and FLATMATE_MODEL_NAME")
 	}
 	return &httpModel{endpoint: endpoint, model: model, token: token,
-		client: &http.Client{Timeout: 30 * time.Second}}, nil
+		client: &http.Client{Timeout: 60 * time.Second, Transport: &http.Transport{
+			Proxy:               http.ProxyFromEnvironment,
+			DialContext:         (&net.Dialer{Timeout: 10 * time.Second}).DialContext,
+			TLSHandshakeTimeout: 10 * time.Second,
+			// Headers wait out almost the whole budget: some gateways
+			// buffer reasoning models until generation completes.
+			ResponseHeaderTimeout: 55 * time.Second,
+		}}}, nil
 }
 
 // NewHTTPModelFromEnv builds a model client from the environment.

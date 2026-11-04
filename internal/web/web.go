@@ -29,7 +29,6 @@ type Server struct {
 	LoginLimiter *Limiter
 	AILimiter    *Limiter
 	MsgLimiter   *Limiter
-	Interviews   *Interviews
 	// UI selects the frontend: "legacy" serves the Go templates,
 	// "spa" serves the built client from ClientDist.
 	UI         string
@@ -48,7 +47,7 @@ func LoadPages(dir string) (map[string]*template.Template, error) {
 	if err != nil {
 		return nil, err
 	}
-	pages := []string{"signup", "login", "profile", "questionnaire", "matches", "match_detail", "onboarding", "listings", "listing", "chat", "thread", "expenses", "agreement", "admin_reports", "admin_metrics", "landing"}
+	pages := []string{"signup", "login", "profile", "questionnaire", "matches", "match_detail", "onboarding", "listings", "listing", "chat", "thread", "expenses", "agreement", "admin_reports", "admin_metrics", "landing", "alerts"}
 	out := make(map[string]*template.Template, len(pages))
 	for _, name := range pages {
 		t, err := base.Clone()
@@ -112,6 +111,8 @@ func (s *Server) NewMux(staticDir string) *http.ServeMux {
 	mux.Handle("GET /chat", s.requireAuth(http.HandlerFunc(s.handleChatShow)))
 	mux.Handle("GET /chat/{id}", s.requireAuth(http.HandlerFunc(s.handleThreadShow)))
 	mux.Handle("POST /chat/{id}", s.requireAuth(http.HandlerFunc(s.handleThreadPost)))
+	mux.Handle("GET /alerts", s.requireAuth(http.HandlerFunc(s.handleAlertsShow)))
+	mux.Handle("POST /alerts/read", s.requireAuth(http.HandlerFunc(s.handleAlertsRead)))
 	mux.Handle("POST /match/{id}/review", s.requireAuth(http.HandlerFunc(s.handleReviewPost)))
 	mux.Handle("GET /expenses/{id}", s.requireAuth(http.HandlerFunc(s.handleExpensesShow)))
 	mux.Handle("POST /expenses/{id}", s.requireAuth(http.HandlerFunc(s.handleExpensesPost)))
@@ -150,13 +151,18 @@ func (s *Server) registerSPA(mux *http.ServeMux) {
 	}))
 }
 
-func (s *Server) render(w http.ResponseWriter, page string, data map[string]any) {
+func (s *Server) render(w http.ResponseWriter, r *http.Request, page string, data map[string]any) {
 	if data == nil {
 		data = map[string]any{}
 	}
 	if _, ok := data["Title"]; !ok {
 		data["Title"] = "Flatmate"
 	}
+	var unread int64
+	if id, ok := s.userID(r); ok {
+		unread, _ = database.New(s.DB).CountUnreadNotifications(r.Context(), id)
+	}
+	data["UnreadAlerts"] = unread
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := s.Pages[page].ExecuteTemplate(w, "base", data); err != nil {
 		http.Error(w, "render error", http.StatusInternalServerError)
@@ -227,5 +233,5 @@ func (s *Server) handleHome(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/matches", http.StatusSeeOther)
 		return
 	}
-	s.render(w, "landing", map[string]any{"Title": "Find flatmates who match your rhythm", "CSRF": s.csrfToken(w, r)})
+	s.render(w, r, "landing", map[string]any{"Title": "Find flatmates who match your rhythm", "CSRF": s.csrfToken(w, r)})
 }

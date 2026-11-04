@@ -4,7 +4,7 @@ CREATE TABLE stays (
   user_a INTEGER NOT NULL REFERENCES users(id),
   user_b INTEGER NOT NULL REFERENCES users(id),
   proposed_by INTEGER NOT NULL REFERENCES users(id),
-  listing_id INTEGER NULL REFERENCES listings(id) ON DELETE SET NULL,
+  listing_id INTEGER REFERENCES listings(id) ON DELETE SET NULL,
   status TEXT NOT NULL DEFAULT 'proposed',
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,

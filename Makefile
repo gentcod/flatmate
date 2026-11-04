@@ -30,8 +30,14 @@ build: ## Build server and seeder binaries
 	go build -o ./bin/admin ./cmd/admin
 	go build -o ./bin/backup ./cmd/backup
 
+buildserver:
+	gofmt -l -s -w .
+	go build -o ./bin/flatmate ./cmd/server
+
 runbin: ## Run the built server binary (used by serve)
 	./bin/flatmate
+
+brun: buildserver runbin
 
 serve: tidy build seed runbin ## Tidy, build, seed, and run the server binary
 

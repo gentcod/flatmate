@@ -1,6 +1,7 @@
 package web
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -56,11 +57,21 @@ func (s *Server) verifiedStay(r *http.Request, id, peer int64) bool {
 
 // tenantStay reports whether user has an active or ended stay linked to listing.
 func (s *Server) tenantStay(r *http.Request, listingID, userID int64) bool {
-	st, err := database.New(s.DB).GetStayForListing(r.Context(), database.GetStayForListingParams{ListingID: listingID, UserID: userID})
+	st, err := database.New(s.DB).GetStayForListing(r.Context(), database.GetStayForListingParams{ListingID: sql.NullInt64{Int64: listingID, Valid: true}, UserID: userID})
 	if err != nil {
 		return false
 	}
 	return st.Status == StayActive || st.Status == StayEnded
+}
+
+// notify records a best-effort notification. It never fails the action.
+func (s *Server) notify(r *http.Request, userID int64, kind string, actorID, refID int64, body string) {
+	if userID == actorID {
+		return
+	}
+	_ = database.New(s.DB).CreateNotification(r.Context(), database.CreateNotificationParams{
+		UserID: userID, Kind: kind, ActorID: actorID, RefID: refID, Body: body, CreatedAt: nowRFC3339(),
+	})
 }
 
 // trustScore computes the weighted mean of ratings: tenant (stay)

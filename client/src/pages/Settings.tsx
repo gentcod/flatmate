@@ -153,7 +153,7 @@ export function SettingsPage() {
                   type="button"
                   disabled={deactivate.isPending}
                   onClick={() =>
-                    deactivate.mutate(undefined, { onSuccess: () => navigate('/login') })
+                    deactivate.mutate(undefined, { onSuccess: () => navigate('/') })
                   }
                   className={dangerBtnCls}
                 >

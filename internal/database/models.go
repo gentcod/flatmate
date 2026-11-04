@@ -56,17 +56,6 @@ type Listing struct {
 	Status      string `json:"status"`
 }
 
-type Stay struct {
-	ID         int64         `json:"id"`
-	UserA      int64         `json:"user_a"`
-	UserB      int64         `json:"user_b"`
-	ProposedBy int64         `json:"proposed_by"`
-	ListingID  sql.NullInt64 `json:"listing_id"`
-	Status     string        `json:"status"`
-	CreatedAt  string        `json:"created_at"`
-	UpdatedAt  string        `json:"updated_at"`
-}
-
 type ListingReview struct {
 	ID        int64  `json:"id"`
 	ListingID int64  `json:"listing_id"`
@@ -84,6 +73,17 @@ type Message struct {
 	Body      string         `json:"body"`
 	CreatedAt string         `json:"created_at"`
 	ReadAt    sql.NullString `json:"read_at"`
+}
+
+type Notification struct {
+	ID        int64          `json:"id"`
+	UserID    int64          `json:"user_id"`
+	Kind      string         `json:"kind"`
+	ActorID   int64          `json:"actor_id"`
+	RefID     int64          `json:"ref_id"`
+	Body      string         `json:"body"`
+	ReadAt    sql.NullString `json:"read_at"`
+	CreatedAt string         `json:"created_at"`
 }
 
 type OnboardingDraft struct {
@@ -143,6 +143,17 @@ type SavedSearch struct {
 	Area      string `json:"area"`
 	MaxRent   int64  `json:"max_rent"`
 	CreatedAt string `json:"created_at"`
+}
+
+type Stay struct {
+	ID         int64         `json:"id"`
+	UserA      int64         `json:"user_a"`
+	UserB      int64         `json:"user_b"`
+	ProposedBy int64         `json:"proposed_by"`
+	ListingID  sql.NullInt64 `json:"listing_id"`
+	Status     string        `json:"status"`
+	CreatedAt  string        `json:"created_at"`
+	UpdatedAt  string        `json:"updated_at"`
 }
 
 type User struct {

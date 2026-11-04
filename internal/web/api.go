@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"errors"
+	"log"
 	"net/http"
 	"net/mail"
 	"sort"
@@ -111,6 +113,8 @@ func (s *Server) registerAPI(mux *http.ServeMux) {
 	mux.Handle("GET /api/v1/listings/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiListingReviewsGet)))
 	mux.Handle("PUT /api/v1/listings/{id}/reviews", s.requireAuthAPI(http.HandlerFunc(s.apiListingReviewsPut)))
 	mux.Handle("POST /api/v1/listings/{id}/status", s.requireAuthAPI(http.HandlerFunc(s.apiListingStatus)))
+	mux.Handle("GET /api/v1/notifications", s.requireAuthAPI(http.HandlerFunc(s.apiNotifications)))
+	mux.Handle("POST /api/v1/notifications/read", s.requireAuthAPI(http.HandlerFunc(s.apiNotificationsRead)))
 	mux.Handle("GET /api/v1/admin/reports", s.requireAdminAPI(http.HandlerFunc(s.apiReportsList)))
 	mux.Handle("POST /api/v1/admin/reports/{id}/resolve", s.requireAdminAPI(http.HandlerFunc(s.apiReportResolve)))
 	mux.Handle("GET /api/v1/admin/metrics", s.requireAdminAPI(http.HandlerFunc(s.apiMetrics)))
@@ -348,12 +352,6 @@ func (s *Server) apiQuestionnaireGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	out := map[string]any{"description": s.savedDescription(r, id)}
-	if iv, ok := s.Interviews.Get(id); ok && len(iv.Drafts) > 0 {
-		for k, v := range iv.Drafts {
-			saved[k] = v
-		}
-		out["notice"] = "Drafted so far — review, adjust, and save to confirm."
-	}
 	dims := buildQdims(saved)
 	prompts := s.questionPrompts(r, id)
 	apiDims := make([]apiQdim, 0, len(dims))
@@ -402,7 +400,6 @@ func (s *Server) apiQuestionnairePut(w http.ResponseWriter, r *http.Request) {
 		writeErr(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	s.Interviews.Drop(id) // answers confirmed; any interview is done
 	writeJSON(w, http.StatusOK, map[string]bool{"ok": true})
 }
 
@@ -642,6 +639,11 @@ func (s *Server) apiStampAction(w http.ResponseWriter, r *http.Request, kind str
 	if !ok {
 		return
 	}
+	if kind == "interest" {
+		if n, _ := database.New(s.DB).CountInterestFrom(r.Context(), database.CountInterestFromParams{Actor: id, Target: target}); n == 0 {
+			s.notify(r, target, "interest", id, id, s.authorName(r, id)+" showed interest in you.")
+		}
+	}
 	database.New(s.DB).AddAction(r.Context(), database.AddActionParams{
 		Actor: id, Target: target, Kind: kind, CreatedAt: nowRFC3339(),
 	})
@@ -731,8 +733,7 @@ func (s *Server) apiReport(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) apiOnboardingGet(w http.ResponseWriter, r *http.Request) {
 	id := authedID(r)
-	out := map[string]any{"total": len(match.Dimensions), "active": false,
-		"turns": []map[string]string{}, "drafts_done": 0, "text": ""}
+	out := map[string]any{"text": ""}
 	if ob, found, err := profile.GetOnboarding(r.Context(), s.DB, id); err == nil && found {
 		out["text"] = ob.Description
 		if ob.Drafts != "" {
@@ -742,20 +743,7 @@ func (s *Server) apiOnboardingGet(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	if iv, ok := s.Interviews.Get(id); ok && len(iv.Turns) > 0 {
-		out["active"] = true
-		out["turns"] = toAPITurns(iv.Turns)
-		out["drafts_done"] = len(iv.Drafts)
-	}
 	writeJSON(w, http.StatusOK, out)
-}
-
-func toAPITurns(turns []Turn) []map[string]string {
-	out := make([]map[string]string, 0, len(turns))
-	for _, t := range turns {
-		out = append(out, map[string]string{"role": t.Role, "text": t.Text})
-	}
-	return out
 }
 
 func toAPISeed(seed map[string]profile.Answer) map[string]apiAnswer {
@@ -783,70 +771,36 @@ func (s *Server) apiOnboardingPost(w http.ResponseWriter, r *http.Request) {
 	}
 	text := strings.TrimSpace(in.Message)
 	if len(text) > 2000 {
-		text = text[:2000]
+		text = string([]rune(text)[:2000])
 	}
 	if len(text) < 3 {
-		if _, ok := s.Interviews.Get(id); !ok {
-			writeErr(w, http.StatusBadRequest, "Write a little more (a sentence or two).")
-			return
-		}
-		s.apiInterviewState(w, r, id, "Say a little more than that.")
+		writeErr(w, http.StatusBadRequest, "Write a little more (a sentence or two).")
 		return
 	}
-	// Append the user turn, then run one interview step over the transcript.
-	var transcript string
-	var covered []string
-	s.Interviews.Update(id, func(iv *Interview) {
-		iv.Turns = append(iv.Turns, Turn{Role: "user", Text: text})
-		iv.UserTurns++
-		transcript = formatTranscript(iv.Turns)
-		for dim := range iv.Drafts {
-			covered = append(covered, dim)
-		}
-	})
-	question, drafts, done, err := ai.InterviewStep(r.Context(), s.AI, transcript, covered)
+	// One shot: a single message, a single extraction. Whatever the
+	// model cannot cover, the user answers in the form, guided by
+	// generated scenario questions for the remaining dimensions.
+	transcript := "user: " + text + "\n"
+	drafts, err := ai.ExtractAnswers(r.Context(), s.AI, transcript)
 	if err != nil {
-		s.apiInterviewFallback(w, r, id, transcript, "Couldn't understand that — review the form below.")
+		log.Printf("interview step: %v", err)
+		msg := "Couldn't draft answers from that — fill in the form below."
+		if errors.Is(err, ai.ErrNotConfigured) {
+			msg = "AI chat isn't available right now — the form below works the same."
+		}
+		s.apiInterviewFallback(w, r, id, transcript, msg)
 		return
 	}
-	merged := map[string]profile.Answer{}
-	s.Interviews.Update(id, func(iv *Interview) {
-		for _, d := range drafts {
-			iv.Drafts[d.Dimension] = profile.Answer{Dimension: d.Dimension, Value: d.Value, Hard: d.Hard, Weight: d.Weight}
-		}
-		if !done {
-			iv.Turns = append(iv.Turns, Turn{Role: "assistant", Text: question})
-		}
-		transcript = formatTranscript(iv.Turns)
-		for k, v := range iv.Drafts {
-			merged[k] = v
-		}
-	})
+	seed := map[string]profile.Answer{}
+	for _, d := range drafts {
+		seed[d.Dimension] = profile.Answer{Dimension: d.Dimension, Value: d.Value, Hard: d.Hard, Weight: d.Weight}
+	}
 	raw, _ := json.Marshal(drafts)
 	profile.SaveOnboarding(r.Context(), s.DB, id, transcript, string(raw))
-	if done || s.interviewCapped(id) {
-		s.Interviews.Drop(id)
-		writeJSON(w, http.StatusOK, map[string]any{
-			"done": true, "seed": toAPISeed(merged), "transcript": transcript,
-			"message": "Pre-filled from your conversation — review, adjust, and save to confirm.",
-		})
-		return
-	}
-	s.apiInterviewState(w, r, id, "")
-}
-
-// apiInterviewState returns the live conversation for the chat UI.
-func (s *Server) apiInterviewState(w http.ResponseWriter, r *http.Request, id int64, errMsg string) {
-	out := map[string]any{"done": false, "total": len(match.Dimensions),
-		"turns": []map[string]string{}, "drafts_done": 0}
-	if iv, ok := s.Interviews.Get(id); ok {
-		out["turns"] = toAPITurns(iv.Turns)
-		out["drafts_done"] = len(iv.Drafts)
-	}
-	if errMsg != "" {
-		out["error"] = errMsg
-	}
-	writeJSON(w, http.StatusOK, out)
+	writeJSON(w, http.StatusOK, map[string]any{
+		"done": true, "seed": toAPISeed(seed), "transcript": transcript,
+		"message": "Drafted " + strconv.Itoa(len(seed)) + " of " + strconv.Itoa(len(match.Dimensions)) + " from your message — answer the rest below.",
+	})
 }
 
 // apiInterviewFallback drops to the plain form, keeping whatever the
@@ -855,14 +809,6 @@ func (s *Server) apiInterviewFallback(w http.ResponseWriter, r *http.Request, id
 	saved, _ := profile.GetAnswers(r.Context(), s.DB, id)
 	if saved == nil {
 		saved = map[string]profile.Answer{}
-	}
-	if iv, ok := s.Interviews.Get(id); ok {
-		for k, v := range iv.Drafts {
-			saved[k] = v
-		}
-		if transcript == "" {
-			transcript = formatTranscript(iv.Turns)
-		}
 	}
 	writeJSON(w, http.StatusOK, map[string]any{
 		"fallback": true, "message": msg,

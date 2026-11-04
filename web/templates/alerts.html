@@ -1,0 +1,15 @@
+{{define "content"}}
+<h1>Alerts</h1>
+<p class="hint">Interests, stay proposals, and reviews land here.</p>
+{{if .Alerts}}
+<form method="post" action="/alerts/read"><input type="hidden" name="csrf_token" value="{{.CSRF}}"><button type="submit">Mark all read</button></form>
+{{range .Alerts}}
+<article class="card">
+<p{{if .Unread}} class="unread"{{end}}>{{if .Unread}}<span class="badge alert">new</span> {{end}}{{.Body}}</p>
+<p class="hint">{{if eq .Kind "listing_review"}}<a href="/listing/{{.RefID}}">View listing</a>{{else}}<a href="/match/{{.ActorID}}">View {{.ActorName}}</a>{{end}} · {{.At}}</p>
+</article>
+{{end}}
+{{else}}
+<p>No alerts yet. When someone shows interest, proposes a stay, or leaves a review, it will show up here.</p>
+{{end}}
+{{end}}
